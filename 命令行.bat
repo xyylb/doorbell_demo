@@ -1,0 +1,1 @@
+@cmd /k call "F:\Espressif\frameworks\esp-idf-v5.4.3\export.bat"
