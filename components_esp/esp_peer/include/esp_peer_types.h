@@ -47,6 +47,8 @@ typedef enum {
     ESP_PEER_ROLE_CONTROLLED,  /*!< Controlled role */
 } esp_peer_role_t;
 
+#ifndef ESP_PEER_ADDR_T_DEFINED
+#define ESP_PEER_ADDR_T_DEFINED
 /**
  * @brief  Peer address
  */
@@ -58,6 +60,8 @@ typedef struct  {
         uint8_t ipv6[16]; /*!< IPV6 address */
     };
 } esp_peer_addr_t;
+#endif // ESP_PEER_ADDR_T_DEFINED
+
 
 /**
  * @brief  Peer RTP transform frame

@@ -183,7 +183,7 @@ int start_webrtc(char *url)
         .peer_cfg = {
             .audio_info = {
                 .codec = ESP_PEER_AUDIO_CODEC_OPUS,
-	            .sample_rate = 48000,   // G711A默认8k，也可改为16k
+	            .sample_rate = 16000,   // G711A默认8k，也可改为16k
 	            .channel = 1,
             },
             // 禁用视频

@@ -109,7 +109,7 @@ void Ec801EUdp::Disconnect() {
     }
 }
 
-int Ec801EUdp::Send(const std::string& data) {
+int Ec801EUdp::Send(const std::string& data, int timeout_ms) {
     const size_t MAX_PACKET_SIZE = 1460;
 
     if (!connected_) {

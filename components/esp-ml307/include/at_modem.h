@@ -76,6 +76,7 @@ public:
     // 状态查询
     bool pin_ready() const { return pin_ready_; }
     bool network_ready() const { return network_ready_; }
+    virtual std::string GetLocalIp() { return local_ip_; }
 
 protected:
     std::shared_ptr<AtUart> at_uart_;
@@ -84,6 +85,7 @@ protected:
     std::string imei_;
     std::string carrier_name_;
     std::string module_revision_;
+    std::string local_ip_;  // 存储本地IP地址
     int csq_ = -1;
     bool pin_ready_ = true;
     bool network_ready_ = false;
@@ -94,7 +96,8 @@ protected:
     CeregState cereg_state_;
 
     virtual void HandleUrc(const std::string& command, const std::vector<AtArgumentValue>& arguments);
-
+    
+	void UpdateLocalIp(const std::string& ip) { local_ip_ = ip; }
     std::function<void(bool network_state)> on_network_state_changed_;
 };
 

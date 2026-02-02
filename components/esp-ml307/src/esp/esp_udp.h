@@ -16,7 +16,7 @@ public:
 
     bool Connect(const std::string& host, int port) override;
     void Disconnect() override;
-    int Send(const std::string& data) override;
+    int Send(const std::string& data, int timeout_ms = -1) override;
     int GetLastError() override;
 
 private:

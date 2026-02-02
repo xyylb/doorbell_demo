@@ -499,3 +499,33 @@ void IRAM_ATTR AtUart::RiPinIsrHandler(void* arg) {
     xEventGroupSetBitsFromISR(at_uart->event_group_handle_, AT_EVENT_RI_PIN_INT, &xHigherPriorityTaskWoken);
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
+
+
+
+
+bool AtUart::SendRawData(const char* data, size_t length) {
+    if (!initialized_) {
+        ESP_LOGE(TAG, "UART not initialized");
+        return false;
+    }
+    
+    ESP_LOGD(TAG, "Sending %d bytes in transparent mode", length);
+    
+    // 在透传模式下，数据直接发送，不需要添加 CRLF
+    int ret = uart_write_bytes(uart_num_, data, length);
+    if (ret < 0) {
+        ESP_LOGE(TAG, "uart_write_bytes failed: %d", ret);
+        return false;
+    }
+    
+    // 等待发送完成
+    ret = uart_wait_tx_done(uart_num_, 1000);  // 最多等待1秒
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "等待发送完成失败: %d", ret);
+        return false;
+    }
+    
+    ESP_LOGD(TAG, "Successfully sent %d bytes in transparent mode", length);
+    return true;
+}
+

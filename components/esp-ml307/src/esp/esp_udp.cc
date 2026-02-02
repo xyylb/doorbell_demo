@@ -84,7 +84,7 @@ void EspUdp::Disconnect() {
     }
 }
 
-int EspUdp::Send(const std::string& data) {
+int EspUdp::Send(const std::string& data, int timeout_ms) {
     if (!connected_) {
         ESP_LOGE(TAG, "Not connected");
         return -1;

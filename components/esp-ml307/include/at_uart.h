@@ -89,6 +89,7 @@ public:
     std::string DecodeHex(const std::string& data);
     void EncodeHexAppend(std::string& dest, const char* data, size_t length);
     void DecodeHexAppend(std::string& dest, const char* data, size_t length);
+    bool SendRawData(const char* data, size_t length);  // 透传模式专用
 
 private:
     // 配置参数

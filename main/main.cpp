@@ -13,6 +13,8 @@
 #include <string>
 
 #include "at_modem.h"
+#include "network_4g.h"
+#include "ml307_udp_socket.h"
 
 // C includes wrapped for C++
 extern "C" {
@@ -306,59 +308,6 @@ extern "C" int network_event_handler(bool connected) {
     return 0;
 }
 
-void new_4g(){
-        ESP_LOGI(TAG, "开始检测4G网络");
-    // 自动检测并初始化模组
-    auto modem = AtModem::Detect(GPIO_NUM_17, GPIO_NUM_18, GPIO_NUM_4, 921600);
-    
-    if (!modem) {
-        ESP_LOGE(TAG, "模组检测失败");
-        return;
-    }
-    
-    // 设置网络状态回调
-    modem->OnNetworkStateChanged([](bool ready) {
-        ESP_LOGI(TAG, "网络状态: %s", ready ? "已连接" : "已断开");
-    });
-    
-    // 等待网络就绪
-    NetworkStatus status = modem->WaitForNetworkReady(30000);
-    if (status != NetworkStatus::Ready) {
-        ESP_LOGE(TAG, "网络连接失败");
-        return;
-    }
-    
-    // 打印模组信息
-    ESP_LOGI(TAG, "模组版本: %s", modem->GetModuleRevision().c_str());
-    ESP_LOGI(TAG, "IMEI: %s", modem->GetImei().c_str());
-    ESP_LOGI(TAG, "ICCID: %s", modem->GetIccid().c_str());
-    ESP_LOGI(TAG, "运营商: %s", modem->GetCarrierName().c_str());
-    ESP_LOGI(TAG, "信号强度: %d", modem->GetCsq());
-    
-    
-    // 创建 HTTP 客户端
-    auto http = modem->CreateHttp(0);
-    
-    // 设置请求头
-    http->SetHeader("User-Agent", "Xiaozhi/3.0.0");
-    http->SetTimeout(10000);
-    
-    // 发送 GET 请求
-    if (http->Open("GET", "https://httpbin.org/json")) {
-        ESP_LOGI(TAG, "HTTP 状态码: %d", http->GetStatusCode());
-        ESP_LOGI(TAG, "响应内容长度: %zu bytes", http->GetBodyLength());
-        
-        // 读取响应内容
-        std::string response = http->ReadAll();
-        ESP_LOGI(TAG, "响应内容: %s", response.c_str());
-        
-        http->Close();
-    } else {
-        ESP_LOGE(TAG, "HTTP 请求失败");
-    }
-    
-}
-
 // ------------------ Main Entry ------------------
 
 void app_main() {
@@ -367,8 +316,57 @@ void app_main() {
     esp_capture_set_thread_scheduler(capture_scheduler);
     media_lib_thread_set_schedule_cb(thread_scheduler);
     init_board();
+    
+    
+    ESP_LOGI(TAG, "程序启动，开始初始化4G模组");
+    
+    // 1. 第一步：初始化4G模组（必须先执行，否则modem为空）
+    Network4g::init();
+    
 
-	new_4g();
+    ESP_LOGI("TEST", "开始测试 udp_socket_open...");
+    
+    // 1. 创建测试用的结构体
+    udp_socket_t test_socket;
+    memset(&test_socket, 0, sizeof(test_socket));
+    
+    // 2. 设置一些初始值
+    test_socket.fd = -1;
+    test_socket.ipv6_fd = -1;
+    test_socket.timeout_sec = 5;  // 5秒超时
+    test_socket.timeout_usec = 0;
+    
+    // 3. 直接调用 udp_socket_open
+    ESP_LOGI("TEST", "准备调用 udp_socket_open...");
+    int result = udp_socket_open(&test_socket, false);  // ipv6_support = false
+    
+    // 4. 打印结果
+    ESP_LOGI("TEST", "调用结果: %d", result);
+    ESP_LOGI("TEST", "返回的 fd: %d", test_socket.fd);
+    ESP_LOGI("TEST", "user_count: %d", (int)test_socket.user_count);
+    
+    // 5. 如果是你的实现，应该会有特定值
+    if (test_socket.fd > 0) {
+        ESP_LOGI("TEST", "✅ 看起来socket创建成功");
+    } else {
+        ESP_LOGI("TEST", "❌ socket创建失败");
+    }
+    
+    
+    // 检查模组是否初始化成功（可选，但建议加）
+    const AtModem* modem = Network4g::GetModemInstance();
+    if (!modem) {
+        ESP_LOGE(TAG, "4G模组初始化失败，退出");
+    }else{
+	    ESP_LOGI(TAG, "4G模组初始化成功，开始测试HTTP请求");
+	    
+	    // 2. 第二步：调用测试函数（执行HTTP请求）
+	    Network4g::test();
+	    
+	}
+    
+    // 3. 也可以直接操作modem实例（比如获取信号强度）
+   // ESP_LOGI(TAG, "在main中获取信号强度: %d", modem->GetCsq());
 
 
 

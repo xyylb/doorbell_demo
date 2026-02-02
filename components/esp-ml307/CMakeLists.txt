@@ -22,9 +22,13 @@ idf_component_register(
         "src/http_client.cc"
         # 新增 C 接口封装的源文件
         "src_c/at_modem_c.cpp"
+        # 新增 C 接口封装的源文件
+        "src_new/network_4g.cpp"
+        "src_new/ml307_udp_socket.cc"
     INCLUDE_DIRS
         "include"
         "include_c"
+        "include_new"
     PRIV_INCLUDE_DIRS
         "."
     REQUIRES
@@ -35,3 +39,5 @@ idf_component_register(
         "pthread"
         "mqtt"
 )
+
+set(COMPONENT_REQUIRES esp_peer)

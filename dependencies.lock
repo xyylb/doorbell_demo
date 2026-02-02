@@ -2,13 +2,13 @@ dependencies:
   av_render:
     dependencies: []
     source:
-      path: C:\project\esp32\doorbell_demo\components\av_render
+      path: C:\project\esp32\doorbell_demo\components_esp\av_render
       type: local
     version: 0.9.1
   esp_peer:
     dependencies: []
     source:
-      path: C:\project\esp32\doorbell_demo\components\esp_peer
+      path: C:\project\esp32\doorbell_demo\components_esp\esp_peer
       type: local
     version: 1.2.7
   espressif/cmake_utilities:
@@ -303,7 +303,7 @@ dependencies:
   media_lib_sal:
     dependencies: []
     source:
-      path: C:\project\esp32\doorbell_demo\components\media_lib_sal
+      path: C:\project\esp32\doorbell_demo\components_esp\media_lib_sal
       type: local
     version: 0.9.0
 direct_dependencies:
@@ -320,6 +320,6 @@ direct_dependencies:
 - idf
 - tempotian/av_render
 - tempotian/media_lib_sal
-manifest_hash: 1bad837dcf50d838e3d72cb74ecb2d59d01f6766b1933e4d8678e89fa7310ff3
+manifest_hash: 18dc6ec7f0f419a7ad5b51a7e4aa10fa0531b6fe3b31ce577dbbb41dd6b8b22a
 target: esp32s3
 version: 2.0.0

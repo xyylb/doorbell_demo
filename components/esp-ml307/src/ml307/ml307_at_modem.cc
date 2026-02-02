@@ -35,9 +35,13 @@ void Ml307AtModem::HandleUrc(const std::string& command, const std::vector<AtArg
     if (command == "MIPCALL" && arguments.size() >= 3) {
         if (arguments[1].int_value == 1) {
             auto ip = arguments[2].string_value;
+            local_ip_ = ip;
             ESP_LOGI(TAG, "PDP Context %d IP: %s", arguments[0].int_value, ip.c_str());
             network_ready_ = true;
             xEventGroupSetBits(event_group_handle_, AT_EVENT_NETWORK_READY);
+        } else {
+            // 连接断开时清空IP
+            local_ip_.clear();
         }
     } else if (command == "MATREADY") {
         if (network_ready_) {

@@ -11,6 +11,16 @@ endif()
 
 list(APPEND EXTRA_COMPONENT_DIRS "./components")
 
+list(APPEND EXTRA_COMPONENT_DIRS "./components_esp")
+
 list(APPEND EXTRA_COMPONENT_DIRS "./common")
 
 project(doorbell_demo)
+
+idf_build_set_property(COMPONENT_LIBS 
+    esp_ml307           # 你的4G组件放在最前面
+    esp_peer            # 然后是esp_peer组件
+    main         # 主程序
+    # 其他组件按需添加...
+    CACHE INTERNAL ""
+)
