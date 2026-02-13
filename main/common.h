@@ -35,9 +35,19 @@ void init_board(void);
 int start_webrtc(char *url);
 
 /**
+ * @brief  Start WebRTC
+ *
+ * @return
+ *      - 0       On success
+ *      - Others  Fail to start
+ */
+int start_webrtc_mqtt(void);
+
+/**
  * @brief  Query WebRTC status
  */
 void query_webrtc(void);
+
 
 /**
  * @brief  Stop WebRTC

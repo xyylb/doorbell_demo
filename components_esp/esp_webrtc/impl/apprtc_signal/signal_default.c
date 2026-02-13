@@ -701,3 +701,5 @@ const esp_peer_signaling_impl_t *esp_signaling_get_apprtc_impl(void)
     };
     return &impl;
 }
+
+//sinal_default.c

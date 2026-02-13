@@ -84,9 +84,9 @@ namespace Network4g {
 	        ESP_LOGI(TAG, "MQTT 连接断开");
 	    });
 	    
-	    mqtt->OnMessage([](const std::string& topic, const std::string& payload) {
+/*	    mqtt->OnMessage([](const std::string& topic, const std::string& payload) {
 	        ESP_LOGI(TAG, "收到消息 [%s]: %s", topic.c_str(), payload.c_str());
-	    });
+	    });*/
 	    
 	    // 连接到 MQTT 代理
 	    if (mqtt->Connect("visit-repair.2811.top", 1883, "esp32_client", "", "")) {

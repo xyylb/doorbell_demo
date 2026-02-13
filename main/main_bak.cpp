@@ -16,9 +16,6 @@
 #include "network_4g.h"
 #include "ml307_udp_socket.h"
 
-
-const char* g_device_id = "your_esp32_device_001";  // ← 替换为你的实际设备ID
-
 // C includes wrapped for C++
 extern "C" {
 #include <esp_wifi.h>
@@ -71,7 +68,7 @@ static void run_async_start(void *arg) {
     char *room = gen_room_id_use_mac();
     std::snprintf(room_url, sizeof(room_url), "%s/join/%s", server_url, room);
     ESP_LOGI(TAG, "Start to join in room %s", room);
-    if (start_webrtc_mqtt() == 0) {
+    if (start_webrtc(room_url) == 0) {
         ESP_LOGW(TAG, "Please use browser to join in %s on %s/doorbell", room, server_url);
     }
     media_lib_thread_destroy(nullptr);
@@ -80,8 +77,23 @@ static void run_async_start(void *arg) {
 // ------------------ Command Handlers ------------------
 
 static int join_room(int argc, char **argv) {
-    ESP_LOGI(TAG, "Start join mqtt");
-    start_webrtc_mqtt();
+    int nerrors = arg_parse(argc, argv, (void **)&room_args);
+    if (nerrors != 0) {
+        arg_print_errors(stderr, room_args.end, argv[0]);
+        return 1;
+    }
+
+    static bool sntp_synced = false;
+    if (!sntp_synced) {
+        if (webrtc_utils_time_sync_init() == 0) {
+            sntp_synced = true;
+        }
+    }
+
+    const char *room_id = room_args.room_id->sval[0];
+    std::snprintf(room_url, sizeof(room_url), "%s/join/%s", server_url, room_id);
+    ESP_LOGI(TAG, "Start to join in room %s", room_id);
+    start_webrtc(room_url);
     return 0;
 }
 
@@ -356,8 +368,6 @@ void app_main() {
     // 3. 也可以直接操作modem实例（比如获取信号强度）
    // ESP_LOGI(TAG, "在main中获取信号强度: %d", modem->GetCsq());
 
-	//MQTT重连时候，应该自动开始
-	start_webrtc_mqtt();
 
 
     // Log I2S config
@@ -366,7 +376,7 @@ void app_main() {
 
     media_sys_buildup();
     init_console();
-    //network_init(WIFI_SSID, WIFI_PASSWORD, network_event_handler);
+    network_init(WIFI_SSID, WIFI_PASSWORD, network_event_handler);
 
     while (true) {
         media_lib_thread_sleep(2000);

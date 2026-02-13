@@ -7,6 +7,7 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
+#include "signal_mqtt.h"
 #include "esp_webrtc.h"
 #include "media_lib_os.h"
 #include "driver/gpio.h"
@@ -158,16 +159,16 @@ static void key_monitor_thread(void *arg)
     media_lib_thread_destroy(NULL);
 }
 
-int start_webrtc(char *url)
+int start_webrtc_mqtt()
 {
-    if (network_is_connected() == false) {
+/*    if (network_is_connected() == false) {
         ESP_LOGE(TAG, "Wifi not connected yet");
         return -1;
     }
     if (url[0] == 0) {
         ESP_LOGE(TAG, "Room Url not set yet");
         return -1;
-    }
+    }*/
     if (webrtc) {
         esp_webrtc_close(webrtc);
         webrtc = NULL;
@@ -199,10 +200,10 @@ int start_webrtc(char *url)
             .extra_size = sizeof(peer_cfg),
         },
         .signaling_cfg = {
-            .signal_url = url,
+            .signal_url = NULL,
         },
         .peer_impl = esp_peer_get_default_impl(),
-        .signaling_impl = esp_signaling_get_apprtc_impl(),
+        .signaling_impl = esp_signaling_get_mqtt_impl(),
     };
     int ret = esp_webrtc_open(&cfg, &webrtc);
     if (ret != 0) {

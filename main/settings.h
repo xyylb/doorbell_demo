@@ -10,6 +10,7 @@
 #pragma once
 
 #include "sdkconfig.h"
+#include "driver/gpio.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,14 +67,14 @@ extern "C" {
  *        When enable `NETWORK_USE_ETHERNET` will cause socket error
  *        User must replace it to a unused GPIO instead (like GPIO27)
  */
-#define DOOR_BELL_RING_BUTTON  0
+#define DOOR_BELL_RING_BUTTON  GPIO_NUM_0
 #else
 /**
  * @brief  GPIO for ring button
  *
  * @note  When use ESP32S3-KORVO-V3 Use ADC button as ring button
  */
-#define DOOR_BELL_RING_BUTTON  0
+#define DOOR_BELL_RING_BUTTON  GPIO_NUM_0
 #endif
 
 #ifdef __cplusplus
