@@ -17,6 +17,9 @@ list(APPEND EXTRA_COMPONENT_DIRS "./common")
 
 project(doorbell_demo)
 
+# Add compiler flags to ignore certain warnings for main component
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
+
 idf_build_set_property(COMPONENT_LIBS 
     esp_ml307           # 你的4G组件放在最前面
     esp_peer            # 然后是esp_peer组件

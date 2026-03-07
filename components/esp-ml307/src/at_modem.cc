@@ -18,21 +18,21 @@ std::unique_ptr<AtModem> AtModem::Detect(gpio_num_t tx_pin, gpio_num_t rx_pin, g
     // 创建AtUart进行检测
     auto uart = std::make_shared<AtUart>(tx_pin, rx_pin, dtr_pin, ri_pin);
     uart->Initialize();
-    
+
     // 设置波特率
     if (!uart->SetBaudRate(baud_rate, timeout_ms)) {
         return nullptr;
     }
-    
+
     // 发送AT+CGMR（或ATI）命令获取模组型号
     if (!uart->SendCommand("AT+CGMR", 3000)) {
         ESP_LOGE(TAG, "Failed to send AT+CGMR command");
         return nullptr;
     }
-    
+
     std::string response = uart->GetResponse();
     ESP_LOGI(TAG, "Detected modem: %s", response.c_str());
-    
+
     // 检查响应中的模组型号
     if (response.find("EC801E") == 0) {
         return std::make_unique<Ec801EAtModem>(uart);
@@ -86,7 +86,7 @@ NetworkStatus AtModem::WaitForNetworkReady(int timeout_ms) {
     network_ready_ = false;
     cereg_state_ = CeregState{};
     xEventGroupClearBits(event_group_handle_, AT_EVENT_NETWORK_READY | AT_EVENT_NETWORK_ERROR);
-    
+
     // 检查 SIM 卡是否准备好
     for (int i = 0; i < 10; i++) {
         if (at_uart_->SendCommand("AT+CPIN?")) {
@@ -107,7 +107,7 @@ NetworkStatus AtModem::WaitForNetworkReady(int timeout_ms) {
     if (!at_uart_->SendCommand("AT+CEREG?")) {
         return NetworkStatus::Error;
     }
-    
+
     TickType_t timeout = portMAX_DELAY;
     if (timeout_ms > 0) {
         timeout = pdMS_TO_TICKS(timeout_ms);

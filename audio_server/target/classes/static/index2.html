@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebRTC 语音通话测试 (适配ESP32)</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<div class="container">
+  <h1>🎙️ WebRTC 语音通话测试 (适配ESP32)</h1>
+
+  <div class="grid">
+    <!-- WebSocket 连接配置 -->
+    <div class="card">
+      <div class="card-title">🔗 WebSocket 连接配置</div>
+      <div class="form-group">
+        <label>服务器地址</label>
+        <input type="text" id="wsHost" value="localhost" placeholder="服务器地址">
+      </div>
+      <div class="form-group">
+        <label>端口</label>
+        <input type="number" id="wsPort" value="8080" placeholder="端口号">
+      </div>
+      <div class="form-group">
+        <label>本端设备ID</label>
+        <input type="text" id="localDeviceId" value="web_client_001" placeholder="设备唯一标识">
+      </div>
+      <div>
+        <span id="connectionStatus" class="status status-disconnected">未连接</span>
+      </div>
+      <div style="margin-top: 16px;">
+        <button class="btn btn-primary" id="btnConnect" onclick="connectWebSocket()">连接</button>
+        <button class="btn btn-danger" id="btnDisconnect" onclick="disconnectWebSocket()" disabled>断开</button>
+      </div>
+    </div>
+
+    <!-- 音频设备配置 -->
+    <div class="card">
+      <div class="card-title">🎧 音频设备配置</div>
+      <div class="form-group">
+        <label>麦克风</label>
+        <select id="audioInputSelect">
+          <option value="">请选择麦克风</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>扬声器</label>
+        <select id="audioOutputSelect">
+          <option value="">请选择扬声器</option>
+        </select>
+      </div>
+      <div class="audio-controls">
+        <span>音量:</span>
+        <div class="audio-meter">
+          <div class="audio-meter-fill" id="audioMeterFill"></div>
+        </div>
+      </div>
+      <div style="margin-top: 16px;">
+        <button class="btn btn-primary" onclick="refreshDevices()">刷新设备</button>
+        <button class="btn btn-success" onclick="testAudio()">测试音频</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通话控制 -->
+  <div class="card">
+    <div class="card-title">📞 通话控制</div>
+    <div class="form-group">
+      <label>目标设备ID (ESP32)</label>
+      <input type="text" id="targetDeviceId" value="esp32_001" placeholder="目标设备ID">
+    </div>
+    <div class="call-controls">
+      <button class="btn btn-success" id="btnCall" onclick="startCall()" disabled>📞 发起通话</button>
+      <button class="btn btn-primary" id="btnRing" onclick="sendRing()" disabled>🔔 发送振铃</button>
+      <button class="btn btn-primary" id="btnAnswer" onclick="answerRing()" disabled>✅ 接听</button>
+      <button class="btn btn-danger" id="btnHangup" onclick="hangupCall()" disabled>❌ 挂断</button>
+      <button class="btn btn-warning" id="btnReject" onclick="rejectRing()" disabled>🚫 拒接</button>
+      <button class="btn btn-primary" id="btnRequestIce" onclick="requestIceServers()" disabled>🧊 获取ICE</button>
+    </div>
+    <div style="margin-top: 16px;">
+      <span id="callStatus" class="status status-disconnected">空闲</span>
+    </div>
+  </div>
+
+  <!-- 信令日志 -->
+  <div class="card">
+    <div class="card-title">📋 信令日志</div>
+    <div class="log-container" id="logContainer"></div>
+    <div style="margin-top: 16px;">
+      <button class="btn btn-primary" onclick="clearLogs()">清空日志</button>
+      <button class="btn btn-primary" onclick="exportLogs()">导出日志</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==================== 全局变量 ====================
+  let ws = null;
+  let pc = null;
+  let localStream = null;
+  let remoteStream = null;
+  let currentCallState = 'idle'; // idle, calling, ringing, connected
+  let incomingOffer = null;
+  let pendingCallerId = null; // 存储振铃阶段的来电方ID（无offer）
+  let audioContext = null;
+  let analyser = null;
+  let dataArray = null;
+  let animationId = null;
+
+  // ==================== WebSocket 连接 ====================
+  function connectWebSocket() {
+    const host = document.getElementById('wsHost').value;
+    const port = document.getElementById('wsPort').value;
+    const wsUrl = `ws://${host}:${port}/signaling`;
+
+    updateConnectionStatus('connecting');
+    log('info', `正在连接 WebSocket: ${wsUrl}`);
+
+    ws = new WebSocket(wsUrl);
+
+    ws.onopen = () => {
+      updateConnectionStatus('connected');
+      log('success', 'WebSocket 连接成功');
+
+      // 注册设备
+      const deviceId = document.getElementById('localDeviceId').value;
+      sendSignaling({
+        type: 'register',
+        from: deviceId,
+        timestamp: Math.floor(Date.now() / 1000)
+      });
+
+      enableCallControls(true);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        handleSignalingMessage(message);
+      } catch (e) {
+        log('error', '解析信令失败: ' + e.message + ' 原始数据: ' + event.data);
+      }
+    };
+
+    ws.onclose = () => {
+      updateConnectionStatus('disconnected');
+      log('warn', 'WebSocket 连接已关闭');
+      enableCallControls(false);
+      resetCallState();
+    };
+
+    ws.onerror = (error) => {
+      log('error', 'WebSocket 错误: ' + error);
+    };
+  }
+
+  function disconnectWebSocket() {
+    if (ws) {
+      ws.close();
+      ws = null;
+    }
+  }
+
+  // ==================== 核心：适配ESP32信令格式 ====================
+  function sendSignaling(message) {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      // 适配ESP32的信令格式 - 确保包含from、timestamp等必填字段
+      const esp32Msg = {
+        type: message.type,
+        from: message.from || document.getElementById('localDeviceId').value,
+        timestamp: message.timestamp || Math.floor(Date.now() / 1000),
+        target: message.target || document.getElementById('targetDeviceId').value,
+        valid: true // ESP32要求的valid字段
+      };
+
+      // 根据消息类型添加对应字段
+      if (message.sdp) esp32Msg.data = message.sdp; // ESP32使用data字段传输SDP
+      if (message.candidate) esp32Msg.candidate = message.candidate;
+      if (message.data) esp32Msg.data = message.data;
+
+      ws.send(JSON.stringify(esp32Msg));
+      log('signal', `发送信令 [${esp32Msg.type}]: ${JSON.stringify(esp32Msg)}`);
+    } else {
+      log('error', 'WebSocket 未连接，无法发送信令');
+    }
+  }
+
+  // ==================== 信令处理 (适配ESP32逻辑) ====================
+  function handleSignalingMessage(message) {
+    log('signal', `收到信令 [${message.type}]: ${JSON.stringify(message)}`);
+
+    switch (message.type) {
+      case 'connected':
+        log('success', '服务器连接确认');
+        break;
+
+      case 'register_response':
+        log('success', '设备注册成功: ' + (message.data || '无数据'));
+        break;
+
+      case 'ice_response':
+        handleIceResponse(message);
+        break;
+
+      case 'ring':
+        // 处理ESP32的振铃信令（无offer）
+        handleRing(message);
+        break;
+
+      case 'offer':
+        // 处理ESP32后续发送的offer信令（关键修复：读取data字段作为SDP）
+        handleIncomingOffer(message);
+        break;
+
+      case 'answer':
+        handleAnswer(message);
+        break;
+
+      case 'candidate':
+        handleCandidate(message);
+        break;
+
+      case 'bye':
+        handleBye(message);
+        break;
+
+      case 'customized':
+        handleCustomized(message);
+        break;
+
+      case 'reject':
+        handleReject(message);
+        break;
+
+      case 'timeout':
+        handleTimeout(message);
+        break;
+
+      case 'error':
+        log('error', '服务器错误: ' + (message.data || '无错误信息'));
+        break;
+
+      default:
+        log('warn', '未知信令类型: ' + message.type);
+    }
+  }
+
+  // ==================== ESP32振铃处理 (仅回复customized信令) ====================
+  function handleRing(message) {
+    // 处理来自ESP32的振铃请求（仅振铃，无offer）
+    pendingCallerId = message.from; // 保存来电方ID
+    log('info', `收到来自 ${message.from} 的振铃请求（无offer）`);
+
+    updateCallStatus('ringing', '收到来电 from ' + message.from);
+    document.getElementById('btnAnswer').disabled = false;
+    document.getElementById('btnReject').disabled = false;
+    document.getElementById('btnCall').disabled = true;
+
+    // 播放来电铃声
+    playRingtone();
+  }
+
+  // 回复振铃：仅发送ACCEPT_CALL自定义信令
+  function answerRing() {
+    console.log('开始接听：仅回复振铃确认');
+    if (!pendingCallerId) {
+      log('error', '没有待处理的振铃请求');
+      return;
+    }
+
+    // 只发送ACCEPT_CALL自定义信令，不处理WebRTC逻辑
+    sendSignaling({
+      type: 'customized',
+      target: pendingCallerId,
+      data: "ACCEPT_CALL",
+      timestamp: Math.floor(Date.now() / 1000),
+      from: document.getElementById('localDeviceId').value
+    });
+
+    log('success', `已发送接听确认信令给 ${pendingCallerId}，等待对方发送offer`);
+    updateCallStatus('calling', '已接听，等待对方响应...');
+
+    // 禁用接听/拒接，保留挂断按钮
+    document.getElementById('btnAnswer').disabled = true;
+    document.getElementById('btnReject').disabled = true;
+    document.getElementById('btnHangup').disabled = false;
+  }
+
+  // 拒接振铃：仅发送REJECT_CALL自定义信令
+  function rejectRing() {
+    console.log('拒绝接听：回复振铃拒绝');
+    if (!pendingCallerId) {
+      log('error', '没有待处理的振铃请求');
+      return;
+    }
+
+    // 只发送REJECT_CALL自定义信令
+    sendSignaling({
+      type: 'customized',
+      target: pendingCallerId,
+      data: "REJECT_CALL",
+      timestamp: Math.floor(Date.now() / 1000),
+      from: document.getElementById('localDeviceId').value
+    });
+
+    log('warn', `已发送拒接信令给 ${pendingCallerId}`);
+
+    // 重置状态
+    pendingCallerId = null;
+    resetCallState();
+  }
+
+  // ==================== Offer处理 (关键修复：适配ESP32的data字段存储SDP) ====================
+  function handleIncomingOffer(message) {
+    // 验证offer是否来自之前振铃的设备
+    if (pendingCallerId && message.from !== pendingCallerId) {
+      log('warn', `收到未知设备 ${message.from} 的offer，忽略`);
+      return;
+    }
+
+    log('info', `收到 ${message.from} 的offer信令，开始自动建立通话`);
+
+    // 关键修复：ESP32的SDP放在data字段中，需要赋值给sdp属性
+    incomingOffer = {
+      from: message.from,
+      sdp: message.data, // 读取data字段作为SDP内容
+      target: message.target
+    };
+
+    // 自动处理offer（无需用户操作）
+    processOfferAutomatically();
+  }
+
+  // 自动处理offer并建立WebRTC连接（添加详细错误处理）
+  // ==================== 自动处理offer并建立WebRTC连接（修复SDP内嵌candidate） ====================
+  async function processOfferAutomatically() {
+    if (!incomingOffer) {
+      log('error', '无待处理的offer');
+      return;
+    }
+
+    try {
+      log('info', '开始初始化本地音频流');
+      // 1. 初始化本地音频流
+      await initLocalStream();
+
+      log('info', '开始创建PeerConnection');
+      // 2. 创建PeerConnection
+      await createPeerConnection();
+
+      // 3. 设置远程SDP（关键：先设置SDP，再解析内嵌的candidate）
+      log('info', '开始设置远程SDP');
+      const remoteDesc = new RTCSessionDescription({
+        type: 'offer',
+        sdp: incomingOffer.sdp
+      });
+
+      await pc.setRemoteDescription(remoteDesc);
+      log('success', '远程SDP设置成功');
+
+      // 关键修复：解析SDP中内嵌的ICE候选并添加到PeerConnection
+/*      log('info', '开始解析SDP中的内嵌ICE候选');
+      const candidates = parseCandidatesFromSDP(incomingOffer.sdp);
+      if (candidates.length > 0) {
+        log('info', `找到 ${candidates.length} 个内嵌ICE候选`);
+        for (const candidate of candidates) {
+          try {
+            await pc.addIceCandidate(candidate);
+            log('success', `添加内嵌ICE候选成功: ${candidate.candidate.substring(0, 50)}...`);
+          } catch (e) {
+            log('warn', `添加内嵌ICE候选失败: ${e.message}`);
+            log('error', `添加内嵌ICE候选失败: ${e.message}，候选: ${JSON.stringify(candidate)}`);
+          }
+        }
+      } else {
+        log('info', 'SDP中未找到内嵌ICE候选');
+      }*/
+
+      // 4. 创建并发送answer
+      log('info', '开始创建answer SDP');
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      log('success', '本地answer SDP创建成功');
+
+      // 发送answer信令给ESP32（关键：使用data字段传输SDP）
+      sendSignaling({
+        type: 'answer',
+        target: incomingOffer.from,
+        from: document.getElementById('localDeviceId').value,
+        timestamp: Math.floor(Date.now() / 1000),
+        sdp: answer.sdp // sendSignaling会自动转换为data字段
+      });
+
+      log('success', '已发送answer信令给ESP32，通话建立中');
+      updateCallStatus('connected', '通话中');
+
+      // 清空临时变量
+      pendingCallerId = null;
+      incomingOffer = null;
+
+    } catch (error) {
+      log('error', '处理offer失败: ' + error.message);
+      console.error('Offer处理详细错误:', error);
+      // 发送错误信令给ESP32
+      sendSignaling({
+        type: 'customized',
+        target: incomingOffer?.from || pendingCallerId,
+        data: `PROCESS_OFFER_ERROR: ${error.message}`,
+        timestamp: Math.floor(Date.now() / 1000),
+        from: document.getElementById('localDeviceId').value
+      });
+      pendingCallerId = null;
+      incomingOffer = null;
+      resetCallState();
+    }
+  }
+
+  // ==================== 工具函数：从SDP中解析内嵌的ICE候选 ====================
+  function parseCandidatesFromSDP(sdp) {
+    const candidates = [];
+    const lines = sdp.split('\r\n');
+    let currentMid = null;
+    let currentMLineIndex = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.startsWith('m=')) {
+        currentMLineIndex++;          // 新媒体行，索引递增
+        currentMid = null;            // 重置mid，等待随后的a=mid
+      } else if (line.startsWith('a=mid:')) {
+        currentMid = line.substring('a=mid:'.length);
+      } else if (line.startsWith('a=candidate:')) {
+        const candidateStr = line.substring('a=candidate:'.length);
+        // 如果当前没有找到a=mid，尝试使用默认值（通常只有一个音频流时是'0'）
+        const mid = currentMid || '0';
+        const mlineIndex = currentMLineIndex >= 0 ? currentMLineIndex : 0;
+        try {
+          const candidate = new RTCIceCandidate({
+            candidate: candidateStr,
+            sdpMid: mid,
+            sdpMLineIndex: mlineIndex
+          });
+          candidates.push(candidate);
+          console.log('解析到候选:', candidate);
+        } catch (e) {
+          console.warn('构造候选失败:', e.message, '行:', line);
+        }
+      }
+    }
+    return candidates;
+  }
+
+  // ==================== 创建PeerConnection（优化ICE处理） ====================
+  async function createPeerConnection() {
+    try {
+      const configuration = {
+        iceServers: [
+          { urls: 'turn:turn.vcall.75prc.cn:3478', username: "youkongcall", credential: "HJbnf23oNF23BgdlNM" }
+        ],
+      };
+
+      log('info', '创建PeerConnection，配置: ' + JSON.stringify(configuration));
+      pc = new RTCPeerConnection(configuration);
+
+      // 添加本地流
+      if (localStream) {
+        localStream.getTracks().forEach(track => {
+          pc.addTrack(track, localStream);
+          log('info', '添加本地音频轨道到PeerConnection');
+        });
+      }
+
+      // 监听远程流
+      pc.ontrack = (event) => {
+        log('info', '收到远程音频流');
+        remoteStream = event.streams[0];
+        const audioElement = new Audio();
+        audioElement.srcObject = remoteStream;
+        audioElement.play().catch(e => log('warn', '播放远程音频失败: ' + e.message));
+        log('success', '远程音频流播放成功');
+      };
+
+      // 监听ICE候选（主要用于本地候选，ESP32的候选已从SDP解析）
+      pc.onicecandidate = (event) => {
+        if (event.candidate) {
+          const targetId = pendingCallerId || document.getElementById('targetDeviceId').value;
+          // 发送本地ICE候选给ESP32
+          sendSignaling({
+            type: 'candidate',
+            target: targetId,
+            from: document.getElementById('localDeviceId').value,
+            timestamp: Math.floor(Date.now() / 1000),
+            candidate: event.candidate.candidate
+          });
+          log('info', '发送本地ICE候选: ' + event.candidate.candidate.substring(0, 50) + '...');
+        } else {
+          log('info', '本地ICE候选收集完成');
+        }
+      };
+
+      // 监听ICE连接状态
+      pc.oniceconnectionstatechange = () => {
+        log('info', 'ICE连接状态: ' + pc.iceConnectionState);
+        // ICE连接成功的状态
+        if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
+          log('success', 'ICE连接成功');
+        }
+        // ICE连接失败的状态
+        else if (pc.iceConnectionState === 'failed') {
+          log('warn', 'ICE连接失败，尝试重新连接');
+          // 可以在这里添加重连逻辑
+        }
+      };
+
+      // 监听连接状态变化
+      pc.onconnectionstatechange = () => {
+        log('info', 'PeerConnection状态: ' + pc.connectionState);
+        if (pc.connectionState === 'connected') {
+          updateCallStatus('connected', '通话中');
+        } else if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed' || pc.connectionState === 'closed') {
+          log('warn', 'PeerConnection断开: ' + pc.connectionState);
+          closeCall();
+        }
+      };
+
+      log('success', 'PeerConnection创建成功');
+    } catch (error) {
+      log('error', '创建PeerConnection失败: ' + error.message);
+      throw error;
+    }
+  }
+
+  // ==================== WebRTC 主动发起通话 ====================
+  async function startCall() {
+    const targetId = document.getElementById('targetDeviceId').value;
+    if (!targetId) {
+      alert('请输入目标设备ID');
+      return;
+    }
+
+    try {
+      await initLocalStream();
+      await createPeerConnection();
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      // 发送ESP32格式的offer信令（使用data字段传输SDP）
+      sendSignaling({
+        type: 'offer',
+        target: targetId,
+        from: document.getElementById('localDeviceId').value,
+        timestamp: Math.floor(Date.now() / 1000),
+        sdp: offer.sdp // sendSignaling会自动转换为data字段
+      });
+
+      updateCallStatus('calling', '呼叫中...');
+      document.getElementById('btnHangup').disabled = false;
+      document.getElementById('btnCall').disabled = true;
+
+    } catch (error) {
+      log('error', '发起通话失败: ' + error.message);
+    }
+  }
+
+  // 发送振铃信令给ESP32
+  function sendRing() {
+    const targetId = document.getElementById('targetDeviceId').value;
+    if (!targetId) {
+      alert('请输入目标设备ID');
+      return;
+    }
+
+    // 发送ESP32格式的ring信令
+    sendSignaling({
+      type: 'ring',
+      target: targetId,
+      from: document.getElementById('localDeviceId').value,
+      timestamp: Math.floor(Date.now() / 1000)
+    });
+
+    updateCallStatus('calling', '正在振铃...');
+    document.getElementById('btnHangup').disabled = false;
+  }
+
+  // 挂断通话
+  function hangupCall() {
+    const targetId = pendingCallerId || document.getElementById('targetDeviceId').value;
+
+    // 发送ESP32格式的bye信令
+    sendSignaling({
+      type: 'bye',
+      target: targetId,
+      from: document.getElementById('localDeviceId').value,
+      timestamp: Math.floor(Date.now() / 1000)
+    });
+
+    closeCall();
+  }
+
+  // 关闭通话清理资源
+  function closeCall() {
+    if (pc) {
+      pc.close();
+      pc = null;
+    }
+    if (localStream) {
+      localStream.getTracks().forEach(track => track.stop());
+      localStream = null;
+    }
+    if (audioContext) {
+      audioContext.close();
+      audioContext = null;
+    }
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+
+    // 清空临时变量
+    pendingCallerId = null;
+    incomingOffer = null;
+
+    resetCallState();
+    log('info', '通话已结束');
+  }
+
+  // ==================== WebRTC 基础功能 (添加错误处理) ====================
+  async function initLocalStream() {
+    try {
+      // 请求音频权限
+      const constraints = {
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 48000
+        },
+        video: false
+      };
+
+      log('info', '请求本地音频流权限');
+      localStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+      // 初始化音频分析
+      initAudioMeter();
+
+      log('success', '本地音频流获取成功');
+    } catch (error) {
+      log('error', '获取本地音频流失败: ' + error.message);
+      throw error;
+    }
+  }
+
+  function initAudioMeter() {
+    try {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+
+      const source = audioContext.createMediaStreamSource(localStream);
+      source.connect(analyser);
+
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+      updateAudioMeter();
+    } catch (e) {
+      log('warn', '音频音量计初始化失败: ' + e.message);
+    }
+  }
+
+  function updateAudioMeter() {
+    if (!analyser) return;
+
+    analyser.getByteFrequencyData(dataArray);
+    const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+    const percentage = (average / 255) * 100;
+
+    document.getElementById('audioMeterFill').style.width = percentage + '%';
+
+    animationId = requestAnimationFrame(updateAudioMeter);
+  }
+
+  async function handleAnswer(message) {
+    try {
+      if (!pc) {
+        log('error', 'PeerConnection未初始化，无法处理answer');
+        return;
+      }
+      // ESP32的answer SDP也在data字段中
+      const sdp = message.data || message.sdp;
+      await pc.setRemoteDescription(new RTCSessionDescription({
+        type: 'answer',
+        sdp: sdp
+      }));
+      updateCallStatus('connected', '通话中');
+      document.getElementById('btnHangup').disabled = false;
+      log('success', '处理answer信令成功');
+    } catch (error) {
+      log('error', '处理 answer 失败: ' + error.message);
+    }
+  }
+
+  async function handleCandidate(message) {
+    try {
+      if (pc && message.candidate) {
+        await pc.addIceCandidate(new RTCIceCandidate({
+          candidate: message.candidate
+        }));
+        log('info', '添加 ICE 候选成功: ' + message.candidate.substring(0, 50) + '...');
+      }
+    } catch (error) {
+      log('error', '添加 ICE 候选失败: ' + error.message);
+    }
+  }
+
+  function handleBye(message) {
+    log('info', '收到对方挂断信令');
+    closeCall();
+  }
+
+  function handleReject(message) {
+    log('warn', '收到对方拒接信令');
+    closeCall();
+  }
+
+  function handleTimeout(message) {
+    log('warn', '呼叫超时');
+    closeCall();
+  }
+
+  function handleIceResponse(message) {
+    log('success', '收到 ICE 服务器配置: ' + JSON.stringify(message.iceServers || message.data));
+  }
+
+  function handleCustomized(message) {
+    log('info', `收到自定义信令: ${message.data}`);
+    // 可根据自定义信令内容扩展处理逻辑
+    if (message.data === 'REJECT_CALL') {
+      handleReject(message);
+    }
+  }
+
+  function requestIceServers() {
+    // 发送ESP32格式的ice_request信令
+    sendSignaling({
+      type: 'ice_request',
+      timestamp: Math.floor(Date.now() / 1000)
+    });
+  }
+
+  // ==================== 音频设备管理 ====================
+  async function refreshDevices() {
+    try {
+      // 先请求权限再枚举设备
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      const devices = await navigator.mediaDevices.enumerateDevices();
+
+      const audioInputs = devices.filter(d => d.kind === 'audioinput');
+      const audioOutputs = devices.filter(d => d.kind === 'audiooutput');
+
+      const inputSelect = document.getElementById('audioInputSelect');
+      const outputSelect = document.getElementById('audioOutputSelect');
+
+      inputSelect.innerHTML = '<option value="">请选择麦克风</option>';
+      outputSelect.innerHTML = '<option value="">请选择扬声器</option>';
+
+      audioInputs.forEach((device, index) => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.text = device.label || `麦克风 ${index + 1}`;
+        inputSelect.appendChild(option);
+      });
+
+      audioOutputs.forEach((device, index) => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.text = device.label || `扬声器 ${index + 1}`;
+        outputSelect.appendChild(option);
+      });
+
+      log('success', `刷新设备完成: ${audioInputs.length} 个麦克风, ${audioOutputs.length} 个扬声器`);
+    } catch (error) {
+      log('error', '刷新设备失败: ' + error.message);
+    }
+  }
+
+  function testAudio() {
+    // 简单的音频测试 - 播放一个提示音
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 440;
+      gainNode.gain.value = 0.1;
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.5);
+
+      log('info', '音频测试: 播放 440Hz 测试音');
+    } catch (e) {
+      log('error', '音频测试失败: ' + e.message);
+    }
+  }
+
+  function playRingtone() {
+    // 简单的铃声
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 800;
+      gainNode.gain.value = 0.1;
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.2);
+
+      setTimeout(() => {
+        const osc2 = audioContext.createOscillator();
+        const gain2 = audioContext.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioContext.destination);
+        osc2.frequency.value = 600;
+        gain2.gain.value = 0.1;
+        osc2.start();
+        osc2.stop(audioContext.currentTime + 0.2);
+      }, 250);
+    } catch (e) {
+      log('warn', '铃声播放失败: ' + e.message);
+    }
+  }
+
+  // ==================== UI 辅助函数 ====================
+  function updateConnectionStatus(status) {
+    const statusEl = document.getElementById('connectionStatus');
+    const btnConnect = document.getElementById('btnConnect');
+    const btnDisconnect = document.getElementById('btnDisconnect');
+
+    switch (status) {
+      case 'connected':
+        statusEl.textContent = '已连接';
+        statusEl.className = 'status status-connected';
+        btnConnect.disabled = true;
+        btnDisconnect.disabled = false;
+        break;
+      case 'connecting':
+        statusEl.textContent = '连接中...';
+        statusEl.className = 'status status-connecting';
+        btnConnect.disabled = true;
+        break;
+      case 'disconnected':
+        statusEl.textContent = '未连接';
+        statusEl.className = 'status status-disconnected';
+        btnConnect.disabled = false;
+        btnDisconnect.disabled = true;
+        break;
+    }
+  }
+
+  function updateCallStatus(state, text) {
+    currentCallState = state;
+    const statusEl = document.getElementById('callStatus');
+    statusEl.textContent = text;
+
+    statusEl.className = 'status';
+    switch (state) {
+      case 'idle':
+        statusEl.classList.add('status-disconnected');
+        break;
+      case 'calling':
+      case 'ringing':
+        statusEl.classList.add('status-calling');
+        break;
+      case 'connected':
+        statusEl.classList.add('status-connected');
+        break;
+    }
+  }
+
+  function enableCallControls(enabled) {
+    document.getElementById('btnCall').disabled = !enabled;
+    document.getElementById('btnRing').disabled = !enabled;
+    document.getElementById('btnRequestIce').disabled = !enabled;
+  }
+
+  function resetCallState() {
+    updateCallStatus('idle', '空闲');
+    document.getElementById('btnCall').disabled = false;
+    document.getElementById('btnRing').disabled = false;
+    document.getElementById('btnAnswer').disabled = true;
+    document.getElementById('btnReject').disabled = true;
+    document.getElementById('btnHangup').disabled = true;
+    pendingCallerId = null;
+    incomingOffer = null;
+  }
+
+  function log(level, message) {
+    const container = document.getElementById('logContainer');
+    const time = new Date().toLocaleTimeString();
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${level}">${message}</span>`;
+    container.appendChild(entry);
+    container.scrollTop = container.scrollHeight;
+    // 同时输出到控制台便于调试
+    console[level === 'error' ? 'error' : level === 'warn' ? 'warn' : 'log'](`[${time}] ${message}`);
+  }
+
+  function clearLogs() {
+    document.getElementById('logContainer').innerHTML = '';
+  }
+
+  function exportLogs() {
+    const container = document.getElementById('logContainer');
+    const logs = container.innerText;
+    const blob = new Blob([logs], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `webrtc_logs_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ==================== 本地存储 ====================
+  function saveToLocalStorage() {
+    const config = {
+      wsHost: document.getElementById('wsHost').value,
+      wsPort: document.getElementById('wsPort').value,
+      localDeviceId: document.getElementById('localDeviceId').value,
+      targetDeviceId: document.getElementById('targetDeviceId').value
+    };
+    localStorage.setItem('webrtcConfig', JSON.stringify(config));
+  }
+
+  function loadFromLocalStorage() {
+    const saved = localStorage.getItem('webrtcConfig');
+    if (saved) {
+      try {
+        const config = JSON.parse(saved);
+        if (config.wsHost) document.getElementById('wsHost').value = config.wsHost;
+        if (config.wsPort) document.getElementById('wsPort').value = config.wsPort;
+        if (config.localDeviceId) document.getElementById('localDeviceId').value = config.localDeviceId;
+        if (config.targetDeviceId) document.getElementById('targetDeviceId').value = config.targetDeviceId;
+        log('info', '已加载保存的配置');
+      } catch (e) {
+        log('error', '加载配置失败: ' + e);
+      }
+    }
+  }
+
+  function setupAutoSave() {
+    const fields = ['wsHost', 'wsPort', 'localDeviceId', 'targetDeviceId'];
+    fields.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.addEventListener('change', saveToLocalStorage);
+        element.addEventListener('blur', saveToLocalStorage);
+      }
+    });
+  }
+
+  // ==================== 初始化 ====================
+  window.onload = () => {
+    loadFromLocalStorage();
+    setupAutoSave();
+    refreshDevices();
+    log('info', '页面加载完成，等待连接...');
+
+    // 自动处理浏览器音频上下文暂停问题
+    document.addEventListener('click', () => {
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    }, { once: true });
+  };
+
+  // 页面关闭时清理资源
+  window.onbeforeunload = () => {
+    closeCall();
+    disconnectWebSocket();
+  };
+</script>
+</body>
+</html>

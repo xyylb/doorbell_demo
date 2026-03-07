@@ -17,8 +17,6 @@
 #include "ml307_udp_socket.h"
 
 
-const char* g_device_id = "your_esp32_device_001";  // ← 替换为你的实际设备ID
-
 // C includes wrapped for C++
 extern "C" {
 #include <esp_wifi.h>
@@ -71,7 +69,7 @@ static void run_async_start(void *arg) {
     char *room = gen_room_id_use_mac();
     std::snprintf(room_url, sizeof(room_url), "%s/join/%s", server_url, room);
     ESP_LOGI(TAG, "Start to join in room %s", room);
-    if (start_webrtc_mqtt() == 0) {
+    if (start_webrtc(room_url) == 0) {
         ESP_LOGW(TAG, "Please use browser to join in %s on %s/doorbell", room, server_url);
     }
     media_lib_thread_destroy(nullptr);
@@ -80,8 +78,23 @@ static void run_async_start(void *arg) {
 // ------------------ Command Handlers ------------------
 
 static int join_room(int argc, char **argv) {
-    ESP_LOGI(TAG, "Start join mqtt");
-    start_webrtc_mqtt();
+    int nerrors = arg_parse(argc, argv, (void **)&room_args);
+    if (nerrors != 0) {
+        arg_print_errors(stderr, room_args.end, argv[0]);
+        return 1;
+    }
+
+    static bool sntp_synced = false;
+    if (!sntp_synced) {
+        if (webrtc_utils_time_sync_init() == 0) {
+            sntp_synced = true;
+        }
+    }
+
+    const char *room_id = room_args.room_id->sval[0];
+    std::snprintf(room_url, sizeof(room_url), "%s/join/%s", server_url, room_id);
+    ESP_LOGI(TAG, "Start to join in room %s", room_id);
+    start_webrtc(room_url);
     return 0;
 }
 
@@ -296,6 +309,38 @@ extern "C" int network_event_handler(bool connected) {
     return 0;
 }
 
+void new_4g(){
+        ESP_LOGI(TAG, "开始检测4G网络");
+    // 自动检测并初始化模组
+    
+    ESP_LOGI(TAG, "Initializing 4G module...");
+    Network4g::init();
+
+    ESP_LOGI("TEST", "Testing UDP socket...");
+    udp_socket_t test_socket;
+    memset(&test_socket, 0, sizeof(test_socket));
+    test_socket.fd = -1;
+    test_socket.ipv6_fd = -1;
+    test_socket.timeout_sec = 5;
+    test_socket.timeout_usec = 0;
+    
+    int result = udp_socket_open(&test_socket, false);
+    ESP_LOGI("TEST", "UDP socket result: %d, fd: %d", result, test_socket.fd);
+    
+    AtModem* modem = Network4g::GetModemInstance();
+    if (!modem) {
+        ESP_LOGE(TAG, "4G module initialization failed");
+    } else {
+        ESP_LOGI(TAG, "4G module initialized successfully");
+        ESP_LOGI(TAG, "IMEI: %s", modem->GetImei().c_str());
+        ESP_LOGI(TAG, "ICCID: %s", modem->GetIccid().c_str());
+        ESP_LOGI(TAG, "Signal: %d", modem->GetCsq());
+        
+        Network4g::test();
+    }
+    
+}
+
 // ------------------ Main Entry ------------------
 
 void app_main() {
@@ -304,60 +349,9 @@ void app_main() {
     esp_capture_set_thread_scheduler(capture_scheduler);
     media_lib_thread_set_schedule_cb(thread_scheduler);
     init_board();
-    
-    
-    ESP_LOGI(TAG, "程序启动，开始初始化4G模组");
-    
-    // 1. 第一步：初始化4G模组（必须先执行，否则modem为空）
-    Network4g::init();
-    
 
-    ESP_LOGI("TEST", "开始测试 udp_socket_open...");
-    
-    // 1. 创建测试用的结构体
-    udp_socket_t test_socket;
-    memset(&test_socket, 0, sizeof(test_socket));
-    
-    // 2. 设置一些初始值
-    test_socket.fd = -1;
-    test_socket.ipv6_fd = -1;
-    test_socket.timeout_sec = 5;  // 5秒超时
-    test_socket.timeout_usec = 0;
-    
-    // 3. 直接调用 udp_socket_open
-    ESP_LOGI("TEST", "准备调用 udp_socket_open...");
-    int result = udp_socket_open(&test_socket, false);  // ipv6_support = false
-    
-    // 4. 打印结果
-    ESP_LOGI("TEST", "调用结果: %d", result);
-    ESP_LOGI("TEST", "返回的 fd: %d", test_socket.fd);
-    ESP_LOGI("TEST", "user_count: %d", (int)test_socket.user_count);
-    
-    // 5. 如果是你的实现，应该会有特定值
-    if (test_socket.fd > 0) {
-        ESP_LOGI("TEST", "✅ 看起来socket创建成功");
-    } else {
-        ESP_LOGI("TEST", "❌ socket创建失败");
-    }
-    
-    
-    // 检查模组是否初始化成功（可选，但建议加）
-    const AtModem* modem = Network4g::GetModemInstance();
-    if (!modem) {
-        ESP_LOGE(TAG, "4G模组初始化失败，退出");
-    }else{
-	    ESP_LOGI(TAG, "4G模组初始化成功，开始测试HTTP请求");
-	    
-	    // 2. 第二步：调用测试函数（执行HTTP请求）
-	    Network4g::test();
-	    
-	}
-    
-    // 3. 也可以直接操作modem实例（比如获取信号强度）
-   // ESP_LOGI(TAG, "在main中获取信号强度: %d", modem->GetCsq());
+	new_4g();
 
-	//MQTT重连时候，应该自动开始
-	start_webrtc_mqtt();
 
 
     // Log I2S config
@@ -366,7 +360,7 @@ void app_main() {
 
     media_sys_buildup();
     init_console();
-    //network_init(WIFI_SSID, WIFI_PASSWORD, network_event_handler);
+    network_init(WIFI_SSID, WIFI_PASSWORD, network_event_handler);
 
     while (true) {
         media_lib_thread_sleep(2000);
@@ -380,5 +374,3 @@ void app_main() {
 extern "C" void app_main(void) {
     DoorbellApp::app_main();
 }
-
-//main.cpp

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd.exe:*)",
+      "Bash(ls:*)",
+      "Bash(/f/Espressif/frameworks/esp-idf-v5.4.3/export.sh:*)",
+      "Bash(source:*)",
+      "Bash(powershell.exe:*)"
+    ]
+  }
+}

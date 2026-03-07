@@ -1,0 +1,21 @@
+#ifndef SIGNAL_MQTT_H_
+#define SIGNAL_MQTT_H_
+
+#include "esp_peer_signaling.h"
+#include "call_state_machine.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+const esp_peer_signaling_impl_t *esp_signaling_get_mqtt_impl(void);
+
+void esp_mqtt_set_peer(esp_peer_signaling_handle_t h, const char* peer_id);
+void esp_mqtt_send_reject(esp_peer_signaling_handle_t h);
+call_state_t esp_mqtt_get_call_state(esp_peer_signaling_handle_t h);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -1,0 +1,39 @@
+server:
+  # Web 服务器端口
+  port: 8080
+
+spring:
+  mqtt:
+    # MQTT 服务器地址（tcp 协议），多个地址用逗号分隔
+    broker-url: tcp://visit-repair.2811.top:1883
+    # 客户端ID（唯一标识，建议自定义）
+    client-id: spring-boot-mqtt-client
+    # 用户名（无则留空）
+    username:
+    # 密码（无则留空）
+    password:
+    # 连接超时时间（秒）
+    connection-timeout: 30
+    # 会话超时时间（秒）
+    keep-alive-interval: 60
+    # 是否清除会话（true=每次连接都是新会话，false=保留会话）
+    clean-session: true
+    # 默认订阅的主题（多个主题用逗号分隔）
+    default-topics: test/esp32/message
+    # QoS 级别（0=最多一次，1=至少一次，2=恰好一次）
+    qos: 1
+
+# 信令服务器配置
+signaling:
+  # 项目名称，用于构建 MQTT 主题
+  project: project
+  # 信令持久化配置
+  persistence:
+    enabled: true
+    file: resources/signaling.log
+
+# ICE 服务器配置（TURN/STUN）
+# 格式: url,username,credential;url2,username2,credential2
+# 如果不配置，默认使用 Google 的免费 STUN 服务器
+ice:
+  servers: ""

@@ -1,0 +1,832 @@
+纯4G模式下浏览器端日志如下
+[15:28:35] 收到来自 esp32_001 的振铃请求（无offer）
+index2.html:266 开始接听：仅回复振铃确认
+index2.html:913 [15:28:37] 发送信令 [customized]: {"type":"customized","from":"web_client_001","timestamp":1772782117,"target":"esp32_001","valid":true,"data":"ACCEPT_CALL"}
+index2.html:913 [15:28:37] 已发送接听确认信令给 esp32_001，等待对方发送offer
+index2.html:913 [15:28:40] 收到信令 [offer]: {"data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 03:63:C1:92:98:F6:E0:07:AD:A3:EA:63:16:48:33:64:FE:80:5C:D9:DA:D9:08:74:2B:2B:4B:9D:2B:6E:C1:CD\r\na=setup:passive\r\na=ice-ufrag:9Zwf\r\na=ice-pwd:QgpeN3WiStdYMx5Ru0n8U6Mq\r\na=candidate:0 1 UDP 1681027583 39.144.0.57 12913 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 15156991 139.129.34.198 59206 typ relay raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","target":"web_client_001","timestamp":18,"type":"offer","valid":true}
+index2.html:913 [15:28:40] 收到 esp32_001 的offer信令，开始自动建立通话
+index2.html:913 [15:28:40] 开始初始化本地音频流
+index2.html:913 [15:28:40] 请求本地音频流权限
+index2.html:913 [15:28:40] 本地音频流获取成功
+index2.html:913 [15:28:40] 开始创建PeerConnection
+index2.html:913 [15:28:40] 创建PeerConnection，配置: {"iceServers":[{"urls":"turn:turn.vcall.75prc.cn:3478","username":"youkongcall","credential":"HJbnf23oNF23BgdlNM"}]}
+index2.html:913 [15:28:40] 添加本地音频轨道到PeerConnection
+index2.html:913 [15:28:40] PeerConnection创建成功
+index2.html:913 [15:28:40] 开始设置远程SDP
+index2.html:913 [15:28:40] 收到远程音频流
+index2.html:913 [15:28:40] 远程音频流播放成功
+index2.html:913 [15:28:40] 远程SDP设置成功
+index2.html:913 [15:28:40] 开始创建answer SDP
+index2.html:913 [15:28:40] 本地answer SDP创建成功
+index2.html:913 [15:28:40] 发送信令 [answer]: {"type":"answer","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"data":"v=0\r\no=- 6838245675869808573 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=msid-semantic: WMS 4b784879-a044-44f1-afae-136f9ad00d6e\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:NpYG\r\na=ice-pwd:g8A3ilLzXAEK3129S4WauKbM\r\na=ice-options:trickle\r\na=fingerprint:sha-256 00:7B:DC:6E:EF:0E:18:A5:0A:62:9E:A7:09:EF:1E:A8:DD:06:C6:38:A3:D1:05:07:40:5A:BF:5E:58:61:66:80\r\na=setup:active\r\na=mid:0\r\na=sendrecv\r\na=msid:4b784879-a044-44f1-afae-136f9ad00d6e 9fd340c7-1b8c-495c-8836-83b8f560fc8f\r\na=rtcp-mux\r\na=rtpmap:111 opus/48000/2\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=ssrc:531039976 cname:6M6O3o0jsuNKijaL\r\n"}
+index2.html:913 [15:28:40] 已发送answer信令给ESP32，通话建立中
+index2.html:913 [15:28:40] ICE连接状态: checking
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:3210738474 1 udp 2122260223 172.30.208.1 49335 typ host generation 0 ufrag NpYG network-id 1"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:3210738474 1 udp 2122260223 172.30.208.1...
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:1771858417 1 udp 2122194687 172.24.192.1 49336 typ host generation 0 ufrag NpYG network-id 2"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:1771858417 1 udp 2122194687 172.24.192.1...
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:902932757 1 udp 2122129151 192.168.31.121 49337 typ host generation 0 ufrag NpYG network-id 3"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:902932757 1 udp 2122129151 192.168.31.12...
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:905458823 1 udp 2122063615 172.17.208.1 49338 typ host generation 0 ufrag NpYG network-id 4"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:905458823 1 udp 2122063615 172.17.208.1 ...
+index2.html:913 [15:28:40] PeerConnection状态: connecting
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:3247446450 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag NpYG network-id 1"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:3247446450 1 tcp 1518280447 172.30.208.1...
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:391351145 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag NpYG network-id 2"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:391351145 1 tcp 1518214911 172.24.192.1 ...
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:1260276621 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag NpYG network-id 3"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:1260276621 1 tcp 1518149375 192.168.31.1...
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:1261950495 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag NpYG network-id 4"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:1261950495 1 tcp 1518083839 172.17.208.1...
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:4095737439 1 udp 1685921535 222.135.198.64 49337 typ srflx raddr 192.168.31.121 rport 49337 generation 0 ufrag NpYG network-id 3"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:4095737439 1 udp 1685921535 222.135.198....
+index2.html:913 [15:28:40] 发送信令 [candidate]: {"type":"candidate","from":"web_client_001","timestamp":1772782120,"target":"esp32_001","valid":true,"candidate":"candidate:943034903 1 udp 41754623 139.129.34.198 55142 typ relay raddr 222.135.198.64 rport 49337 generation 0 ufrag NpYG network-id 3"}
+index2.html:913 [15:28:40] 发送本地ICE候选: candidate:943034903 1 udp 41754623 139.129.34.198 ...
+index2.html:913 [15:28:56] ICE连接状态: disconnected
+index2.html:913 [15:28:56] PeerConnection状态: failed
+index2.html:913  [15:28:56] PeerConnection断开: failed
+overrideMethod @ hook.js:608
+log @ index2.html:913
+pc.onconnectionstatechange @ index2.html:522
+index2.html:913 [15:28:56] 通话已结束
+
+纯4G模式下esp32日志如下
+I (3969) AV_RENDER: Get need resample 0 in:16000 out:0
+I (3970) I2S_RENDER: open channel:1 sample_rate:16000 bits:16
+I (3981) I2S_IF: channel mode 0 bits:16/16 channel:2 mask:1
+I (3982) I2S_IF: STD Mode 1 bits:16/16 channel:2 sample_rate:16000 mask:1
+I (3993) Adev_Codec: Open codec device OK
+I (3994) AV_RENDER: ARender Auto pause audio first frame at 0
+I (4149) Ml307Mqtt: unhandled MQTT event: puback
+I (4163) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (4164) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1772783734,"type":"ice_response","valid":true}
+I (4190) MQTT_SIG: Received message type: ice_response
+I (4201) MQTT_SIG: Got ICE: stun:turn.vcall.75prc.cn:3478 user=youkongcall
+I (4202) MQTT_SIG: ICE信息保存: stun:turn.vcall.75prc.cn:3478 user=youkongcall psw=HJbnf23oNF23BgdlNM    
+I (4213) webrtc: signal_ice_received CALLED: ice_info_loaded=1, pending_connect=1, pc=0x0, signaling_connected=1, is_initiator=1
+I (4224) webrtc: ICE server: stun_url=stun:turn.vcall.75prc.cn:3478, user=youkongcall
+I (4225) webrtc: Pending connection until user enable
+I (5933) AV_RENDER: Adec got msg:Close
+I (5933) AV_RENDER: Thread Adec exited
+I (5988) AV_RENDER: ARender got msg:Close
+I (5988) AV_RENDER: Thread ARender exited
+I (5989) AV_RENDER: Close done
+cmd
+I (22689) MQTT_SIG: mqtt_signal_send_msg 4
+I (22689) DOOR_BELL: Ring button on state 0
+I (22690) MQTT_SIG: MQTT UP RING [/voice/project/esp32_001/up]: {"type":"ring","from":"esp32_001","timestamp":21}
+Get samplerate 44100 chanel 1
+I (22702) AV_RENDER: Get need resample 0 in:44100 out:0
+I (22713) I2S_RENDER: open channel:1 sample_rate:44100 bits:16
+E (22714) i2s_common: i2s_channel_disable(1200): the channel has not been enabled yet
+I (22725) I2S_IF: channel mode 0 bits:16/16 channel:2 mask:1
+I (22726) I2S_IF: STD Mode 1 bits:16/16 channel:2 sample_rate:44100 mask:1
+esp> I (22737) Adev_Codec: Open codec device OK
+I (22741) AV_RENDER: ARender Auto pause audio first frame at 0
+I (22936) Ml307Mqtt: unhandled MQTT event: puback
+I (24559) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (24560) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"data":"ACCEPT_CALL","from":"web_client_001","target":"esp32_001","timestamp":1772783755,"type":"customized","valid":true}
+I (24573) MQTT_SIG: Received message type: customized
+I (24583) MQTT_SIG: Received customized command: ACCEPT_CALL
+I (24584) webrtc: Received customized data
+I (24595) DOOR_BELL: Receive command ACCEPT_CALL
+I (24596) webrtc: start_peer_connection: is_initiator=1, stun_url=stun:turn.vcall.75prc.cn:3478, user=youkongcall
+I (24607) DTLS: Init SRTP OK
+I (24964) webrtc: peer_connection_task started
+I (24965) webrtc: Calling esp_peer_new_connection, pc=0x3fcc0950
+I (24966) webrtc: PeerConnectionState: 2
+I (24975) webrtc: PeerConnectionState: 3
+I (24977) webrtc: State NEW_CONNECTION - SDP should be generated soon
+I (24978) webrtc: esp_peer_new_connection returned 0
+I (25017) AV_RENDER: ARender got msg:Close
+I (25017) AV_RENDER: Adec got msg:Close
+I (25018) AV_RENDER: Thread ARender exited
+I (25018) AV_RENDER: Thread Adec exited
+I (25030) AV_RENDER: Close done
+I (25037) AGENT: Start agent as Controlling
+W (25038) udp_socket: 使用4G通信，调用了udp_socket_open打开了
+I (25106) AGENT: Send STUN binding request
+W (25106) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=20
+I (25107) udp_socket: get 139.129.34.198:3478
+I (25118) udp_socket: get 1
+I (25118) udp_socket: get 2
+I (25119) udp_socket: get 3
+I (25119) udp_socket: get 4
+I (25119) udp_socket: get 4 id=1
+I (25130) Ml307AtModem: CreateUdp 1
+I (25130) Ml307AtModem: CreateUdp assert 1
+I (25131) AtUart: RegisterUrcCallback
+I (25141) AtUart: RegisterUrcCallback lock
+I (25142) Ml307Udp: Ml307Udp created with id=1
+I (25143) udp_socket: get 5
+I (25143) udp_socket: get 6
+I (25153) Ml307Udp: [1] Connecting to 139.129.34.198:3478
+I (25156) Ml307Udp: [1] UDP state: CONNECTED
+I (25157) Ml307Udp: [1] Closing existing connection
+I (25168) Ml307Udp: [1] Disconnecting
+I (25176) Ml307Udp: [1] UDP disconnected
+I (25193) Ml307Udp: [1] UDP connected
+I (25193) Ml307Udp: [1] Connected to 139.129.34.198:3478 in 14ms
+I (25194) udp_socket: get 7
+I (25194) udp_socket: UDP connect 139.129.34.198:3478
+I (25205) udp_socket: send 139.129.34.198:3478, len=20 ,timeout=500
+I (25209) udp_socket: send 139.129.34.198:3478, len=20, ret=20
+W (25210) udp_socket: 发送udp包到:139.129.34.198 完成
+I (25221) AGENT: Send allocate now
+W (25221) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=28
+I (25232) udp_socket: get 139.129.34.198:3478
+I (25233) udp_socket: get 666
+I (25233) udp_socket: send 139.129.34.198:3478, len=28 ,timeout=500
+I (25247) udp_socket: send 139.129.34.198:3478, len=28, ret=28
+W (25248) udp_socket: 发送udp包到:139.129.34.198 完成
+E (25749) AGENT: 0 Failed to receive request
+
+W (25750) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=20
+I (25751) udp_socket: get 139.129.34.198:3478
+I (25761) udp_socket: get 666
+I (25762) udp_socket: send 139.129.34.198:3478, len=20 ,timeout=500
+I (25766) udp_socket: send 139.129.34.198:3478, len=20, ret=20
+W (25777) udp_socket: 发送udp包到:139.129.34.198 完成
+I (25777) AGENT: Send allocate now
+W (25778) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=28
+I (25789) udp_socket: get 139.129.34.198:3478
+I (25789) udp_socket: get 666
+I (25790) udp_socket: send 139.129.34.198:3478, len=28 ,timeout=500
+I (25804) udp_socket: send 139.129.34.198:3478, len=28, ret=28
+W (25804) udp_socket: 发送udp包到:139.129.34.198 完成
+I (26195) AGENT: Send allocate now
+W (26196) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=120
+I (26197) udp_socket: get 139.129.34.198:3478
+I (26208) udp_socket: get 666
+I (26208) udp_socket: send 139.129.34.198:3478, len=120 ,timeout=500
+I (26214) udp_socket: send 139.129.34.198:3478, len=120, ret=120
+W (26215) udp_socket: 发送udp包到:139.129.34.198 完成
+I (26226) AGENT: Send allocate now
+W (26227) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=120
+I (26228) udp_socket: get 139.129.34.198:3478
+I (26239) udp_socket: get 666
+I (26239) udp_socket: send 139.129.34.198:3478, len=120 ,timeout=500
+I (26255) udp_socket: send 139.129.34.198:3478, len=120, ret=120
+W (26256) udp_socket: 发送udp包到:139.129.34.198 完成
+I (26257) AGENT: Send allocate now
+W (26268) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=120
+I (26268) udp_socket: get 139.129.34.198:3478
+I (26269) udp_socket: get 666
+I (26279) udp_socket: send 139.129.34.198:3478, len=120 ,timeout=500
+I (26285) udp_socket: send 139.129.34.198:3478, len=120, ret=120
+W (26286) udp_socket: 发送udp包到:139.129.34.198 完成
+I (26297) AGENT: 0 Get candidate success user:youkongcall psw:HJbnf23oNF23BgdlNM
+Add audio codec 9 sample_rate 16000
+I (26300) webrtc: pc_on_msg called, type=1, size=662, rtc->signaling=0x3fcdf7b0
+I (26311) MQTT_SIG: mqtt_signal_send_msg 1
+I (26311) MQTT_SIG: Sending offer SDP
+I (26323) MQTT_SIG: MQTT UP [/voice/project/esp32_001/up]: {"type":"offer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 98:70:04:C4:19:BE:43:2C:87:A3:6A:1A:98:6D:12:97:AB:75:E5:E7:CA:A4:96:12:16:35:C3:FF:FD:98:BA:CD\r\na=setup:passive\r\na=ice-ufrag:9Zwf\r\na=ice-pwd:QgpeN3WiStdYMx5Ru0n8U6Mq\r\na=candidate:0 1 UDP 1682553599 39.144.0.57 18874 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 15173631 139.129.34.198 59271 typ relay raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":25}
+I (26421) webrtc: pc_on_msg: send_msg returned 0
+I (26562) Ml307Mqtt: unhandled MQTT event: puback
+I (26910) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (26911) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"data":"v=0\r\no=- 4680661178552845597 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=msid-semantic: WMS 1f7cf2e3-cad9-467b-a6cb-719e5623fb92\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:3/dn\r\na=ice-pwd:T6DheBHsqYgEVE3vRDmPlfvh\r\na=ice-options:trickle\r\na=fingerprint:sha-256 67:49:6A:F0:01:A1:4A:A3:F9:03:F6:03:7F:67:17:AD:DF:F2:E2:B2:4C:74:31:BC:88:14:6F:C3:20:AD:0C:42\r\na=setup:active\r\na=mid:0\r\na=sendrecv\r\na=msid:1f7cf2e3-cad9-467b-a6cb-719e5623fb92 2b98c027-bd33-4668-ab55-01dfd7254e06\r\na=rtcp-mux\r\na=rtpmap:111 opus/48000/2\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=ssrc:1170897735 
+cname:8IKIFG+eLn35c6L/\r\n","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"answer","valid":true}
+I (26992) MQTT_SIG: Received message type: answer
+I (26992) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (27003) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:2842056467 1 udp 2122260223 172.30.208.1 65476 typ host generation 0 ufrag 3/dn network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (27027) MQTT_SIG: Received message type: candidate
+I (27028) MQTT_SIG: Received ICE candidate
+I (27028) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (27039) MQTT_SIG: Received ICE candidate on_msg is ture
+I (27040) MQTT_SIG: Received ICE candidate on_msg before
+I (27451) AGENT: 0 Add remote type:1 172.30.208.1:65476
+I (27452) webrtc: PeerConnectionState: 4
+I (27452) MQTT_SIG: Received ICE candidate on_msg after
+I (27461) webrtc: PeerConnectionState: 8
+I (27464) MQTT_SIG: Received ICE candidate -23232
+I (27464) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (27475) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:2141570504 1 udp 2122194687 172.24.192.1 65477 typ host generation 0 ufrag 3/dn network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (27499) MQTT_SIG: Received message type: candidate
+I (27500) MQTT_SIG: Received ICE candidate
+I (27510) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (27511) MQTT_SIG: Received ICE candidate on_msg is ture
+I (27522) MQTT_SIG: Received ICE candidate on_msg before
+I (27523) AGENT: 0 Add remote type:1 172.24.192.1:65477
+I (27534) webrtc: PeerConnectionState: 4
+I (27534) MQTT_SIG: Received ICE candidate on_msg after
+I (27535) MQTT_SIG: Received ICE candidate -23232
+I (27543) webrtc: PeerConnectionState: 8
+I (27546) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (27557) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:602408236 1 udp 2122129151 192.168.31.121 65478 typ host generation 0 ufrag 3/dn network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (27581) MQTT_SIG: Received message type: candidate
+I (27581) MQTT_SIG: Received ICE candidate
+I (27582) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (27593) MQTT_SIG: Received ICE candidate on_msg is ture
+I (27593) MQTT_SIG: Received ICE candidate on_msg before
+I (27604) AGENT: 0 Add remote type:1 192.168.31.121:65478
+I (27605) webrtc: PeerConnectionState: 4
+I (27606) webrtc: PeerConnectionState: 8
+I (27616) MQTT_SIG: Received ICE candidate on_msg after
+I (27617) MQTT_SIG: Received ICE candidate -23232
+I (27627) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (27628) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:599890110 1 udp 2122063615 172.17.208.1 65479 typ host generation 0 ufrag 3/dn network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (27652) MQTT_SIG: Received message type: candidate
+I (27663) MQTT_SIG: Received ICE candidate
+I (27663) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (27674) MQTT_SIG: Received ICE candidate on_msg is ture
+I (27675) MQTT_SIG: Received ICE candidate on_msg before
+I (27686) AGENT: 0 Add remote type:1 172.17.208.1:65479
+I (27686) webrtc: PeerConnectionState: 4
+I (27687) MQTT_SIG: Received ICE candidate on_msg after
+I (27696) webrtc: PeerConnectionState: 8
+I (27698) MQTT_SIG: Received ICE candidate -23232
+I (27699) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (27710) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:3794162278 1 udp 1685921535 222.135.198.64 65478 typ srflx raddr 192.168.31.121 rport 65478 generation 0 ufrag 3/dn network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (27734) MQTT_SIG: Received message type: candidate
+I (27745) MQTT_SIG: Received ICE candidate
+I (27745) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (27756) MQTT_SIG: Received ICE candidate on_msg is ture
+I (27757) MQTT_SIG: Received ICE candidate on_msg before
+I (27757) AGENT: 0 Add remote type:2 222.135.198.64:65478
+I (27768) AGENT: 0 Sorted pair 0 type: 2 local:39.144.0.57:18874 Remote:222.135.198.64:65478
+I (27780) webrtc: PeerConnectionState: 4
+I (27780) MQTT_SIG: Received ICE candidate on_msg after
+I (27781) MQTT_SIG: Received ICE candidate -23232
+I (27790) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:4c598d93643bd7252b449456
+W (27803) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (27804) udp_socket: get 222.135.198.64:65478
+I (27815) udp_socket: get 1
+I (27815) udp_socket: get 2
+I (27815) udp_socket: get 3
+I (27816) udp_socket: get 4
+I (27816) udp_socket: get 4 id=2
+I (27827) Ml307AtModem: CreateUdp 2
+I (27827) Ml307AtModem: CreateUdp assert 2
+I (27828) AtUart: RegisterUrcCallback
+I (27838) AtUart: RegisterUrcCallback lock
+I (27839) Ml307Udp: Ml307Udp created with id=2
+I (27839) udp_socket: get 5
+I (27840) udp_socket: get 6
+I (27850) Ml307Udp: [2] Connecting to 222.135.198.64:65478
+I (27793) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (27853) Ml307Udp: [2] UDP state: CONNECTED
+I (27862) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:772554286 1 udp 41754623 139.129.34.198 61894 typ relay raddr 222.135.198.64 rport 65478 generation 0 ufrag 3/dn network-id 
+3","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}  
+I (27863) Ml307Udp: [2] Closing existing connection
+I (27897) Ml307Udp: [2] Disconnecting
+I (27887) MQTT_SIG: Received message type: candidate
+I (27898) MQTT_SIG: Received ICE candidate
+I (27906) Ml307Udp: [2] UDP disconnected
+I (27909) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (27921) MQTT_SIG: Received ICE candidate on_msg is ture
+I (27921) MQTT_SIG: Received ICE candidate on_msg before
+I (27926) Ml307Udp: [2] UDP connected
+I (27926) Ml307Udp: [2] Connected to 222.135.198.64:65478 in 14ms
+I (27933) udp_socket: get 7
+I (27934) udp_socket: UDP connect 222.135.198.64:65478
+I (27945) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (27950) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (27960) udp_socket: 发送udp包到:222.135.198.64 完成
+I (28111) AGENT: 0 Add remote type:4 139.129.34.198:61894
+I (28112) AGENT: 0 Sorted pair 0 type: 2 local:39.144.0.57:18874 Remote:222.135.198.64:65478
+I (28123) AGENT: 0 Sorted pair 1 type: 4 local:139.129.34.198:59271 Remote:139.129.34.198:61894
+W (28125) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=124
+I (28136) udp_socket: get 139.129.34.198:3478
+I (28136) udp_socket: get 666
+I (28137) udp_socket: send 139.129.34.198:3478, len=124 ,timeout=150
+I (28125) webrtc: PeerConnectionState: 4
+I (28148) MQTT_SIG: Received ICE candidate on_msg after
+I (28153) udp_socket: send 139.129.34.198:3478, len=124, ret=124
+W (28160) udp_socket: 发送udp包到:139.129.34.198 完成
+I (28161) MQTT_SIG: Received ICE candidate -23232
+I (28171) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (28183) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:3618223499 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag 3/dn network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (28206) MQTT_SIG: Received message type: candidate
+I (28207) MQTT_SIG: Received ICE candidate
+I (28207) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (28218) MQTT_SIG: Received ICE candidate on_msg is ture
+I (28219) MQTT_SIG: Received ICE candidate on_msg before
+I (28221) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:6db505597d157d8d71dfed43
+W (28241) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (28242) udp_socket: get 222.135.198.64:65478
+I (28253) udp_socket: get 666
+I (28253) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (28258) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (28259) udp_socket: 发送udp包到:222.135.198.64 完成
+I (28270) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:666d97166fd595896931589d
+I (28282) AGENT: 0 send indication bind request
+
+W (28283) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (28294) udp_socket: get 139.129.34.198:3478
+I (28294) udp_socket: get 666
+I (28295) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (28311) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (28312) udp_socket: 发送udp包到:139.129.34.198 完成
+I (28403) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (28405) AGENT: 0 Sorted pair 0 type: 2 local:39.144.0.57:18874 Remote:222.135.198.64:65478
+I (28416) AGENT: 0 Sorted pair 1 type: 4 local:139.129.34.198:59271 Remote:139.129.34.198:61894
+I (28427) webrtc: PeerConnectionState: 4
+I (28428) MQTT_SIG: Received ICE candidate on_msg after
+I (28429) MQTT_SIG: Received ICE candidate -23232
+I (28439) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (28440) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:23734096 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag 3/dn network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (28464) MQTT_SIG: Received message type: candidate
+I (28475) MQTT_SIG: Received ICE candidate
+I (28475) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (28486) MQTT_SIG: Received ICE candidate on_msg is ture
+I (28487) MQTT_SIG: Received ICE candidate on_msg before
+I (28587) AGENT: 0 Sorted pair 0 type: 2 local:39.144.0.57:18874 Remote:222.135.198.64:65478
+I (28588) AGENT: 0 Sorted pair 1 type: 4 local:139.129.34.198:59271 Remote:139.129.34.198:61894
+I (28600) webrtc: PeerConnectionState: 4
+I (28600) MQTT_SIG: Received ICE candidate on_msg after
+I (28611) MQTT_SIG: Received ICE candidate -23232
+I (28612) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (28623) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:1562896308 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag 3/dn network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (28646) MQTT_SIG: Received message type: candidate
+I (28647) MQTT_SIG: Received ICE candidate
+I (28647) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (28658) MQTT_SIG: Received ICE candidate on_msg is ture
+I (28659) MQTT_SIG: Received ICE candidate on_msg before
+I (28750) AGENT: 0 Sorted pair 0 type: 2 local:39.144.0.57:18874 Remote:222.135.198.64:65478
+I (28751) AGENT: 0 Sorted pair 1 type: 4 local:139.129.34.198:59271 Remote:139.129.34.198:61894
+I (28763) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:17c5e07e0b0abb7751af16c6
+W (28775) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (28775) udp_socket: get 222.135.198.64:65478
+I (28786) udp_socket: get 666
+I (28787) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (28764) webrtc: PeerConnectionState: 4
+I (28792) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (28799) udp_socket: 发送udp包到:222.135.198.64 完成
+I (28810) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:5148068835eb8df57a1179b4
+I (28822) AGENT: 0 send indication bind request
+
+W (28822) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (28823) udp_socket: get 139.129.34.198:3478
+I (28834) udp_socket: get 666
+I (28834) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (28799) MQTT_SIG: Received ICE candidate on_msg after
+I (28846) MQTT_SIG: Received ICE candidate -23232
+I (28847) MQTT_SIG: Processing MQTT message from queue: /voice/project/esp32_001/down
+I (28850) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (28859) udp_socket: 发送udp包到:139.129.34.198 完成
+I (28859) MQTT_SIG: MQTT SUB [/voice/project/esp32_001/down]: {"candidate":"candidate:1561229862 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag 3/dn network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1772783757,"type":"candidate","valid":true}
+I (28893) MQTT_SIG: Received message type: candidate
+I (28904) MQTT_SIG: Received ICE candidate
+I (28905) MQTT_SIG: Received ICE candidate g_mqtt_sig_handle is ture
+I (28905) MQTT_SIG: Received ICE candidate on_msg is ture
+I (28916) MQTT_SIG: Received ICE candidate on_msg before
+I (28917) AGENT: 0 Sorted pair 0 type: 2 local:39.144.0.57:18874 Remote:222.135.198.64:65478
+I (28928) AGENT: 0 Sorted pair 1 type: 4 local:139.129.34.198:59271 Remote:139.129.34.198:61894
+I (28940) webrtc: PeerConnectionState: 4
+I (28940) MQTT_SIG: Received ICE candidate on_msg after
+I (28941) MQTT_SIG: Received ICE candidate -23232
+I (29084) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (29255) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:1ae53a307c418dd42170b934
+W (29257) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (29268) udp_socket: get 222.135.198.64:65478
+I (29269) udp_socket: get 666
+I (29279) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (29284) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (29285) udp_socket: 发送udp包到:222.135.198.64 完成
+I (29286) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:249ad60f28bae6bd526d022f
+I (29298) AGENT: 0 send indication bind request
+
+W (29309) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (29310) udp_socket: get 139.129.34.198:3478
+I (29320) udp_socket: get 666
+I (29321) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (29327) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (29327) udp_socket: 发送udp包到:139.129.34.198 完成
+I (29731) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:6de3eda1559e2ff738b9210f
+W (29733) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (29744) udp_socket: get 222.135.198.64:65478
+I (29745) udp_socket: get 666
+I (29755) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (29760) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (29761) udp_socket: 发送udp包到:222.135.198.64 完成
+I (29772) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:0d1102d92657c93c79b12ba8
+I (29774) AGENT: 0 send indication bind request
+
+W (29785) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (29785) udp_socket: get 139.129.34.198:3478
+I (29796) udp_socket: get 666
+I (29796) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (29813) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (29813) udp_socket: 发送udp包到:139.129.34.198 完成
+I (29814) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (30211) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:55365135794f06e57091758f
+W (30213) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (30224) udp_socket: get 222.135.198.64:65478
+I (30225) udp_socket: get 666
+I (30235) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (30240) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (30241) udp_socket: 发送udp包到:222.135.198.64 完成
+I (30252) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:6e7b6440116e0fc138479acf
+I (30254) AGENT: 0 send indication bind request
+
+W (30265) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (30266) udp_socket: get 139.129.34.198:3478
+I (30276) udp_socket: get 666
+I (30277) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (30282) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (30283) udp_socket: 发送udp包到:139.129.34.198 完成
+I (30313) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (30682) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:23252c5217e9617140c9fe6a
+W (30684) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (30695) udp_socket: get 222.135.198.64:65478
+I (30696) udp_socket: get 666
+I (30706) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (30711) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (30712) udp_socket: 发送udp包到:222.135.198.64 完成
+I (30723) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:07d89db046755a5b482fa51b
+I (30725) AGENT: 0 send indication bind request
+
+W (30736) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (30737) udp_socket: get 139.129.34.198:3478
+I (30747) udp_socket: get 666
+I (30748) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (30753) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (30754) udp_socket: 发送udp包到:139.129.34.198 完成
+I (31004) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (31175) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:44aeb1a30d57872a4cbd7e82
+W (31177) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (31188) udp_socket: get 222.135.198.64:65478
+I (31188) udp_socket: get 666
+I (31199) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (31204) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (31205) udp_socket: 发送udp包到:222.135.198.64 完成
+I (31216) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:7b5f2b0e27de5630302d71f2
+I (31218) AGENT: 0 send indication bind request
+
+W (31229) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (31230) udp_socket: get 139.129.34.198:3478
+I (31240) udp_socket: get 666
+I (31241) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (31246) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (31247) udp_socket: 发送udp包到:139.129.34.198 完成
+I (31642) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:47a3556b3c7f6aa37c55d8ae
+W (31644) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (31655) udp_socket: get 222.135.198.64:65478
+I (31656) udp_socket: get 666
+I (31656) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (31671) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (31672) udp_socket: 发送udp包到:222.135.198.64 完成
+I (31683) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:2b847f490057b6d65df6e283
+I (31685) AGENT: 0 send indication bind request
+
+W (31695) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (31696) udp_socket: get 139.129.34.198:3478
+I (31707) udp_socket: get 666
+I (31707) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (31723) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (31724) udp_socket: 发送udp包到:139.129.34.198 完成
+I (31725) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (32141) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:4b941d424cc54c177044ffe7
+W (32143) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (32154) udp_socket: get 222.135.198.64:65478
+I (32155) udp_socket: get 666
+I (32165) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (32170) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (32171) udp_socket: 发送udp包到:222.135.198.64 完成
+I (32182) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:446d80736a50abc676e04ee6
+I (32184) AGENT: 0 send indication bind request
+
+W (32195) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (32196) udp_socket: get 139.129.34.198:3478
+I (32206) udp_socket: get 666
+I (32207) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (32214) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (32215) udp_socket: 发送udp包到:139.129.34.198 完成
+I (32229) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (32621) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:00611ef139b7048a5cfaa8fe
+W (32623) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (32634) udp_socket: get 222.135.198.64:65478
+I (32635) udp_socket: get 666
+I (32645) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (32651) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (32651) udp_socket: 发送udp包到:222.135.198.64 完成
+I (32662) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:29ae8b7e0f90f8e4755b6b75
+I (32664) AGENT: 0 send indication bind request
+
+W (32675) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (32676) udp_socket: get 139.129.34.198:3478
+I (32686) udp_socket: get 666
+I (32687) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (32693) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (32693) udp_socket: 发送udp包到:139.129.34.198 完成
+I (32867) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (33038) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:70c23c8e72f7fcc6205c9587
+W (33040) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (33051) udp_socket: get 222.135.198.64:65478
+I (33052) udp_socket: get 666
+I (33062) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (33067) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (33068) udp_socket: 发送udp包到:222.135.198.64 完成
+I (33079) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:340c30247b7620e675214e9d
+I (33081) AGENT: 0 send indication bind request
+
+W (33092) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (33093) udp_socket: get 139.129.34.198:3478
+I (33103) udp_socket: get 666
+I (33104) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (33109) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (33110) udp_socket: 发送udp包到:139.129.34.198 完成
+I (33483) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (33494) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:5aec5e5d0cad3244587f6040
+W (33496) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (33507) udp_socket: get 222.135.198.64:65478
+I (33507) udp_socket: get 666
+I (33518) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (33523) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (33524) udp_socket: 发送udp包到:222.135.198.64 完成
+I (33535) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:7c06ba5e0cf05da936745def
+I (33537) AGENT: 0 send indication bind request
+
+W (33547) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (33548) udp_socket: get 139.129.34.198:3478
+I (33559) udp_socket: get 666
+I (33559) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (33575) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (33576) udp_socket: 发送udp包到:139.129.34.198 完成
+I (33985) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:7325d2ec775cfe3f0e223791
+W (33987) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (33998) udp_socket: get 222.135.198.64:65478
+I (33998) udp_socket: get 666
+I (34009) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (34014) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (34015) udp_socket: 发送udp包到:222.135.198.64 完成
+I (34026) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:0bbadf172a16db1800985972
+I (34027) AGENT: 0 send indication bind request
+
+W (34038) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (34039) udp_socket: get 139.129.34.198:3478
+I (34050) udp_socket: get 666
+I (34050) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (34066) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (34067) udp_socket: 发送udp包到:139.129.34.198 完成
+I (34107) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (34461) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:75c9aeeb4ea0c6061a637bf2
+W (34463) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (34474) udp_socket: get 222.135.198.64:65478
+I (34474) udp_socket: get 666
+I (34485) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (34490) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (34491) udp_socket: 发送udp包到:222.135.198.64 完成
+I (34502) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:42967a6c4bb1e6be1c2099d9
+I (34504) AGENT: 0 send indication bind request
+
+W (34515) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (34516) udp_socket: get 139.129.34.198:3478
+I (34526) udp_socket: get 666
+I (34527) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (34533) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (34534) udp_socket: 发送udp包到:139.129.34.198 完成
+I (34847) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (35018) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:500f7b347e0d3df744ac5234
+W (35020) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (35031) udp_socket: get 222.135.198.64:65478
+I (35032) udp_socket: get 666
+I (35042) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (35048) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (35048) udp_socket: 发送udp包到:222.135.198.64 完成
+I (35060) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:25d23d33426b1e70040e4297
+I (35061) AGENT: 0 send indication bind request
+
+W (35072) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (35073) udp_socket: get 139.129.34.198:3478
+I (35083) udp_socket: get 666
+I (35084) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (35090) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (35090) udp_socket: 发送udp包到:139.129.34.198 完成
+I (35373) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (35544) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:2e03d8d7274ee4520346c612
+W (35546) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (35557) udp_socket: get 222.135.198.64:65478
+I (35558) udp_socket: get 666
+I (35568) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (35573) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (35574) udp_socket: 发送udp包到:222.135.198.64 完成
+I (35585) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:20f8ff943d0442950c75db66
+I (35587) AGENT: 0 send indication bind request
+
+W (35598) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (35599) udp_socket: get 139.129.34.198:3478
+I (35609) udp_socket: get 666
+I (35610) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (35616) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (35616) udp_socket: 发送udp包到:139.129.34.198 完成
+W (35861) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=20
+I (35862) udp_socket: get 139.129.34.198:3478
+I (35862) udp_socket: get 666
+I (35873) udp_socket: send 139.129.34.198:3478, len=20 ,timeout=150
+I (35877) udp_socket: send 139.129.34.198:3478, len=20, ret=20
+W (35878) udp_socket: 发送udp包到:139.129.34.198 完成
+I (35997) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (36008) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:22fefe0663d6e1236c52f559
+W (36010) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (36021) udp_socket: get 222.135.198.64:65478
+I (36021) udp_socket: get 666
+I (36032) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (36037) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (36038) udp_socket: 发送udp包到:222.135.198.64 完成
+I (36049) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:1203eee7767bb4ec22e2e0a9
+I (36051) AGENT: 0 send indication bind request
+
+W (36061) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (36062) udp_socket: get 139.129.34.198:3478
+I (36073) udp_socket: get 666
+I (36073) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (36089) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (36090) udp_socket: 发送udp包到:139.129.34.198 完成
+W (36331) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=120
+I (36332) udp_socket: get 139.129.34.198:3478
+I (36333) udp_socket: get 666
+I (36344) udp_socket: send 139.129.34.198:3478, len=120 ,timeout=150
+I (36350) udp_socket: send 139.129.34.198:3478, len=120, ret=120
+W (36351) udp_socket: 发送udp包到:139.129.34.198 完成
+I (36411) AGENT: 0 Send binding request (cand:0) local:39.144.0.57:18874 remote:222.135.198.64:65478 id:003a5839773336bf05df1fba
+W (36413) udp_socket: 发送udp包到:222.135.198.64, port=65478, len=76
+I (36424) udp_socket: get 222.135.198.64:65478
+I (36425) udp_socket: get 666
+I (36435) udp_socket: send 222.135.198.64:65478, len=76 ,timeout=150
+I (36440) udp_socket: send 222.135.198.64:65478, len=76, ret=76
+W (36441) udp_socket: 发送udp包到:222.135.198.64 完成
+I (36452) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:5de2d8ae7fdd81242ad45a81
+I (36454) AGENT: 0 send indication bind request
+
+W (36464) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (36465) udp_socket: get 139.129.34.198:3478
+I (36476) udp_socket: get 666
+I (36476) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (36492) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (36493) udp_socket: 发送udp包到:139.129.34.198 完成
+I (36623) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (36954) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:113057454817e9e417e9263c
+I (36956) AGENT: 0 send indication bind request
+
+W (36967) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (36968) udp_socket: get 139.129.34.198:3478
+I (36978) udp_socket: get 666
+I (36979) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (36985) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (36986) udp_socket: 发送udp包到:139.129.34.198 完成
+I (37247) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (37418) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:35f58c4714b17cc737b9759d
+I (37420) AGENT: 0 send indication bind request
+
+W (37431) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (37432) udp_socket: get 139.129.34.198:3478
+I (37442) udp_socket: get 666
+I (37443) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (37449) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (37450) udp_socket: 发送udp包到:139.129.34.198 完成
+I (37851) AGENT: 0 Send binding request (cand:0) local:139.129.34.198:59271 remote:139.129.34.198:61894 id:3bcbfd610c2cb017268fbb3b
+I (37853) AGENT: 0 send indication bind request
+
+W (37864) udp_socket: 发送udp包到:139.129.34.198, port=3478, len=112
+I (37865) udp_socket: get 139.129.34.198:3478
+I (37875) udp_socket: get 666
+I (37876) udp_socket: send 139.129.34.198:3478, len=112 ,timeout=150
+I (37882) udp_socket: send 139.129.34.198:3478, len=112, ret=112
+W (37883) udp_socket: 发送udp包到:139.129.34.198 完成
+I (37894) AGENT: 0 PeerIndication recv local:139.129.34.198:59271 remote:139.129.34.198:61894
+I (37915) webrtc: PeerConnectionState: 8
+
+
+
+wifi信令+4G udp模式esp32日志如下(完全正常)
+cmd
+I (29643) APPRTC_SIG: send to remote : {"cmd":"send","msg":"{\"type\":\"customized\",\"data\":\"RING\"}"} 
+I (29646) DOOR_BELL: Ring button on state 0
+esp> Get samplerate 44100 chanel 1
+I (29660) AV_RENDER: Get need resample 0 in:44100 out:0
+I (29661) I2S_RENDER: open channel:1 sample_rate:44100 bits:16
+E (29672) i2s_common: i2s_channel_disable(1200): the channel has not been enabled yet
+I (29673) I2S_IF: channel mode 0 bits:16/16 channel:2 mask:1
+I (29684) I2S_IF: STD Mode 1 bits:16/16 channel:2 sample_rate:44100 mask:1
+I (29685) Adev_Codec: Open codec device OK
+I (29686) AV_RENDER: ARender Auto pause audio first frame at 0
+I (34023) esp-x509-crt-bundle: Certificate validated
+Got url:stun:webrtc.espressif.com:3478 user_name: 1772698807:ninefingers psw:gR3Ao9KbR8Nrn+kBgEGyWuWIFOw=
+I (34546) HTTPS_CLIENT: HTTP Status = 200, content_length = 173
+I (34560) webrtc: signal_ice_received CALLED: ice_info_loaded=1, pending_connect=1, pc=0x0, signaling_connected=1, is_initiator=1
+I (34562) webrtc: ICE server: stun_url=stun:webrtc.espressif.com:3478, user=1772698807:ninefingers        
+I (34572) AV_RENDER: Adec got msg:Close
+I (34573) webrtc: Pending connection until user enable
+I (34574) AV_RENDER: Thread Adec exited
+I (34588) AV_RENDER: ARender got msg:Close
+I (34589) AV_RENDER: Thread ARender exited
+I (34589) AV_RENDER: Close done
+I (38017) webrtc: Received customized data
+I (38017) DOOR_BELL: Receive command ACCEPT_CALL
+I (38018) webrtc: start_peer_connection: is_initiator=1, stun_url=stun:webrtc.espressif.com:3478, user=1772698807:ninefingers
+I (38030) DTLS: Init SRTP OK
+I (39488) webrtc: peer_connection_task started
+I (39488) webrtc: Calling esp_peer_new_connection, pc=0x3fcc1ed0
+I (39490) webrtc: PeerConnectionState: 2
+I (39499) webrtc: PeerConnectionState: 3
+I (39500) webrtc: State NEW_CONNECTION - SDP should be generated soon
+I (39501) AGENT: Start agent as Controlling
+I (39502) webrtc: esp_peer_new_connection returned 0
+W (39512) udp_socket: 使用4G通信，调用了udp_socket_open打开了
+I (39524) AGENT: Send STUN binding request
+I (39525) Ml307Udp: Ml307Udp created with id=0
+I (39525) Ml307Udp: [0] Connecting to 18.162.210.35:3478
+I (39538) Ml307Udp: [0] UDP state: CONNECTED
+I (39539) Ml307Udp: [0] Closing existing connection
+I (39540) Ml307Udp: [0] Disconnecting
+I (39558) Ml307Udp: [0] UDP disconnected
+I (39575) Ml307Udp: [0] UDP connected
+I (39575) Ml307Udp: [0] Connected to 18.162.210.35:3478 in 14ms
+I (39576) udp_socket: UDP connect 18.162.210.35:3478
+I (39592) AGENT: Send allocate now
+E (40095) AGENT: 0 Failed to receive request
+
+I (40099) AGENT: Send allocate now
+I (40580) AGENT: Send allocate now
+I (40596) AGENT: Send allocate now
+I (40612) AGENT: Send allocate now
+I (40711) AGENT: 0 Get candidate success user:1772698807:ninefingers psw:gR3Ao9KbR8Nrn+kBgEGyWuWIFOw=
+Add audio codec 9 sample_rate 16000
+I (40714) webrtc: pc_on_msg called, type=1, size=662, rtc->signaling=0x3fcdf78c
+I (40725) APPRTC_SIG: Begin to send offer to https://webrtc.espressif.com/message/759222920/47586127      
+I (41002) esp-x509-crt-bundle: Certificate validated
+I (41708) HTTPS_CLIENT: HTTP Status = 200, content_length = 21
+I (41710) webrtc: pc_on_msg: send_msg returned 0
+I (41811) PEER_DEF: Get peer role 0
+I (41811) PEER_DEF: A direction: sendrecv
+I (41812) PEER_DEF: A SRC: 770410744
+I (41812) PEER_DEF: peer_extract_sdp_info: Done parsing. stream_count=1, audio_mid=255 (dir=3), video_mid=255 (dir=3), data_mid=255
+I (42233) AGENT: 0 Add remote type:1 172.30.208.1:55910
+I (42234) webrtc: PeerConnectionState: 4
+I (42236) AGENT: 0 Add remote type:1 172.24.192.1:55911
+I (42237) webrtc: PeerConnectionState: 4
+I (42241) webrtc: PeerConnectionState: 8
+I (42250) AGENT: 0 Add remote type:1 192.168.31.121:55912
+I (42251) webrtc: PeerConnectionState: 4
+I (42258) webrtc: PeerConnectionState: 8
+I (42263) AGENT: 0 Add remote type:1 172.17.208.1:55913
+I (42264) webrtc: PeerConnectionState: 4
+I (42272) webrtc: PeerConnectionState: 8
+I (42462) AGENT: 0 Add remote type:2 222.135.198.64:55912
+I (42463) AGENT: 0 Sorted pair 0 type: 2 local:223.104.196.236:5255 Remote:222.135.198.64:55912
+I (42474) webrtc: PeerConnectionState: 4
+I (42475) AGENT: 0 Send binding request (cand:0) local:223.104.196.236:5255 remote:222.135.198.64:55912 id:4c598d93643bd7252b449456
+I (42487) Ml307Udp: Ml307Udp created with id=1
+I (42487) Ml307Udp: [1] Connecting to 222.135.198.64:55912
+I (42500) Ml307Udp: [1] UDP state: CONNECTED
+I (42501) Ml307Udp: [1] Closing existing connection
+I (42501) Ml307Udp: [1] Disconnecting
+I (42510) Ml307Udp: [1] UDP disconnected
+I (42527) Ml307Udp: [1] UDP connected
+I (42527) Ml307Udp: [1] Connected to 222.135.198.64:55912 in 14ms
+I (42528) udp_socket: UDP connect 222.135.198.64:55912
+I (42693) AGENT: 0 Add remote type:4 172.31.6.33:59054
+I (42694) AGENT: 0 Sorted pair 0 type: 2 local:223.104.196.236:5255 Remote:222.135.198.64:55912
+I (42705) AGENT: 0 Sorted pair 1 type: 4 local:172.31.6.33:59100 Remote:172.31.6.33:59054
+I (42706) webrtc: PeerConnectionState: 4
+I (42807) AGENT: 0 Send binding request (cand:0) local:172.31.6.33:59100 remote:172.31.6.33:59054 id:45cb977b6ea3bbbe3a984b90
+I (42809) AGENT: 0 send indication bind request
+
+I (42985) AGENT: 0 Send binding request (cand:0) local:223.104.196.236:5255 remote:222.135.198.64:55912 id:666d97166fd595896931589d
+I (43028) AGENT: 0 LocalIndication resp local:172.31.6.33:59100 remote:172.31.6.33:59054
+I (43030) AGENT: 0 Select pair172.31.6.33:59054
+I (43030) AGENT: 0 Send binding request (cand:1) local:172.31.6.33:59100 remote:172.31.6.33:59054 id:1dee132f3b3a772600f32298
+I (43042) AGENT: 0 send indication bind request
+
+I (43058) AGENT: 0 Start remote 172.31.6.33:59054 send Channel Bind Request id:5148068835eb8df57a1179b4   
+I (43075) AGENT: 0 PeerIndication recv local:172.31.6.33:59100 remote:172.31.6.33:59054
+I (43166) AGENT: 0 Receive Channel bind response id:5148068835eb8df57a1179b4
+I (43167) AGENT: 0 Channel bind success, connection DONE
+I (43276) AGENT: 0 Send binding request (cand:1) local:172.31.6.33:59100 remote:172.31.6.33:59054 id:6db4489d4a691c3a5a89680d
+I (43278) AGENT: 0 send indication bind request
+
+I (43650) AGENT: Skip Channel Bind for connected
+I (43651) AGENT: 0 Connection OK 172.31.6.33:59054
+I (43651) webrtc: PeerConnectionState: 5
+I (43652) PEER_DEF: Start DTLS role as 1
+I (43663) webrtc: PeerConnectionState: 6
+I (43673) DTLS: Start to do server handshake
+I (43675) AGENT: 0 send indication bind response
+
+I (44848) DTLS: SRTP connected OK
+I (44856) DTLS: Server handshake success
+I (44857) PEER_DEF: DTLS handshake success
+I (44857) webrtc: PeerConnectionState: 7
+I (44859) AUD_PIPE_NEGO: Negotiate return 0 src_format:541934416 sample_rate:16000
+
+I (44870) AUD_PIPE_NEGO: Path mask 1 select sink:0 format 1398100047
+I (44871) AUD_SRC: Get rate:16000, ch:1, bits:16
+I (44882) ESP_GMF_TASK: Waiting to run... [tsk:aenc_0-0x3fce1554, wk:0x3c2ffd9c, run:0]
+I (44884) I2S_IF: channel mode 0 bits:16/16 channel:2 mask:1
+I (44895) I2S_IF: STD Mode 0 bits:16/16 channel:2 sample_rate:16000 mask:1
+I (44896) Adev_Codec: Open codec device OK
+E (44907) MODEL_LOADER: Can not find model in partition table
+W (44907) AUD_AEC_SRC: No model to load
+W (44908) AFE_CONFIG: wakenet model not found. please load wakenet model...
+I (44920) AFE: AFE Version: (1MIC_V250121)
+I (44920) AFE: Input PCM Config: total 1 channels(1 microphone, 0 playback), sample rate:16000
+I (44931) AFE: AFE Pipeline: [input] -> [output]
+I (44933) AUD_SRC: Start to fetch audio src data now
+I (44933) ESP_GMF_TASK: One times job is complete, del[wk:0x3c2ffd9c, ctx:0x3c2f6bb8, label:aud_src_open] 
+I (44945) ESP_GMF_PORT: ACQ IN, new self payload:0x3c2ffd9c, port:0x3c2f6404, el:0x3c2f6bb8-aud_src
+I (44957) ESP_GMF_AENC: Open, type:OPUS, acquire in frame: 640, out frame: 100
+I (44968) ESP_GMF_TASK: One times job is complete, del[wk:0x3c302a84, ctx:0x3c2f6c94, label:aud_enc_open]
+I (45026) AGENT: 0 send indication bind response
+
+Get samplerate 16000 chanel 1

@@ -43,7 +43,7 @@ struct UdpConnection {
 
 class UdpManager {
 public:
-    static constexpr int MAX_CONN = 4;
+    static constexpr int MAX_CONN = 3;
 
     UdpManager() {
         // 创建事件组
@@ -59,34 +59,44 @@ public:
 
     UdpConnection* get(const std::string& ip, uint16_t port) {
         std::string key = ip + ":" + std::to_string(port);
+        //ESP_LOGI(TAG, "get %s", key.c_str());
 
         auto it = conns.find(key);
         if (it != conns.end()) {
+        //ESP_LOGI(TAG, "get 666");
             it->second->last_used = xTaskGetTickCount();
             return it->second.get();
         }
+        //ESP_LOGI(TAG, "get 1");
 
         if (conns.size() >= MAX_CONN) {
+        //ESP_LOGI(TAG, "get 666");
             evict_oldest();
         }
+        //ESP_LOGI(TAG, "get 2");
 
         auto conn = std::make_unique<UdpConnection>();
         conn->remote_ip = ip;
         conn->remote_port = port;
         conn->last_used = xTaskGetTickCount();
+        //ESP_LOGI(TAG, "get 3");
 
         AtModem *modem = Network4g::GetModemInstance();
         if (!modem) {
             ESP_LOGE(TAG, "no modem");
             return nullptr;
         }
+        //ESP_LOGI(TAG, "get 4");
 
         int id = next_id++ % MAX_CONN;
+        
+        //ESP_LOGI(TAG, "get 4 id=%d", id);
         conn->udp = modem->CreateUdp(id);
         if (!conn->udp) {
             ESP_LOGE(TAG, "CreateUdp failed");
             return nullptr;
         }
+        //ESP_LOGI(TAG, "get 5");
 
         /* 接收回调：设置事件标志 */
         conn->udp->OnMessage([c = conn.get()](const std::string& data) {
@@ -94,22 +104,24 @@ public:
             c->last_packet = data;   // 覆盖
             c->has_packet = true;
             c->last_used = xTaskGetTickCount();
-            
+
             // 设置接收事件
             if (udp_event) {
                 xEventGroupSetBits(udp_event, UDP_EVT_RX);
             }
         });
+        //ESP_LOGI(TAG, "get 6");
 
         if (!conn->udp->Connect(ip, port)) {
             ESP_LOGE(TAG, "connect %s:%u failed", ip.c_str(), port);
             return nullptr;
         }
+        //ESP_LOGI(TAG, "get 7");
 
         auto *ret = conn.get();
         conns[key] = std::move(conn);
 
-        ESP_LOGI(TAG, "UDP connect %s:%u", ip.c_str(), port);
+        //ESP_LOGI(TAG, "UDP connect %s:%u", ip.c_str(), port);
         return ret;
     }
 
@@ -118,7 +130,9 @@ public:
         if (!c || !c->udp) return -1;
 
         std::string data((const char*)buf, len);
+        //ESP_LOGI(TAG, "send %s:%u, len=%d ,timeout=%lld", ip.c_str(), port, len, sock->timeout_sec);
         int r = c->udp->Send(data, sock->timeout_sec);
+        //ESP_LOGI(TAG, "send %s:%u, len=%d, ret=%d", ip.c_str(), port, len, r);
         return r;
     }
 
@@ -149,7 +163,7 @@ public:
             }
         }
         conns.clear();
-        
+
         // 清除所有事件标志
         if (udp_event) {
             xEventGroupClearBits(udp_event, UDP_EVT_RX);
@@ -173,7 +187,7 @@ private:
     }
 
     std::map<std::string, std::unique_ptr<UdpConnection>> conns;
-    int next_id = 0;
+    int next_id = 2;
 };
 
 static UdpManager g_udp;
@@ -199,8 +213,11 @@ int udp_socket_sendto(udp_socket_t *sock, esp_peer_addr_t *addr,
     snprintf(ip, sizeof(ip), "%u.%u.%u.%u",
              addr->ipv4[0], addr->ipv4[1],
              addr->ipv4[2], addr->ipv4[3]);
-    
+
+
+    //ESP_LOGW(TAG, "发送udp包到:%s, port=%u, len=%d", ip, addr->port, len);
     int sent = g_udp.send(ip, addr->port, buf, len, sock);
+    //ESP_LOGW(TAG, "发送udp包到:%s 完成", ip);
 
     if (sent <= 0) {
         return -1;

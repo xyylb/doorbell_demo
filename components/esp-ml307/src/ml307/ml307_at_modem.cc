@@ -101,7 +101,9 @@ std::unique_ptr<Tcp> Ml307AtModem::CreateSsl(int connect_id) {
 }
 
 std::unique_ptr<Udp> Ml307AtModem::CreateUdp(int connect_id) {
+        ESP_LOGI(TAG, "CreateUdp %d", connect_id);
     assert(connect_id >= 0);
+        ESP_LOGI(TAG, "CreateUdp assert %d", connect_id);
     return std::make_unique<Ml307Udp>(at_uart_, connect_id);
 }
 

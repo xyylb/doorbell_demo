@@ -1,4 +1,4 @@
-/* Door Bell Demo
+/* Voice Call Demo
 
    This example code is in the Public Domain (or CC0 licensed, at your option.)
 
@@ -18,50 +18,20 @@
 extern "C" {
 #endif
 
-/**
- * @brief  Initialize for board
- */
 void init_board(void);
 
-/**
- * @brief  Start WebRTC
- *
- * @param[in]  url  Signaling URL
- *
- * @return
- *      - 0       On success
- *      - Others  Fail to start
- */
 int start_webrtc(char *url);
-
-/**
- * @brief  Start WebRTC
- *
- * @return
- *      - 0       On success
- *      - Others  Fail to start
- */
 int start_webrtc_mqtt(void);
-
-/**
- * @brief  Query WebRTC status
- */
 void query_webrtc(void);
-
-
-/**
- * @brief  Stop WebRTC
- *
- * @return
- *      - 0       On success
- *      - Others  Fail to stop
- */
 int stop_webrtc(void);
-
-/**
- * @brief  Send command to peer
- */
 void send_cmd(char *cmd);
+
+int voice_call_offer(const char* target_id);
+int voice_call_answer(void);
+int voice_call_reject(void);
+int voice_call_close(void);
+const char* voice_call_get_state_name(void);
+const char* voice_call_get_peer_id(void);
 
 #ifdef __cplusplus
 }

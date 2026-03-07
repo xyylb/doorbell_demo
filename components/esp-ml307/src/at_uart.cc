@@ -428,7 +428,9 @@ std::string AtUart::GetResponse() const {
 }
 
 std::list<UrcCallback>::iterator AtUart::RegisterUrcCallback(UrcCallback callback) {
+    //ESP_LOGI(TAG, "RegisterUrcCallback");
     std::lock_guard<std::mutex> lock(mutex_);
+    //ESP_LOGI(TAG, "RegisterUrcCallback lock");
     return urc_callbacks_.insert(urc_callbacks_.end(), callback);
 }
 

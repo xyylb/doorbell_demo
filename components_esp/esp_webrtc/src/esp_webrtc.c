@@ -244,6 +244,9 @@ static int pc_on_state(esp_peer_state_t state, void *ctx)
         state != ESP_PEER_STATE_DATA_CHANNEL_DISCONNECTED) {
         rtc->peer_state = state;
     }
+    if (state == ESP_PEER_STATE_NEW_CONNECTION) {
+        ESP_LOGI(TAG, "State NEW_CONNECTION - SDP should be generated soon");
+    }
     if (state == ESP_PEER_STATE_CANDIDATE_GATHERING) {
         pc_notify_app(rtc, ESP_WEBRTC_EVENT_CONNECTING);
     } else if (state == ESP_PEER_STATE_CONNECTED) {
@@ -272,8 +275,15 @@ static int pc_on_state(esp_peer_state_t state, void *ctx)
 static int pc_on_msg(esp_peer_msg_t *info, void *ctx)
 {
     webrtc_t *rtc = (webrtc_t *)ctx;
-    ESP_LOGI(TAG, "Send client sdp: %s\n", info->data);
-    return esp_peer_signaling_send_msg(rtc->signaling, (esp_peer_signaling_msg_t *)info);
+    ESP_LOGI(TAG, "pc_on_msg called, type=%d, size=%d, rtc->signaling=%p", 
+             info->type, info->size, rtc->signaling);
+    if (rtc->signaling == NULL) {
+        ESP_LOGE(TAG, "pc_on_msg: signaling is NULL!");
+        return -1;
+    }
+    int ret = esp_peer_signaling_send_msg(rtc->signaling, (esp_peer_signaling_msg_t *)info);
+    ESP_LOGI(TAG, "pc_on_msg: send_msg returned %d", ret);
+    return ret;
 }
 
 static void pc_task(void *arg)
@@ -637,6 +647,10 @@ static int pc_start(webrtc_t *rtc, esp_peer_ice_server_cfg_t *server_info, int s
 static int start_peer_connection(webrtc_t *rtc, esp_peer_signaling_ice_info_t *info)
 {
     rtc->ice_role = info->is_initiator ? ESP_PEER_ROLE_CONTROLLING : ESP_PEER_ROLE_CONTROLLED;
+     ESP_LOGI(TAG, "start_peer_connection: is_initiator=%d, stun_url=%s, user=%s", 
+             info->is_initiator, 
+             info->server_info.stun_url ? info->server_info.stun_url : "NULL",
+             info->server_info.user ? info->server_info.user : "NULL");
     int ret;
     if (info->server_info.stun_url) {
         ret = pc_start(rtc, &info->server_info, 1);
@@ -651,11 +665,31 @@ static int signal_ice_received(esp_peer_signaling_ice_info_t *info, void *ctx)
     webrtc_t *rtc = (webrtc_t *)ctx;
     rtc->ice_info_loaded = true;
     rtc->ice_info = *info;
+    ESP_LOGI(TAG, "signal_ice_received CALLED: ice_info_loaded=%d, pending_connect=%d, pc=%p, signaling_connected=%d, is_initiator=%d", 
+             rtc->ice_info_loaded, rtc->pending_connect, rtc->pc, rtc->signaling_connected, info->is_initiator);
+    ESP_LOGI(TAG, "ICE server: stun_url=%s, user=%s", 
+             info->server_info.stun_url ? info->server_info.stun_url : "NULL",
+             info->server_info.user ? info->server_info.user : "NULL");
     if (rtc->pending_connect) {
         ESP_LOGI(TAG, "Pending connection until user enable");
         return ESP_PEER_ERR_NONE;
     }
-    return start_peer_connection(rtc, info);
+    if (rtc->pc) {
+        ESP_LOGI(TAG, "Peer connection already exists, triggering SDP if signaling connected");
+        if (rtc->signaling_connected) {
+            return esp_peer_new_connection(rtc->pc);
+        }
+        return ESP_PEER_ERR_NONE;
+    }
+    int ret = start_peer_connection(rtc, info);
+    if (ret != ESP_PEER_ERR_NONE) {
+        return ret;
+    }
+    if (rtc->signaling_connected && rtc->pc) {
+        ESP_LOGI(TAG, "Signaling already connected, triggering SDP generation");
+        return esp_peer_new_connection(rtc->pc);
+    }
+    return ESP_PEER_ERR_NONE;
 }
 
 static int signal_connected(void *ctx)
@@ -789,12 +823,16 @@ int esp_webrtc_enable_peer_connection(esp_webrtc_handle_t handle, bool enable)
         }
         // Signaling already connected
         if (rtc->signaling_connected) {
+            ESP_LOGI(TAG, "Calling esp_peer_new_connection, pc=%p", rtc->pc);
             ret = esp_peer_new_connection(rtc->pc);
+            ESP_LOGI(TAG, "esp_peer_new_connection returned %d", ret);
             // Let mainloop resume
             if (rtc->pause) {
                 rtc->pause = false;
                 SET_WAIT_BITS(PC_RESUME_BIT);
             }
+        } else {
+            ESP_LOGW(TAG, "Signaling not connected yet, skip new_connection");
         }
     } else {
         // Close connection better than reconnect?
@@ -1002,5 +1040,20 @@ int esp_webrtc_close(esp_webrtc_handle_t handle)
     SAFE_FREE(rtc->aud_fifo);
     free(rtc);
     return ESP_PEER_ERR_NONE;
+}
+
+int esp_webrtc_debug_get_signaling_state(esp_webrtc_handle_t handle)
+{
+    if (handle == NULL) {
+        return -1;
+    }
+    webrtc_t *rtc = (webrtc_t *)handle;
+    int state = 0;
+    if (rtc->signaling_connected) state |= 1;
+    if (rtc->ice_info_loaded) state |= 2;
+    if (rtc->pending_connect) state |= 4;
+    if (rtc->pc) state |= 8;
+    if (rtc->running) state |= 16;
+    return state;
 }
 //esp-webrtc.cpp

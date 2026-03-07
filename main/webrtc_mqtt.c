@@ -7,7 +7,6 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
-#include "signal_mqtt.h"
 #include "esp_webrtc.h"
 #include "media_lib_os.h"
 #include "driver/gpio.h"
@@ -15,6 +14,8 @@
 #include "esp_log.h"
 #include "esp_webrtc_defaults.h"
 #include "esp_peer_default.h"
+
+#include "esp_mqtt_signaling.h"
 
 #define TAG "DOOR_BELL"
 
@@ -106,7 +107,7 @@ static int door_bell_on_cmd(esp_webrtc_custom_data_via_t via, uint8_t *data, int
         door_bell_change_state(DOOR_BELL_STATE_NONE);
     }
     return 0;
-}
+}                                            
 
 static int webrtc_event_handler(esp_webrtc_event_t *event, void *ctx)
 {
@@ -128,6 +129,7 @@ void send_cmd(char *cmd)
         if (door_bell_state < DOOR_BELL_STATE_CONNECTING) {
             door_bell_state = DOOR_BELL_STATE_RINGING;
             play_tone(DOOR_BELL_TONE_RING);
+            mqtt_sig_send_ring(NULL);
         }
     }
 }
@@ -159,16 +161,16 @@ static void key_monitor_thread(void *arg)
     media_lib_thread_destroy(NULL);
 }
 
-int start_webrtc_mqtt()
+int start_webrtc(char *url)
 {
-/*    if (network_is_connected() == false) {
+    if (network_is_connected() == false) {
         ESP_LOGE(TAG, "Wifi not connected yet");
         return -1;
     }
     if (url[0] == 0) {
         ESP_LOGE(TAG, "Room Url not set yet");
         return -1;
-    }*/
+    }
     if (webrtc) {
         esp_webrtc_close(webrtc);
         webrtc = NULL;
@@ -200,7 +202,7 @@ int start_webrtc_mqtt()
             .extra_size = sizeof(peer_cfg),
         },
         .signaling_cfg = {
-            .signal_url = NULL,
+            .signal_url = url,
         },
         .peer_impl = esp_peer_get_default_impl(),
         .signaling_impl = esp_signaling_get_mqtt_impl(),

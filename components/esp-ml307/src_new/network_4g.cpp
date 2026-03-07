@@ -1,5 +1,6 @@
 #include "esp_log.h"
 #include "at_modem.h"
+#include "network_4g.h"
 
 static const char *TAG = "network_4g";
 
@@ -25,6 +26,10 @@ namespace Network4g {
         // 设置网络状态回调
         modem->OnNetworkStateChanged([](bool ready) {
             ESP_LOGI(TAG, "网络状态: %s", ready ? "已连接" : "已断开");
+            if (ready) {
+                // 网络连接成功，重新连接 MQTT
+                //Network4g::test();
+            }
         });
         
         // 等待网络就绪
