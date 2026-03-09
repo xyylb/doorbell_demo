@@ -14,8 +14,12 @@
 #include "esp_log.h"
 #include "esp_webrtc_defaults.h"
 #include "esp_peer_default.h"
-
 #include "esp_mqtt_signaling.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/timers.h"
+
+static void start_call_timeout(void);
+static void stop_call_timeout(void);
 
 #define TAG "DOOR_BELL"
 
@@ -25,6 +29,7 @@
 #define DOOR_BELL_RING_CMD          "RING"
 #define DOOR_BELL_CALL_ACCEPTED_CMD "ACCEPT_CALL"
 #define DOOR_BELL_CALL_DENIED_CMD   "DENY_CALL"
+#define DOOR_BELL_CALL_REJECTED_CMD "REJECT_CALL"
 
 #define SAME_STR(a, b) (strncmp(a, b, sizeof(b) - 1) == 0)
 #define SEND_CMD(webrtc, cmd) \
@@ -52,6 +57,8 @@ typedef struct {
 static esp_webrtc_handle_t webrtc;
 static door_bell_state_t   door_bell_state;
 static bool                monitor_key;
+static char                call_target[32];
+static TimerHandle_t        call_timeout_timer;
 
 extern const uint8_t ring_music_start[] asm("_binary_ring_aac_start");
 extern const uint8_t ring_music_end[] asm("_binary_ring_aac_end");
@@ -86,6 +93,19 @@ static void door_bell_change_state(door_bell_state_t state)
     }
 }
 
+static int signaling_on_msg(esp_peer_signaling_msg_t *msg, void *ctx)
+{
+    if (msg->type == ESP_PEER_SIGNALING_MSG_CUSTOMIZED && msg->data && msg->size > 0) {
+        const char *cmd = (const char *)msg->data;
+        ESP_LOGI(TAG, "Received customized message: %s", cmd);
+        
+        if (SAME_STR(cmd, DOOR_BELL_RING_CMD)) {
+            play_tone(DOOR_BELL_TONE_RING);
+        }
+    }
+    return 0;
+}
+
 static int door_bell_on_cmd(esp_webrtc_custom_data_via_t via, uint8_t *data, int size, void *ctx)
 {
     if (size == 0 || webrtc == NULL) {
@@ -93,7 +113,13 @@ static int door_bell_on_cmd(esp_webrtc_custom_data_via_t via, uint8_t *data, int
     }
     ESP_LOGI(TAG, "Receive command %.*s", size, (char *)data);
     const char *cmd = (const char *)data;
-    if (SAME_STR(cmd, DOOR_BELL_OPEN_DOOR_CMD)) {
+    if (SAME_STR(cmd, DOOR_BELL_RING_CMD)) {
+        play_tone(DOOR_BELL_TONE_RING);
+        if (door_bell_state < DOOR_BELL_STATE_CONNECTING) {
+            door_bell_state = DOOR_BELL_STATE_CONNECTING;
+            esp_webrtc_enable_peer_connection(webrtc, true);
+        }
+    } else if (SAME_STR(cmd, DOOR_BELL_OPEN_DOOR_CMD)) {
         // Reply with door OPENED
         SEND_CMD(webrtc, DOOR_BELL_DOOR_OPENED_CMD);
         // Only play tome when connection not build up
@@ -101,8 +127,15 @@ static int door_bell_on_cmd(esp_webrtc_custom_data_via_t via, uint8_t *data, int
             play_tone(DOOR_BELL_TONE_OPEN_DOOR);
         }
     } else if (SAME_STR(cmd, DOOR_BELL_CALL_ACCEPTED_CMD)) {
+        stop_call_timeout();
         esp_webrtc_enable_peer_connection(webrtc, true);
     } else if (SAME_STR(cmd, DOOR_BELL_CALL_DENIED_CMD)) {
+        stop_call_timeout();
+        esp_webrtc_enable_peer_connection(webrtc, false);
+        door_bell_change_state(DOOR_BELL_STATE_NONE);
+    } else if (SAME_STR(cmd, DOOR_BELL_CALL_REJECTED_CMD)) {
+        ESP_LOGI(TAG, "Call rejected by peer");
+        stop_call_timeout();
         esp_webrtc_enable_peer_connection(webrtc, false);
         door_bell_change_state(DOOR_BELL_STATE_NONE);
     }
@@ -115,7 +148,11 @@ static int webrtc_event_handler(esp_webrtc_event_t *event, void *ctx)
         door_bell_change_state(DOOR_BELL_STATE_CONNECTING);
     } else if (event->type == ESP_WEBRTC_EVENT_CONNECTED) {
         door_bell_change_state(DOOR_BELL_STATE_CONNECTED);
-    } else if (event->type == ESP_WEBRTC_EVENT_CONNECT_FAILED || event->type == ESP_WEBRTC_EVENT_DISCONNECTED) {
+    } else if (event->type == ESP_WEBRTC_EVENT_DISCONNECTED) {
+        stop_call_timeout();
+        door_bell_change_state(DOOR_BELL_STATE_NONE);
+    } else if (event->type == ESP_WEBRTC_EVENT_CONNECT_FAILED) {
+        stop_call_timeout();
         door_bell_change_state(DOOR_BELL_STATE_NONE);
     }
     return 0;
@@ -130,7 +167,67 @@ void send_cmd(char *cmd)
             door_bell_state = DOOR_BELL_STATE_RINGING;
             play_tone(DOOR_BELL_TONE_RING);
             mqtt_sig_send_ring(NULL);
+            start_call_timeout();
         }
+    } else if (SAME_STR(cmd, "answer")) {
+        ESP_LOGI(TAG, "User answering call");
+        mqtt_sig_answer_call();
+        stop_call_timeout();
+    } else if (SAME_STR(cmd, "reject")) {
+        ESP_LOGI(TAG, "User rejecting call");
+        mqtt_sig_reject_call();
+        stop_call_timeout();
+        door_bell_change_state(DOOR_BELL_STATE_NONE);
+        door_bell_state = DOOR_BELL_STATE_NONE;
+    } else if (SAME_STR(cmd, "close")) {
+        ESP_LOGI(TAG, "User closing call");
+        mqtt_sig_close_call();
+        stop_call_timeout();
+        if (webrtc) {
+            ESP_LOGI(TAG, "Closing webrtc connection");
+            esp_webrtc_close(webrtc);
+            webrtc = NULL;
+        }
+        door_bell_change_state(DOOR_BELL_STATE_NONE);
+        door_bell_state = DOOR_BELL_STATE_NONE;
+    }
+}
+
+static void key_monitor_thread(void *arg);
+
+static TaskHandle_t call_timeout_handle = NULL;
+
+static void call_timeout_task(void *param)
+{
+    call_timeout_handle = xTaskGetCurrentTaskHandle();
+    ESP_LOGI(TAG, "Call timeout task started, waiting 10 seconds...");
+    vTaskDelay(pdMS_TO_TICKS(10000));
+    
+    ESP_LOGI(TAG, "Call timeout, sending timeout to peer");
+    mqtt_sig_send_timeout(call_target);
+    door_bell_change_state(DOOR_BELL_STATE_NONE);
+    door_bell_state = DOOR_BELL_STATE_NONE;
+    call_timeout_handle = NULL;
+    vTaskDelete(NULL);
+}
+
+static void start_call_timeout(void)
+{
+    if (call_timeout_handle != NULL) {
+        ESP_LOGI(TAG, "Deleting existing timeout task");
+        vTaskDelete(call_timeout_handle);
+        call_timeout_handle = NULL;
+    }
+    xTaskCreate(call_timeout_task, "call_timeout", 4096, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Call timeout task created (10 seconds)");
+}
+
+static void stop_call_timeout(void)
+{
+    if (call_timeout_handle != NULL) {
+        ESP_LOGI(TAG, "Stopping call timeout, deleting task");
+        vTaskDelete(call_timeout_handle);
+        call_timeout_handle = NULL;
     }
 }
 
@@ -212,6 +309,8 @@ int start_webrtc(char *url)
         ESP_LOGE(TAG, "Fail to open webrtc");
         return ret;
     }
+    
+    mqtt_sig_set_webrtc_handle(webrtc);
     // 设置媒体提供者（仅音频）
     esp_webrtc_media_provider_t media_provider = {};
     media_sys_get_provider(&media_provider);

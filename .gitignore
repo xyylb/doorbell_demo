@@ -36,3 +36,4 @@ coverage.info
 coverage_report/
 
 .vscode
+/audio_server/target/

@@ -263,23 +263,20 @@
 
   // 回复振铃：仅发送ACCEPT_CALL自定义信令
   function answerRing() {
-    console.log('开始接听：仅回复振铃确认');
-    if (!pendingCallerId) {
-      log('error', '没有待处理的振铃请求');
+    console.log('开始接听：建立通话并回复answer');
+
+    // 需要有 incomingOffer 才能接听
+    if (!incomingOffer) {
+      log('error', '没有待处理的通话请求');
       return;
     }
 
-    // 只发送ACCEPT_CALL自定义信令，不处理WebRTC逻辑
-    sendSignaling({
-      type: 'customized',
-      target: pendingCallerId,
-      data: "ACCEPT_CALL",
-      timestamp: Math.floor(Date.now() / 1000),
-      from: document.getElementById('localDeviceId').value
-    });
+    // 直接建立通话并发送 answer
+    log('success', `开始建立通话，回复 answer 给 ${incomingOffer.from}`);
+    updateCallStatus('calling', '正在接听...');
 
-    log('success', `已发送接听确认信令给 ${pendingCallerId}，等待对方发送offer`);
-    updateCallStatus('calling', '已接听，等待对方响应...');
+    // 建立通话（会自动发送 answer）
+    processOfferAutomatically();
 
     // 禁用接听/拒接，保留挂断按钮
     document.getElementById('btnAnswer').disabled = true;
@@ -289,25 +286,26 @@
 
   // 拒接振铃：仅发送REJECT_CALL自定义信令
   function rejectRing() {
-    console.log('拒绝接听：回复振铃拒绝');
-    if (!pendingCallerId) {
-      log('error', '没有待处理的振铃请求');
+    console.log('拒绝接听');
+
+    // 需要有 incomingOffer 才能拒接
+    if (!incomingOffer) {
+      log('error', '没有待处理的通话请求');
       return;
     }
 
-    // 只发送REJECT_CALL自定义信令
+    log('warn', `拒绝接听 ${incomingOffer.from}`);
+
+    // 发送 reject 信令给 ESP32
     sendSignaling({
-      type: 'customized',
-      target: pendingCallerId,
-      data: "REJECT_CALL",
-      timestamp: Math.floor(Date.now() / 1000),
-      from: document.getElementById('localDeviceId').value
+      type: 'reject',
+      target: incomingOffer.from,
+      from: document.getElementById('localDeviceId').value,
+      timestamp: Math.floor(Date.now() / 1000)
     });
 
-    log('warn', `已发送拒接信令给 ${pendingCallerId}`);
-
     // 重置状态
-    pendingCallerId = null;
+    incomingOffer = null;
     resetCallState();
   }
 
@@ -319,7 +317,7 @@
       return;
     }
 
-    log('info', `收到 ${message.from} 的offer信令，开始自动建立通话`);
+    log('info', `收到 ${message.from} 的offer信令，等待用户确认接听`);
 
     // 关键修复：ESP32的SDP放在data字段中，需要赋值给sdp属性
     incomingOffer = {
@@ -328,8 +326,14 @@
       target: message.target
     };
 
-    // 自动处理offer（无需用户操作）
-    processOfferAutomatically();
+    // 启用页面上的接听/拒接按钮
+    updateCallStatus('ringing', '收到来电 from ' + message.from);
+    document.getElementById('btnAnswer').disabled = false;
+    document.getElementById('btnReject').disabled = false;
+    document.getElementById('btnCall').disabled = true;
+
+    // 播放来电铃声
+    playRingtone();
   }
 
   // 自动处理offer并建立WebRTC连接（添加详细错误处理）

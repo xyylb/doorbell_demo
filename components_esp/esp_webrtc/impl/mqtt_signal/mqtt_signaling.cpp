@@ -15,13 +15,18 @@
 #include "esp_netif.h"
 
 #include "esp_mqtt_signaling.h"
+#include "esp_webrtc.h"
+#include "esp_peer.h"
 #include "network_4g.h"
 
 extern "C" {
     const esp_peer_signaling_impl_t *esp_signaling_get_mqtt_impl(void);
     void mqtt_sig_set_device_id(const char *device_id);
     void mqtt_sig_send_ring(const char *target);
+    int play_tone_int(int t);
 }
+
+static void *g_webrtc_handle = NULL;
 
 #define TAG "MQTT_SIG"
 
@@ -45,7 +50,10 @@ typedef struct {
     TaskHandle_t ice_timer;
     bool ice_reload_stop;
     char *pending_sdp;
-    char *pending_candidate;
+    char incoming_offer_from[32];
+    bool pending_offer_waiting;
+    char *pending_candidates[10];
+    int pending_candidate_count;
 } mqtt_sig_t;
 
 void mqtt_sig_set_device_id(const char *device_id)
@@ -53,6 +61,170 @@ void mqtt_sig_set_device_id(const char *device_id)
     if (device_id) {
         strncpy(g_device_id, device_id, sizeof(g_device_id) - 1);
     }
+}
+
+void mqtt_sig_answer_call(void)
+{
+    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+    
+    if (g_mqtt_sig_handle == NULL) {
+        ESP_LOGE(TAG, "MQTT signaling not initialized");
+        return;
+    }
+    
+    mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+    
+    if (sg->pending_sdp) {
+        ESP_LOGI(TAG, "Processing pending offer SDP, answering call from %s", sg->incoming_offer_from);
+        
+        sg->is_initiator = false;
+        
+        if (g_webrtc_handle && sg->ice_url && sg->ice_user && sg->ice_psw) {
+            ESP_LOGI(TAG, "ICE URL: %s, User: %s, PSW: %s", sg->ice_url, sg->ice_user, sg->ice_psw);
+            ESP_LOGI(TAG, "Re-sending ICE info with is_initiator=false");
+            esp_peer_signaling_ice_info_t ice_info = {
+                .server_info = {
+                    .stun_url = sg->ice_url,
+                    .user = sg->ice_user,
+                    .psw = sg->ice_psw,
+                },
+                .is_initiator = false,
+            };
+            if (sg->cfg.on_ice_info) {
+                sg->cfg.on_ice_info(&ice_info, sg->cfg.ctx);
+            }
+        }
+        
+        if (g_webrtc_handle) {
+            ESP_LOGI(TAG, "Enabling peer connection before sending SDP");
+            esp_webrtc_enable_peer_connection(g_webrtc_handle, true);
+        }
+        
+        if (sg->cfg.on_msg) {
+            esp_peer_signaling_msg_t msg = {
+                .type = ESP_PEER_SIGNALING_MSG_SDP,
+                .data = (uint8_t *)strdup(sg->pending_sdp),
+                .size = (int)strlen(sg->pending_sdp),
+            };
+            sg->cfg.on_msg(&msg, sg->cfg.ctx);
+            free(msg.data);
+        }
+        ESP_LOGI(TAG, "wait press candidates %d", sg->pending_candidate_count);
+        
+        for (int i = 0; i < sg->pending_candidate_count; i++) {
+            if (sg->pending_candidates[i] && sg->cfg.on_msg) {
+            ESP_LOGI(TAG, "press candidates %s", sg->pending_candidates[i]);
+                esp_peer_signaling_msg_t cand_msg = {
+                    .type = ESP_PEER_SIGNALING_MSG_CANDIDATE,
+                    .data = (uint8_t *)strdup(sg->pending_candidates[i]),
+                    .size = (int)strlen(sg->pending_candidates[i]),
+                };
+                sg->cfg.on_msg(&cand_msg, sg->cfg.ctx);
+                free(cand_msg.data);
+                free(sg->pending_candidates[i]);
+                sg->pending_candidates[i] = NULL;
+            }
+        }
+        sg->pending_candidate_count = 0;
+        
+        
+        if (sg->cfg.on_connected) {
+            sg->cfg.on_connected(sg->cfg.ctx);
+        }
+        
+        free(sg->pending_sdp);
+        sg->pending_sdp = NULL;
+        sg->pending_offer_waiting = false;
+    } else {
+        ESP_LOGW(TAG, "No pending offer to answer");
+    }
+}
+
+void mqtt_sig_reject_call(void)
+{
+    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+    
+    if (g_mqtt_sig_handle == NULL) {
+        ESP_LOGE(TAG, "MQTT signaling not initialized");
+        return;
+    }
+    
+    mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+    
+    ESP_LOGI(TAG, "Rejecting call from %s", sg->incoming_offer_from);
+    
+    if (sg->pending_sdp) {
+        free(sg->pending_sdp);
+        sg->pending_sdp = NULL;
+    }
+    
+    for (int i = 0; i < sg->pending_candidate_count; i++) {
+        free(sg->pending_candidates[i]);
+        sg->pending_candidates[i] = NULL;
+    }
+    sg->pending_candidate_count = 0;
+    sg->pending_offer_waiting = false;
+    
+    Mqtt* mqtt = Network4g::GetMqttInstance();
+    if (!mqtt || !mqtt->IsConnected()) {
+        ESP_LOGE(TAG, "MQTT not connected");
+        return;
+    }
+    
+    char topic[128];
+    char payload[128];
+    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, g_device_id);
+    snprintf(payload, sizeof(payload), 
+             "{\"type\":\"reject\",\"from\":\"%s\",\"timestamp\":%ld}",
+             g_device_id, (long)time(NULL));
+    
+    mqtt->Publish(topic, payload, 1);
+    ESP_LOGI(TAG, "Reject sent: %s", payload);
+    
+    sg->incoming_offer_from[0] = '\0';
+}
+
+void mqtt_sig_close_call(void)
+{
+    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+    
+    if (g_mqtt_sig_handle == NULL) {
+        ESP_LOGE(TAG, "MQTT signaling not initialized");
+        return;
+    }
+    
+    mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+    
+    ESP_LOGI(TAG, "Closing call");
+    
+    if (sg->pending_sdp) {
+        free(sg->pending_sdp);
+        sg->pending_sdp = NULL;
+    }
+    for (int i = 0; i < sg->pending_candidate_count; i++) {
+        free(sg->pending_candidates[i]);
+        sg->pending_candidates[i] = NULL;
+    }
+    sg->pending_candidate_count = 0;
+    sg->pending_offer_waiting = false;
+    
+    Mqtt* mqtt = Network4g::GetMqttInstance();
+    if (!mqtt || !mqtt->IsConnected()) {
+        ESP_LOGE(TAG, "MQTT not connected");
+        return;
+    }
+    
+    char topic[128];
+    char payload[128];
+    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, g_device_id);
+    snprintf(payload, sizeof(payload), 
+             "{\"type\":\"bye\",\"from\":\"%s\",\"timestamp\":%ld}",
+             g_device_id, (long)time(NULL));
+    
+    mqtt->Publish(topic, payload, 1);
+    ESP_LOGI(TAG, "Bye sent: %s", payload);
+    
+    sg->incoming_offer_from[0] = '\0';
 }
 
 void mqtt_sig_set_peer_id(const char *peer_id)
@@ -70,29 +242,36 @@ void mqtt_sig_send_ring(const char *target)
     
     mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
     
-    char topic[128];
-    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, sg->device_id);
-
-    cJSON *json = cJSON_CreateObject();
-    cJSON_AddStringToObject(json, "type", "ring");
-    cJSON_AddStringToObject(json, "from", sg->device_id);
-    if (target) {
-        cJSON_AddStringToObject(json, "target", target);
+    sg->is_initiator = true;
+    
+    if (sg->cfg.on_msg) {
+        const char *cmd = "ACCEPT_CALL";
+        esp_peer_signaling_msg_t msg = {
+            .type = ESP_PEER_SIGNALING_MSG_CUSTOMIZED,
+            .data = (uint8_t *)strdup(cmd),
+            .size = (int)strlen(cmd),
+        };
+        ESP_LOGI(TAG, "Triggering offer via on_msg callback");
+        sg->cfg.on_msg(&msg, sg->cfg.ctx);
+        free(msg.data);
     }
-    cJSON_AddNumberToObject(json, "timestamp", time(NULL));
+}
 
-    char *payload = cJSON_PrintUnformatted(json);
-    cJSON_Delete(json);
-
-    if (payload) {
-        ESP_LOGI(TAG, "MQTT UP RING [%s]: %s", topic, payload);
-        
-        Mqtt* mqtt = Network4g::GetMqttInstance();
-        if (mqtt && mqtt->IsConnected()) {
-            mqtt->Publish(topic, payload, 1);
-        }
-        
-        free(payload);
+void mqtt_sig_trigger_offer(void)
+{
+    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+    
+    if (g_mqtt_sig_handle == NULL) {
+        ESP_LOGE(TAG, "MQTT signaling not initialized");
+        return;
+    }
+    
+    mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+    sg->is_initiator = true;
+    
+    if (sg->cfg.on_connected) {
+        ESP_LOGI(TAG, "mqtt_sig_trigger_offer: triggering peer connection");
+        sg->cfg.on_connected(sg->cfg.ctx);
     }
 }
 
@@ -124,6 +303,47 @@ static int mqtt_send_up(mqtt_sig_t *sg, const char *type, const char *data)
         return 0;
     }
     return -1;
+}
+
+void mqtt_sig_send_timeout(const char *target)
+{
+    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+    
+    if (g_mqtt_sig_handle == NULL) {
+        ESP_LOGE(TAG, "MQTT signaling not initialized");
+        return;
+    }
+    
+    mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+    
+    ESP_LOGI(TAG, "Sending timeout to %s", target);
+    
+    if (sg->pending_sdp) {
+        free(sg->pending_sdp);
+        sg->pending_sdp = NULL;
+    }
+    for (int i = 0; i < sg->pending_candidate_count; i++) {
+        free(sg->pending_candidates[i]);
+        sg->pending_candidates[i] = NULL;
+    }
+    sg->pending_candidate_count = 0;
+    sg->pending_offer_waiting = false;
+    
+    Mqtt* mqtt = Network4g::GetMqttInstance();
+    if (!mqtt || !mqtt->IsConnected()) {
+        ESP_LOGE(TAG, "MQTT not connected");
+        return;
+    }
+    
+    char topic[128];
+    char payload[128];
+    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, sg->device_id);
+    snprintf(payload, sizeof(payload), 
+             "{\"type\":\"timeout\",\"from\":\"%s\",\"timestamp\":%ld}",
+             sg->device_id, (long)time(NULL));
+    
+    mqtt->Publish(topic, payload, 1);
+    ESP_LOGI(TAG, "Timeout sent: %s", payload);
 }
 
 static void send_ice_request(void)
@@ -236,24 +456,27 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
             }
         }
     } else if (strcmp(msg_type, "offer") == 0) {
-        cJSON *sdp = cJSON_GetObjectItem(json, "sdp");
+        cJSON *sdp = cJSON_GetObjectItem(json, "data");
+        cJSON *from = cJSON_GetObjectItem(json, "from");
         if (sdp) {
-            ESP_LOGI(TAG, "Received offer SDP");
+            ESP_LOGI(TAG, "Received offer SDP from %s, waiting for user to answer", from ? from->valuestring : "unknown");
             
             extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
             if (g_mqtt_sig_handle) {
                 mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
                 sg->is_initiator = false;
                 
-                if (sg->cfg.on_msg) {
-                    esp_peer_signaling_msg_t msg = {
-                        .type = ESP_PEER_SIGNALING_MSG_SDP,
-                        .data = (uint8_t *)strdup(sdp->valuestring),
-                        .size = (int)strlen(sdp->valuestring),
-                    };
-                    sg->cfg.on_msg(&msg, sg->cfg.ctx);
-                    free(msg.data);
+                if (from && from->valuestring) {
+                    strncpy(sg->incoming_offer_from, from->valuestring, sizeof(sg->incoming_offer_from) - 1);
                 }
+                
+                if (sg->pending_sdp) free(sg->pending_sdp);
+                sg->pending_sdp = strdup(sdp->valuestring);
+                sg->pending_offer_waiting = true;
+                sg->pending_candidate_count = 0;
+                
+                //play_tone_int(0);
+                ESP_LOGI(TAG, "Ringing, waiting for user to answer/reject");
             }
         }
     } else if (strcmp(msg_type, "answer") == 0) {
@@ -264,6 +487,7 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
             extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
             if (g_mqtt_sig_handle) {
                 mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+                sg->is_initiator = false;
                 
                 if (sg->cfg.on_msg) {
                     esp_peer_signaling_msg_t msg = {
@@ -283,30 +507,29 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
             
             extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
             if (g_mqtt_sig_handle) {
-                ESP_LOGI(TAG, "Received ICE candidate g_mqtt_sig_handle is ture");
                 mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
                 
-                if (sg->cfg.on_msg) {
-                    ESP_LOGI(TAG, "Received ICE candidate on_msg is ture");
+                if (sg->pending_offer_waiting && sg->pending_candidate_count < 10) {
+                    sg->pending_candidates[sg->pending_candidate_count] = strdup(candidate->valuestring);
+                    sg->pending_candidate_count++;
+                    ESP_LOGI(TAG, "Cached candidate, count=%d", sg->pending_candidate_count);
+                } else if (sg->cfg.on_msg) {
                     esp_peer_signaling_msg_t msg = {
                         .type = ESP_PEER_SIGNALING_MSG_CANDIDATE,
                         .data = (uint8_t *)strdup(candidate->valuestring),
                         .size = (int)strlen(candidate->valuestring),
                     };
-                    ESP_LOGI(TAG, "Received ICE candidate on_msg before");
-
                     sg->cfg.on_msg(&msg, sg->cfg.ctx);
-                    ESP_LOGI(TAG, "Received ICE candidate on_msg after");
                     free(msg.data);
                 }
             }
-            ESP_LOGI(TAG, "Received ICE candidate -23232");
         }
     } else if (strcmp(msg_type, "customized") == 0) {
         cJSON *data = cJSON_GetObjectItem(json, "data");
         if (data && data->valuestring) {
             ESP_LOGI(TAG, "Received customized command: %s", data->valuestring);
             
+            // data = "ACCEPT_CALL"时候可以触发offer
             extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
             if (g_mqtt_sig_handle) {
                 mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
@@ -320,6 +543,36 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
                     sg->cfg.on_msg(&msg, sg->cfg.ctx);
                     free(msg.data);
                 }
+            }
+        }
+    } else if (strcmp(msg_type, "bye") == 0) {
+        // Peer closed
+        ESP_LOGI(TAG, "Received bye, closing connection");
+        extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+        if (g_mqtt_sig_handle) {
+            mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+            if (sg->cfg.on_msg) {
+                esp_peer_signaling_msg_t msg = {
+                    .type = ESP_PEER_SIGNALING_MSG_BYE,
+                    .data = NULL,
+                    .size = 0,
+                };
+                sg->cfg.on_msg(&msg, sg->cfg.ctx);
+            }
+        }
+    } else if (strcmp(msg_type, "reject") == 0) {
+        // Peer closed
+        ESP_LOGI(TAG, "Received reject, closing connection");
+        extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+        if (g_mqtt_sig_handle) {
+            mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+            if (sg->cfg.on_msg) {
+                esp_peer_signaling_msg_t msg = {
+                    .type = ESP_PEER_SIGNALING_MSG_BYE,
+                    .data = NULL,
+                    .size = 0,
+                };
+                sg->cfg.on_msg(&msg, sg->cfg.ctx);
             }
         }
     }
@@ -397,6 +650,12 @@ static void setup_mqtt_callbacks(void)
 
 esp_peer_signaling_handle_t g_mqtt_sig_handle = NULL;
 
+void mqtt_sig_set_webrtc_handle(void *handle)
+{
+    g_webrtc_handle = handle;
+    ESP_LOGI(TAG, "WebRTC handle set: %p", handle);
+}
+
 static int mqtt_signal_start(esp_peer_signaling_cfg_t *cfg, esp_peer_signaling_handle_t *h)
 {
     if (cfg == NULL || h == NULL) {
@@ -413,6 +672,9 @@ static int mqtt_signal_start(esp_peer_signaling_cfg_t *cfg, esp_peer_signaling_h
     sg->signaling_ready = false;
     sg->is_initiator = true;
     sg->ice_reload_started = false;
+    sg->pending_sdp = NULL;
+    sg->pending_offer_waiting = false;
+    sg->pending_candidate_count = 0;
 
     ESP_LOGI(TAG, "Starting MQTT signaling for device %s", sg->device_id);
 
@@ -487,7 +749,9 @@ static int mqtt_signal_stop(esp_peer_signaling_handle_t h)
     if (sg->ice_user) free(sg->ice_user);
     if (sg->ice_psw) free(sg->ice_psw);
     if (sg->pending_sdp) free(sg->pending_sdp);
-    if (sg->pending_candidate) free(sg->pending_candidate);
+    for (int i = 0; i < sg->pending_candidate_count; i++) {
+        free(sg->pending_candidates[i]);
+    }
 
     free(sg);
     return 0;
