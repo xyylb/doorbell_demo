@@ -5,7 +5,7 @@
 
 namespace Network4g {
     void init(void);
-    void test(void);
+    void initMqtt(void);
     AtModem* GetModemInstance(void);
     Mqtt* GetMqttInstance(void);
 }

@@ -1,6 +1,7 @@
 #include "esp_log.h"
 #include "at_modem.h"
 #include "network_4g.h"
+#include "mqtt_signaling.h"
 
 static const char *TAG = "network_4g";
 
@@ -27,8 +28,9 @@ namespace Network4g {
         modem->OnNetworkStateChanged([](bool ready) {
             ESP_LOGI(TAG, "网络状态: %s", ready ? "已连接" : "已断开");
             if (ready) {
-                // 网络连接成功，重新连接 MQTT
-                //Network4g::test();
+                // 网络连接成功，重新连接 MQTT 并重启信令
+                ESP_LOGI(TAG, "网络已恢复，重启MQTT信令...");
+                mqtt_sig_restart();
             }
         });
         
@@ -47,35 +49,12 @@ namespace Network4g {
         ESP_LOGI(TAG, "信号强度: %d", modem->GetCsq());
     }
     
-    void test(){
+    void initMqtt(){
         // 先检查 modem 是否初始化成功，避免空指针访问
         if (!modem) {
             ESP_LOGE(TAG, "模组未初始化，无法执行 HTTP 请求");
             return;
         }
-        
-        // 创建 HTTP 客户端
-/*        auto http = modem->CreateHttp(0);
-        // 设置请求头
-        http->SetHeader("User-Agent", "Xiaozhi/3.0.0");
-        http->SetTimeout(10000);
-        
-        // 发送 GET 请求
-        if (http->Open("GET", "https://httpbin.org/json")) {
-            ESP_LOGI(TAG, "HTTP 状态码: %d", http->GetStatusCode());
-            ESP_LOGI(TAG, "响应内容长度: %zu bytes", http->GetBodyLength());
-            
-            // 读取响应内容
-            std::string response = http->ReadAll();
-            ESP_LOGI(TAG, "响应内容: %s", response.c_str());
-            
-            http->Close();
-        } else {
-            ESP_LOGE(TAG, "HTTP 请求失败");
-        }*/
-        
-        
-	    ESP_LOGI(TAG, "开始 MQTT 测试");
 	
 	    // 创建 MQTT 客户端
 	    mqtt = modem->CreateMqtt(0);

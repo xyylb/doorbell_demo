@@ -292,6 +292,7 @@ int start_webrtc(char *url)
     esp_webrtc_set_event_handler(webrtc, webrtc_event_handler, NULL);
 
     // 禁用自动连接
+    //esp_webrtc_enable_peer_connection(webrtc, false);
     esp_webrtc_enable_peer_connection(webrtc, false);
 
     // 启动webrtc

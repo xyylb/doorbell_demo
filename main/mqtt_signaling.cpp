@@ -24,6 +24,7 @@ extern "C" {
     const esp_peer_signaling_impl_t *esp_signaling_get_mqtt_impl(void);
     void mqtt_sig_set_device_id(const char *device_id);
     void mqtt_sig_send_ring(const char *target);
+    void mqtt_sig_restart(void);
 }
 
 static void *g_webrtc_handle = NULL;
@@ -254,6 +255,35 @@ void mqtt_sig_send_ring(const char *target)
         ESP_LOGI(TAG, "Triggering offer via on_msg callback");
         sg->cfg.on_msg(&msg, sg->cfg.ctx);
         free(msg.data);
+    }
+}
+
+void mqtt_sig_restart(void)
+{
+    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+    
+    ESP_LOGI(TAG, "Restarting MQTT signaling...");
+    
+    Mqtt* mqtt = Network4g::GetMqttInstance();
+    if (mqtt == NULL) {
+        ESP_LOGE(TAG, "MQTT not available");
+        return;
+    }
+    
+    if (!mqtt->IsConnected()) {
+        ESP_LOGW(TAG, "MQTT not connected, waiting...");
+        return;
+    }
+    
+    if (g_mqtt_sig_handle != NULL) {
+        mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+        
+        char topic[128];
+        snprintf(topic, sizeof(topic), DOWN_TOPIC_TEMPLATE, g_device_id);
+        mqtt->Subscribe(topic, 1);
+        
+        sg->signaling_ready = true;
+        ESP_LOGI(TAG, "MQTT signaling restarted, subscribed to %s", topic);
     }
 }
 

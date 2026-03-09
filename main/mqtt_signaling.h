@@ -16,6 +16,7 @@ void mqtt_sig_trigger_offer(void);
 void mqtt_sig_answer_call(void);
 void mqtt_sig_reject_call(void);
 void mqtt_sig_close_call(void);
+void mqtt_sig_restart(void);
 
 #ifdef __cplusplus
 }
