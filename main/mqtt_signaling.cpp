@@ -14,16 +14,16 @@
 #include <sys/param.h>
 #include "esp_netif.h"
 
-#include "esp_mqtt_signaling.h"
+#include "mqtt_signaling.h"
 #include "esp_webrtc.h"
 #include "esp_peer.h"
 #include "network_4g.h"
+#include "door_bell_audio.h"
 
 extern "C" {
     const esp_peer_signaling_impl_t *esp_signaling_get_mqtt_impl(void);
     void mqtt_sig_set_device_id(const char *device_id);
     void mqtt_sig_send_ring(const char *target);
-    int play_tone_int(int t);
 }
 
 static void *g_webrtc_handle = NULL;
@@ -475,7 +475,7 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
                 sg->pending_offer_waiting = true;
                 sg->pending_candidate_count = 0;
                 
-                //play_tone_int(0);
+                play_tone(DOOR_BELL_TONE_RING);
                 ESP_LOGI(TAG, "Ringing, waiting for user to answer/reject");
             }
         }

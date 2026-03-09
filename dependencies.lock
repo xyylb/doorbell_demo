@@ -2,13 +2,13 @@ dependencies:
   av_render:
     dependencies: []
     source:
-      path: C:\project\esp32\doorbell_demo\components_esp\av_render
+      path: C:\project\esp32\doorbell_demo_voice\components\av_render
       type: local
     version: 0.9.1
   esp_peer:
     dependencies: []
     source:
-      path: C:\project\esp32\doorbell_demo\components_esp\esp_peer
+      path: C:\project\esp32\doorbell_demo_voice\components\esp_peer
       type: local
     version: 1.2.7
   espressif/cmake_utilities:
@@ -60,7 +60,7 @@ dependencies:
       type: service
     version: 2.1.5
   espressif/esp32-camera:
-    component_hash: f0a608b109935a5389221eee5090ec61f51b0df1a0749531fe59d33aaf263233
+    component_hash: ac4228c825b891378bc0806869170d4ebc5d45ba8ebc519b4f8886a56ad2d123
     dependencies:
     - name: espressif/esp_jpeg
       registry_url: https://components.espressif.com
@@ -72,7 +72,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 2.1.4
+    version: 2.1.5
   espressif/esp_audio_codec:
     component_hash: 04c2f0d5eca207cdfabd3aafc50ef4bca53532115ddf7689e5cfabd00eb88b02
     dependencies:
@@ -184,7 +184,7 @@ dependencies:
       type: service
     version: 1.0.0
   espressif/esp_muxer:
-    component_hash: 9e04768f41757e9f96a014298b0daa3ec6c67cbf162a34836af41978e7c603fb
+    component_hash: 0e3f27c1ec96035c846b9ccc262190045e93b721defe13060d0e4ab712d98852
     dependencies:
     - name: idf
       require: private
@@ -192,7 +192,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 1.1.2
+    version: 1.2.0
   espressif/esp_new_jpeg:
     component_hash: 2f06f88e94fbc781b26a9be4291ff4ffc88596c90436a1e1358a7a38296b44ae
     dependencies: []
@@ -261,12 +261,12 @@ dependencies:
       type: service
     version: 0.7.2
   espressif/gmf_core:
-    component_hash: c93ce72be18e9c86380a0ce65929c23eb377c853fc58a888889e58b3f3624aed
+    component_hash: f9a6459cceae333fe914630138c13ae3dcc28f7cb6f68c664a05817eb8e96301
     dependencies: []
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 0.7.9
+    version: 0.7.10
   espressif/gmf_video:
     component_hash: f846518801ae7e748ecde24e5ac4b21518ca42fffb533b9d9d67a4cd7ed2c3b8
     dependencies:
@@ -303,7 +303,7 @@ dependencies:
   media_lib_sal:
     dependencies: []
     source:
-      path: C:\project\esp32\doorbell_demo\components_esp\media_lib_sal
+      path: C:\project\esp32\doorbell_demo_voice\components\media_lib_sal
       type: local
     version: 0.9.0
 direct_dependencies:
@@ -320,6 +320,6 @@ direct_dependencies:
 - idf
 - tempotian/av_render
 - tempotian/media_lib_sal
-manifest_hash: 18dc6ec7f0f419a7ad5b51a7e4aa10fa0531b6fe3b31ce577dbbb41dd6b8b22a
+manifest_hash: 1bad837dcf50d838e3d72cb74ecb2d59d01f6766b1933e4d8678e89fa7310ff3
 target: esp32s3
 version: 2.0.0

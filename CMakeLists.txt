@@ -11,8 +11,6 @@ endif()
 
 list(APPEND EXTRA_COMPONENT_DIRS "./components")
 
-list(APPEND EXTRA_COMPONENT_DIRS "./components_esp")
-
 list(APPEND EXTRA_COMPONENT_DIRS "./common")
 
 project(doorbell_demo)

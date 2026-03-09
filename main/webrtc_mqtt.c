@@ -14,7 +14,8 @@
 #include "esp_log.h"
 #include "esp_webrtc_defaults.h"
 #include "esp_peer_default.h"
-#include "esp_mqtt_signaling.h"
+#include "mqtt_signaling.h"
+#include "door_bell_audio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"
 
@@ -42,17 +43,6 @@ typedef enum {
     DOOR_BELL_STATE_CONNECTED,
 } door_bell_state_t;
 
-typedef enum {
-    DOOR_BELL_TONE_RING,
-    DOOR_BELL_TONE_OPEN_DOOR,
-    DOOR_BELL_TONE_JOIN_SUCCESS,
-} door_bell_tone_type_t;
-
-typedef struct {
-    const uint8_t *start;
-    const uint8_t *end;
-    int            duration;
-} door_bell_tone_data_t;
 
 static esp_webrtc_handle_t webrtc;
 static door_bell_state_t   door_bell_state;
@@ -66,24 +56,6 @@ extern const uint8_t open_music_start[] asm("_binary_open_aac_start");
 extern const uint8_t open_music_end[] asm("_binary_open_aac_end");
 extern const uint8_t join_music_start[] asm("_binary_join_aac_start");
 extern const uint8_t join_music_end[] asm("_binary_join_aac_end");
-
-static int play_tone(door_bell_tone_type_t type)
-{
-    door_bell_tone_data_t tone_data[] = {
-        { ring_music_start, ring_music_end, 4000 },
-        { open_music_start, open_music_end, 0 },
-        { join_music_start, join_music_end, 0 },
-    };
-    if (type >= sizeof(tone_data) / sizeof(tone_data[0])) {
-        return 0;
-    }
-    return play_music(tone_data[type].start, (int)(tone_data[type].end - tone_data[type].start), tone_data[type].duration);
-}
-
-int play_tone_int(int t)
-{
-    return play_tone((door_bell_tone_type_t)t);
-}
 
 static void door_bell_change_state(door_bell_state_t state)
 {
