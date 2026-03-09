@@ -28,9 +28,17 @@ namespace Network4g {
         modem->OnNetworkStateChanged([](bool ready) {
             ESP_LOGI(TAG, "网络状态: %s", ready ? "已连接" : "已断开");
             if (ready) {
-                // 网络连接成功，重新连接 MQTT 并重启信令
-                ESP_LOGI(TAG, "网络已恢复，重启MQTT信令...");
-                mqtt_sig_restart();
+                // 网络连接成功，延迟重启 MQTT 信令，避免干扰网络检测
+                ESP_LOGI(TAG, "网络已恢复，延迟重启MQTT信令...");
+                TaskHandle_t task_handle;
+                xTaskCreate([](void* arg) {
+                    ESP_LOGI(TAG, "2秒后开始初始化mqtt");
+                    vTaskDelay(pdMS_TO_TICKS(2000));  // 等待 2 秒让网络完全恢复
+                    ESP_LOGI(TAG, "开始初始化MQTT...");
+                    initMqtt();
+                    mqtt_sig_restart();
+                    vTaskDelete(NULL);
+                }, "mqtt_restart", 4096, NULL, 5, &task_handle);
             }
         });
         
@@ -55,18 +63,18 @@ namespace Network4g {
             ESP_LOGE(TAG, "模组未初始化，无法执行 HTTP 请求");
             return;
         }
-	
-	    // 创建 MQTT 客户端
-	    mqtt = modem->CreateMqtt(0);
-	    
-	    // 设置回调函数
-	    mqtt->OnConnected([]() {
-	        ESP_LOGI(TAG, "MQTT 连接成功");
-	    });
-	    
-	    mqtt->OnDisconnected([]() {
-	        ESP_LOGI(TAG, "MQTT 连接断开");
-	    });
+
+            // 创建 MQTT 客户端
+            mqtt = modem->CreateMqtt(0);
+            
+            // 设置回调函数
+            mqtt->OnConnected([]() {
+                ESP_LOGI(TAG, "MQTT 连接成功");
+            });
+            
+            mqtt->OnDisconnected([]() {
+                ESP_LOGI(TAG, "MQTT 连接断开");
+            });
 	    
 /*	    mqtt->OnMessage([](const std::string& topic, const std::string& payload) {
 	        ESP_LOGI(TAG, "收到消息 [%s]: %s", topic.c_str(), payload.c_str());

@@ -336,7 +336,7 @@ void new_4g(){
         ESP_LOGI(TAG, "ICCID: %s", modem->GetIccid().c_str());
         ESP_LOGI(TAG, "Signal: %d", modem->GetCsq());
         
-        Network4g::initMqtt();
+        //Network4g::initMqtt();
     }
     
 }

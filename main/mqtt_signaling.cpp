@@ -76,9 +76,22 @@ void mqtt_sig_answer_call(void)
     mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
     
     if (sg->pending_sdp) {
-        ESP_LOGI(TAG, "Processing pending offer SDP, answering call from %s", sg->incoming_offer_from);
+        static int answer_count = 0;
+        answer_count++;
+        ESP_LOGI(TAG, "==== Answer call #%d, from %s ====", answer_count, sg->incoming_offer_from);
         
         sg->is_initiator = false;
+        
+        // 必须先关闭旧的 peer connection！
+        if (g_webrtc_handle) {
+            ESP_LOGI(TAG, "First disable peer connection before re-enable");
+            esp_webrtc_enable_peer_connection(g_webrtc_handle, false);
+            vTaskDelay(pdMS_TO_TICKS(200));
+            ESP_LOGI(TAG, "Peer connection disabled, now re-enable");
+        }
+        
+        ESP_LOGI(TAG, "g_webrtc_handle=%p, ice_url=%p, ice_user=%p, ice_psw=%p", 
+                 g_webrtc_handle, sg->ice_url, sg->ice_user, sg->ice_psw);
         
         if (g_webrtc_handle && sg->ice_url && sg->ice_user && sg->ice_psw) {
             ESP_LOGI(TAG, "ICE URL: %s, User: %s, PSW: %s", sg->ice_url, sg->ice_user, sg->ice_psw);
@@ -92,6 +105,7 @@ void mqtt_sig_answer_call(void)
                 .is_initiator = false,
             };
             if (sg->cfg.on_ice_info) {
+                ESP_LOGI(TAG, "Calling on_ice_info callback...");
                 sg->cfg.on_ice_info(&ice_info, sg->cfg.ctx);
             }
         }
@@ -258,34 +272,6 @@ void mqtt_sig_send_ring(const char *target)
     }
 }
 
-void mqtt_sig_restart(void)
-{
-    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
-    
-    ESP_LOGI(TAG, "Restarting MQTT signaling...");
-    
-    Mqtt* mqtt = Network4g::GetMqttInstance();
-    if (mqtt == NULL) {
-        ESP_LOGE(TAG, "MQTT not available");
-        return;
-    }
-    
-    if (!mqtt->IsConnected()) {
-        ESP_LOGW(TAG, "MQTT not connected, waiting...");
-        return;
-    }
-    
-    if (g_mqtt_sig_handle != NULL) {
-        mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
-        
-        char topic[128];
-        snprintf(topic, sizeof(topic), DOWN_TOPIC_TEMPLATE, g_device_id);
-        mqtt->Subscribe(topic, 1);
-        
-        sg->signaling_ready = true;
-        ESP_LOGI(TAG, "MQTT signaling restarted, subscribed to %s", topic);
-    }
-}
 
 void mqtt_sig_trigger_offer(void)
 {
@@ -608,6 +594,59 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
     }
 
     cJSON_Delete(json);
+}
+
+
+void mqtt_sig_restart(void)
+{
+    extern esp_peer_signaling_handle_t g_mqtt_sig_handle;
+    
+    ESP_LOGI(TAG, "Restarting MQTT signaling...");
+    
+    Mqtt* mqtt = Network4g::GetMqttInstance();
+    if (mqtt == NULL) {
+        ESP_LOGE(TAG, "MQTT not available");
+        return;
+    }
+    
+    if (!mqtt->IsConnected()) {
+        
+        ESP_LOGW(TAG, "MQTT not connected, waiting...");
+        return;
+    }
+    
+    // 重新请求 ICE 服务器信息
+    ESP_LOGI(TAG, "Requesting ICE servers after restart...");
+    send_ice_request();
+    
+    // 重新设置 MQTT 回调（因为 MQTT 重连后回调可能丢失）
+    mqtt->OnMessage([](const std::string& topic, const std::string& payload) {
+        ESP_LOGI(TAG, "MQTT SUB [%s]: %s", topic.c_str(), payload.c_str());
+        char *topic_copy = strdup(topic.c_str());
+        char *payload_copy = strdup(payload.c_str());
+        
+        auto *ctx = new std::pair<char*, char*>(topic_copy, payload_copy);
+        
+        xTaskCreate([](void *param) {
+            auto *ctx = (std::pair<char*, char*>*)param;
+            mqtt_message_handler(std::string(ctx->first), std::string(ctx->second));
+            free(ctx->first);
+            free(ctx->second);
+            delete ctx;
+            vTaskDelete(NULL);
+        }, "mqtt_msg_async", 8192, ctx, 5, NULL);
+    });
+    
+    if (g_mqtt_sig_handle != NULL) {
+        mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
+        
+        char topic[128];
+        snprintf(topic, sizeof(topic), DOWN_TOPIC_TEMPLATE, g_device_id);
+        mqtt->Subscribe(topic, 1);
+        
+        sg->signaling_ready = true;
+        ESP_LOGI(TAG, "MQTT signaling restarted, subscribed to %s", topic);
+    }
 }
 
 static void setup_mqtt_callbacks(void)
