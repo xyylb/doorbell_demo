@@ -7978,3 +7978,597 @@ Payload: {"type":"ice_request","timestamp":143}
 [2026-03-09 17:38:16] [DOWN] Topic: /voice/project/esp32_001/down
 Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773049096,"type":"ice_response","valid":true}
 ---
+[2026-03-09 17:41:50] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":2}
+---
+[2026-03-09 17:41:50] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773049310,"type":"ice_response","valid":true}
+---
+[2026-03-09 17:42:15] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":27}
+---
+[2026-03-09 17:42:15] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773049335,"type":"ice_response","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 1662305861936104587 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS 05523ad3-33a4-4874-9b85-8732aeb0b699\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:Glm6\r\na=ice-pwd:AT4DJ5TsQTI45B7wNh4K8sHn\r\na=ice-options:trickle\r\na=fingerprint:sha-256 C6:36:DD:F3:D7:D6:A3:38:52:9F:2D:70:63:CE:79:C4:10:F6:AD:F7:96:8B:09:9A:8E:31:54:D3:5A:4D:47:46\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:05523ad3-33a4-4874-9b85-8732aeb0b699 54d92f0c-413a-4d17-ae7b-852e2a29cabd\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:1007035955 cname:KEUwd9QEHDAce47u\r\na=ssrc:1007035955 msid:05523ad3-33a4-4874-9b85-8732aeb0b699 54d92f0c-413a-4d17-ae7b-852e2a29cabd\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"offer","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1418710520 1 udp 2122260223 172.30.208.1 56347 typ host generation 0 ufrag Glm6 network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1163396406 1 udp 2122194687 172.24.192.1 56348 typ host generation 0 ufrag Glm6 network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3798167191 1 udp 2122129151 192.168.31.121 56349 typ host generation 0 ufrag Glm6 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4234327394 1 udp 2122063615 172.17.208.1 56350 typ host generation 0 ufrag Glm6 network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1957365838 1 udp 1685921535 222.135.198.64 56349 typ srflx raddr 192.168.31.121 rport 56349 generation 0 ufrag Glm6 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:207678336 1 udp 41754623 139.129.34.198 50641 typ relay raddr 222.135.198.64 rport 56349 generation 0 ufrag Glm6 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2854558060 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag Glm6 network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3153252770 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag Glm6 network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:482982403 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag Glm6 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:42:25] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:46686710 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag Glm6 network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773049345,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:14] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"offer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 6A:2C:40:1F:A7:EE:B6:17:44:86:7E:C3:F8:5F:45:76:CE:A1:D3:5D:53:F0:17:74:48:1C:87:B0:75:BC:0A:67\r\na=setup:passive\r\na=ice-ufrag:WwUl\r\na=ice-pwd:Pd9ZwfQgpeN3WiStdYMx5Ru0\r\na=candidate:0 1 UDP 1679192063 223.104.196.209 5743 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 13188607 139.129.34.198 51517 typ relay raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":87}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 2739620111420447024 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=msid-semantic: WMS f43b1e07-1d4c-4fdf-b53e-f2ab4913a7a7\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:U4RK\r\na=ice-pwd:h6D5vYywkV/AXYbCUkRUUJop\r\na=ice-options:trickle\r\na=fingerprint:sha-256 A7:35:C1:E6:72:17:30:15:8C:5B:89:26:EC:33:1B:5D:A2:96:7F:89:2B:3A:B3:8E:48:ED:79:C1:77:BB:A6:E7\r\na=setup:active\r\na=mid:0\r\na=sendrecv\r\na=msid:f43b1e07-1d4c-4fdf-b53e-f2ab4913a7a7 abc183a0-e91f-4dc6-bbc5-9cd4323a6d36\r\na=rtcp-mux\r\na=rtpmap:111 opus/48000/2\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=ssrc:1063604534 cname:WQyT7jPdp+SFKtrP\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"answer","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1057395285 1 udp 2122260223 172.30.208.1 53921 typ host generation 0 ufrag U4RK network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:785472155 1 udp 2122194687 172.24.192.1 53922 typ host generation 0 ufrag U4RK network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2313826618 1 udp 2122129151 192.168.31.121 53923 typ host generation 0 ufrag U4RK network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2548820687 1 udp 2122063615 172.17.208.1 53924 typ host generation 0 ufrag U4RK network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:522344419 1 udp 1685921535 222.135.198.64 53923 typ srflx raddr 192.168.31.121 rport 53923 generation 0 ufrag U4RK network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1743369261 1 udp 41754623 139.129.34.198 64548 typ relay raddr 222.135.198.64 rport 53923 generation 0 ufrag U4RK network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3249292993 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag U4RK network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3497758223 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag U4RK network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2000741806 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag U4RK network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1765883483 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag U4RK network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773049399,"type":"candidate","valid":true}
+---
+[2026-03-09 17:43:24] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"timeout","from":"esp32_001","timestamp":96}
+---
+[2026-03-09 17:43:45] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":5}
+---
+[2026-03-09 17:43:45] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773049425,"type":"ice_response","valid":true}
+---
+[2026-03-09 17:45:11] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":2}
+---
+[2026-03-09 17:45:11] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773049511,"type":"ice_response","valid":true}
+---
+[2026-03-09 17:47:37] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"offer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 12:76:02:E7:05:9E:17:FD:C5:8A:92:BC:50:86:A6:DE:94:4E:0C:58:E9:DE:AC:8E:DC:2C:C4:81:B9:78:64:D4\r\na=setup:passive\r\na=ice-ufrag:WwUl\r\na=ice-pwd:Pd9ZwfQgpeN3WiStdYMx5Ru0\r\na=candidate:0 1 UDP 1686572031 39.144.0.98 34571 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 14855167 139.129.34.198 58027 typ relay raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":149}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 6157536745150648322 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=msid-semantic: WMS 777df4f0-2d99-4d9c-9ad5-5d80f71a5f31\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:ZhoQ\r\na=ice-pwd:zWY6IxbcYs/VKME0LFBqAH09\r\na=ice-options:trickle\r\na=fingerprint:sha-256 7D:A8:48:8E:48:F1:42:E9:E8:26:CF:F1:DB:ED:A1:34:28:88:05:FA:7B:0C:F0:54:61:94:42:F2:CC:4B:6C:88\r\na=setup:active\r\na=mid:0\r\na=sendrecv\r\na=msid:777df4f0-2d99-4d9c-9ad5-5d80f71a5f31 24a1d59e-2a04-41b9-b450-851fdbf814b1\r\na=rtcp-mux\r\na=rtpmap:111 opus/48000/2\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=ssrc:1936863517 cname:v5qxv60Ek5rrB6WJ\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"answer","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3331366979 1 udp 2122260223 172.30.208.1 61780 typ host generation 0 ufrag ZhoQ network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:273887896 1 udp 2122194687 172.24.192.1 61781 typ host generation 0 ufrag ZhoQ network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1277096572 1 udp 2122129151 192.168.31.121 61782 typ host generation 0 ufrag ZhoQ network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1278701550 1 udp 2122063615 172.17.208.1 61783 typ host generation 0 ufrag ZhoQ network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2379261238 1 udp 1685921535 222.135.198.64 61782 typ srflx raddr 192.168.31.121 rport 61782 generation 0 ufrag ZhoQ network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1106954622 1 udp 41754623 139.129.34.198 60969 typ relay raddr 222.135.198.64 rport 61782 generation 0 ufrag ZhoQ network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3093250779 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag ZhoQ network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1855770624 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag ZhoQ network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:852562148 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag ZhoQ network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:39] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:855149942 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag ZhoQ network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773049659,"type":"candidate","valid":true}
+---
+[2026-03-09 17:47:45] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"from":"web_client_001","target":"esp32_001","timestamp":1773049665,"type":"bye","valid":true}
+---
+[2026-03-09 19:03:50] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":4713}
+---
+[2026-03-09 19:03:50] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773054230,"type":"ice_response","valid":true}
+---
+[2026-03-09 19:21:13] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":5756}
+---
+[2026-03-09 19:21:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773055273,"type":"ice_response","valid":true}
+---
+[2026-03-09 19:28:14] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":6177}
+---
+[2026-03-09 19:28:14] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773055694,"type":"ice_response","valid":true}
+---
+[2026-03-09 19:32:40] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":6443}
+---
+[2026-03-09 19:32:40] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773055960,"type":"ice_response","valid":true}
+---
+[2026-03-09 19:43:49] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":7112}
+---
+[2026-03-09 19:43:49] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773056629,"type":"ice_response","valid":true}
+---
+[2026-03-09 19:49:02] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":7425}
+---
+[2026-03-09 19:49:02] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773056942,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:00:07] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":8090}
+---
+[2026-03-09 20:00:07] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773057607,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:08:17] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":8580}
+---
+[2026-03-09 20:08:17] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773058097,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:11:35] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":8778}
+---
+[2026-03-09 20:11:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773058295,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:14:52] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":8975}
+---
+[2026-03-09 20:14:52] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773058492,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:19:23] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":9246}
+---
+[2026-03-09 20:19:23] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773058763,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:31:53] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":9996}
+---
+[2026-03-09 20:31:53] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773059513,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:34:18] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":10141}
+---
+[2026-03-09 20:34:18] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773059658,"type":"ice_response","valid":true}
+---
+[2026-03-09 20:36:14] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":10257}
+---
+[2026-03-09 20:36:14] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773059774,"type":"ice_response","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 3526042739394745081 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS ec297624-03cc-42f3-8a5f-44aec4bda9a1\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:v1iS\r\na=ice-pwd:zUVWAPbXAjmSYmnv3GnRfbuh\r\na=ice-options:trickle\r\na=fingerprint:sha-256 53:03:15:F7:FC:AD:19:78:8F:9F:93:F1:11:83:C7:0B:C2:42:61:6E:61:C2:59:C3:20:97:3D:F8:70:23:8E:11\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:ec297624-03cc-42f3-8a5f-44aec4bda9a1 df949416-3007-444a-aec8-0b26cc4469ef\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:3335692886 cname:/1NDuTz3orJSeCoK\r\na=ssrc:3335692886 msid:ec297624-03cc-42f3-8a5f-44aec4bda9a1 df949416-3007-444a-aec8-0b26cc4469ef\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"offer","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3490950447 1 udp 2122260223 172.30.208.1 59289 typ host generation 0 ufrag v1iS network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3250873825 1 udp 2122194687 172.24.192.1 59290 typ host generation 0 ufrag v1iS network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1727991360 1 udp 2122129151 192.168.31.121 59291 typ host generation 0 ufrag v1iS network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2029966773 1 udp 2122063615 172.17.208.1 59292 typ host generation 0 ufrag v1iS network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4030163097 1 udp 1685921535 222.135.198.64 59291 typ srflx raddr 192.168.31.121 rport 59291 generation 0 ufrag v1iS network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2298252119 1 udp 41754623 139.129.34.198 49073 typ relay raddr 222.135.198.64 rport 59291 generation 0 ufrag v1iS network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:783907259 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag v1iS network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1064218997 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag v1iS network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2555763412 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag v1iS network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:13] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2253652257 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag v1iS network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773107293,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:29] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 09:48:29] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773107309,"type":"ice_response","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 8000685956068052501 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS 8ae46150-a6d2-4483-b76b-db567fd75c5c\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:XRu3\r\na=ice-pwd:MV2xFVyRJP3GnViSg/8ms0Ym\r\na=ice-options:trickle\r\na=fingerprint:sha-256 D7:E9:22:D6:19:96:42:A9:09:76:59:94:0D:CE:8A:47:27:A6:13:60:8E:6E:08:57:16:1F:8A:5C:9C:1B:FD:D3\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:8ae46150-a6d2-4483-b76b-db567fd75c5c 7de75196-29b7-40bb-9eeb-98e29046e570\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:1055756757 cname:9T4vuTZ7rHO7J9QG\r\na=ssrc:1055756757 msid:8ae46150-a6d2-4483-b76b-db567fd75c5c 7de75196-29b7-40bb-9eeb-98e29046e570\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"offer","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3356365906 1 udp 2122260223 172.30.208.1 62416 typ host generation 0 ufrag XRu3 network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:516785801 1 udp 2122194687 172.24.192.1 62417 typ host generation 0 ufrag XRu3 network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1115702893 1 udp 2122129151 192.168.31.121 62418 typ host generation 0 ufrag XRu3 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1118428159 1 udp 2122063615 172.17.208.1 62419 typ host generation 0 ufrag XRu3 network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2202931495 1 udp 1685921535 222.135.198.64 62418 typ srflx raddr 192.168.31.121 rport 62418 generation 0 ufrag XRu3 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1331985775 1 udp 41754623 139.129.34.198 49827 typ relay raddr 222.135.198.64 rport 62418 generation 0 ufrag XRu3 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3066164938 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag XRu3 network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1610769425 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag XRu3 network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1011852533 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag XRu3 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:48:35] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1013332327 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag XRu3 network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773107315,"type":"candidate","valid":true}
+---
+[2026-03-10 09:50:26] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 09:50:26] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773107426,"type":"ice_response","valid":true}
+---
+[2026-03-10 09:54:19] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 09:54:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773107659,"type":"ice_response","valid":true}
+---
+[2026-03-10 10:09:01] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 9104587140404980544 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS 08dc026d-23eb-442d-8a70-649cfdbec4f0\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:ELT1\r\na=ice-pwd:amramgeFDKYPE+S4ObnanIHe\r\na=ice-options:trickle\r\na=fingerprint:sha-256 BD:EB:93:03:CA:B8:50:4E:78:0A:06:53:E8:18:F9:53:E8:52:FA:92:AD:8C:77:0F:F8:00:56:AE:A5:DE:16:7D\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:08dc026d-23eb-442d-8a70-649cfdbec4f0 b33cddc8-ea10-460f-a038-63392fcd3b18\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:127279649 cname:glig9IxKlX2je42C\r\na=ssrc:127279649 msid:08dc026d-23eb-442d-8a70-649cfdbec4f0 b33cddc8-ea10-460f-a038-63392fcd3b18\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773108541,"type":"offer","valid":true}
+---
+[2026-03-10 10:09:01] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:827924835 1 udp 2122260223 172.30.208.1 51612 typ host generation 0 ufrag ELT1 network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773108541,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:01] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3885675448 1 udp 2122194687 172.24.192.1 51613 typ host generation 0 ufrag ELT1 network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773108541,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:01] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3151459164 1 udp 2122129151 192.168.31.121 51614 typ host generation 0 ufrag ELT1 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773108541,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:01] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3154046670 1 udp 2122063615 172.17.208.1 51615 typ host generation 0 ufrag ELT1 network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773108541,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:01] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2048467990 1 udp 1685921535 222.135.198.64 51614 typ srflx raddr 192.168.31.121 rport 51614 generation 0 ufrag ELT1 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773108541,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:02] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3056814174 1 udp 41754623 139.129.34.198 54849 typ relay raddr 222.135.198.64 rport 51614 generation 0 ufrag ELT1 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773108542,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:02] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1335280635 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag ELT1 network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773108542,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:02] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2572505376 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag ELT1 network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773108542,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:02] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3306721732 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag ELT1 network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773108542,"type":"candidate","valid":true}
+---
+[2026-03-10 10:09:02] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3308325974 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag ELT1 network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773108542,"type":"candidate","valid":true}
+---
+[2026-03-10 10:14:10] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":2}
+---
+[2026-03-10 10:14:10] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773108850,"type":"ice_response","valid":true}
+---
+[2026-03-10 10:14:11] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 10:14:11] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773108851,"type":"ice_response","valid":true}
+---
+[2026-03-10 10:15:23] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":2}
+---
+[2026-03-10 10:15:23] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773108923,"type":"ice_response","valid":true}
+---
+[2026-03-10 10:15:23] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 10:15:23] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773108923,"type":"ice_response","valid":true}
+---
+[2026-03-10 10:16:43] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 10:16:43] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773109003,"type":"ice_response","valid":true}
+---
+[2026-03-10 10:18:43] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 10:18:43] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773109123,"type":"ice_response","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 866128461618022645 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS 5754d1ed-b292-4177-b1a9-0cb163f5a87d\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:D6qg\r\na=ice-pwd:IODvNfCFy8ohZxE/uk90pm7R\r\na=ice-options:trickle\r\na=fingerprint:sha-256 21:7E:D4:73:82:25:0C:04:69:19:03:27:38:A2:B2:1D:32:CC:8F:76:49:D9:D4:A0:8B:BC:D6:B3:E2:A7:5E:B7\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:5754d1ed-b292-4177-b1a9-0cb163f5a87d d7e4d17f-db9b-4973-9ee1-ecbf7f1b64a6\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:3065457983 cname:K/MVWC/6mrlH7Yoh\r\na=ssrc:3065457983 msid:5754d1ed-b292-4177-b1a9-0cb163f5a87d d7e4d17f-db9b-4973-9ee1-ecbf7f1b64a6\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"offer","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1995910538 1 udp 2122260223 172.30.208.1 63436 typ host generation 0 ufrag D6qg network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2687811409 1 udp 2122194687 172.24.192.1 63437 typ host generation 0 ufrag D6qg network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4235820981 1 udp 2122129151 192.168.31.121 63438 typ host generation 0 ufrag D6qg network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4233159207 1 udp 2122063615 172.17.208.1 63439 typ host generation 0 ufrag D6qg network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1035413759 1 udp 1685921535 222.135.198.64 63438 typ srflx raddr 192.168.31.121 rport 63438 generation 0 ufrag D6qg network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4053615799 1 udp 41754623 139.129.34.198 52859 typ relay raddr 222.135.198.64 rport 63438 generation 0 ufrag D6qg network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:137940754 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag D6qg network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3741015497 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag D6qg network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2193005869 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag D6qg network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2191458495 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag D6qg network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773114441,"type":"candidate","valid":true}
+---
+[2026-03-10 11:47:30] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"answer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 6A:A7:11:65:8A:1D:9C:48:CA:91:73:D1:02:A6:59:D4:60:5F:4C:DB:B2:2C:F4:77:30:3F:56:CB:67:F3:F1:DD\r\na=setup:passive\r\na=ice-ufrag:WwUl\r\na=ice-pwd:Pd9ZwfQgpeN3WiStdYMx5Ru0\r\na=candidate:0 1 UDP 1685479935 39.144.0.51 30305 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 13082623 139.129.34.198 51103 typ relay raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":5331}
+---
+[2026-03-10 11:49:05] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 11:49:05] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773114545,"type":"ice_response","valid":true}
+---
+[2026-03-10 11:49:12] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 11:49:12] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773114552,"type":"ice_response","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 1435250636789439991 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS cc9f1572-ba76-4c03-b37f-a16ae5142cc2\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:tm8V\r\na=ice-pwd:vL1FTpzXIc8ihfbvz/7yajxg\r\na=ice-options:trickle\r\na=fingerprint:sha-256 FC:46:C0:AF:67:7E:BE:F1:C4:82:32:7E:90:89:83:B9:02:9A:A0:BA:32:63:36:F6:71:D1:13:DD:02:F6:AD:81\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:cc9f1572-ba76-4c03-b37f-a16ae5142cc2 c6d68a13-168d-47a0-856c-06c900b5796a\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:1582054115 cname:9jltodu2L0qHA8vF\r\na=ssrc:1582054115 msid:cc9f1572-ba76-4c03-b37f-a16ae5142cc2 c6d68a13-168d-47a0-856c-06c900b5796a\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"offer","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:254304235 1 udp 2122260223 172.30.208.1 54993 typ host generation 0 ufrag tm8V network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3656109360 1 udp 2122194687 172.24.192.1 54994 typ host generation 0 ufrag tm8V network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2242252244 1 udp 2122129151 192.168.31.121 54995 typ host generation 0 ufrag tm8V network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2240778310 1 udp 2122063615 172.17.208.1 54996 typ host generation 0 ufrag tm8V network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1147689630 1 udp 1685921535 222.135.198.64 54995 typ srflx raddr 192.168.31.121 rport 54995 generation 0 ufrag tm8V network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2286040790 1 udp 41754623 139.129.34.198 64498 typ relay raddr 222.135.198.64 rport 54995 generation 0 ufrag tm8V network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1911012723 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag tm8V network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2804166568 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag tm8V network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4218023756 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag tm8V network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4215304926 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag tm8V network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773114556,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:29] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"answer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 8A:FC:01:F0:A5:DC:E2:5A:72:52:EA:74:02:EC:23:46:50:25:9F:74:D4:86:0C:45:12:BB:40:79:8C:CB:09:6F\r\na=setup:passive\r\na=ice-ufrag:lPd9\r\na=ice-pwd:ZwfQgpeN3WiStdYMx5Ru0n8U\r\na=candidate:0 1 UDP 1685481471 39.144.0.51 30311 typ srflx raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":20}
+---
+[2026-03-10 11:49:41] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 11:49:41] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773114581,"type":"ice_response","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 5048253284739445796 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS c7237b92-c73a-41ad-9697-ce1a79e3b078\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:CZWu\r\na=ice-pwd:Ur4I63pueREBhq7Xsm2aF0tJ\r\na=ice-options:trickle\r\na=fingerprint:sha-256 54:A6:1F:9E:CE:45:82:F1:C4:72:26:37:4A:AA:AC:55:A4:57:5E:F4:9E:E8:D3:27:AF:89:4E:27:A1:EF:55:30\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:c7237b92-c73a-41ad-9697-ce1a79e3b078 2fa22f9e-9212-4054-9a27-058b9afd608b\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:2122791286 cname:609ydiQw33e+qej9\r\na=ssrc:2122791286 msid:c7237b92-c73a-41ad-9697-ce1a79e3b078 2fa22f9e-9212-4054-9a27-058b9afd608b\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"offer","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3160408636 1 udp 2122260223 172.30.208.1 62077 typ host generation 0 ufrag CZWu network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1789104359 1 udp 2122194687 172.24.192.1 62078 typ host generation 0 ufrag CZWu network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:921587715 1 udp 2122129151 192.168.31.121 62079 typ host generation 0 ufrag CZWu network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:919063953 1 udp 2122063615 172.17.208.1 62080 typ host generation 0 ufrag CZWu network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4146071369 1 udp 1685921535 222.135.198.64 62079 typ srflx raddr 192.168.31.121 rport 62079 generation 0 ufrag CZWu network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:990538497 1 udp 41754623 139.129.34.198 53795 typ relay raddr 222.135.198.64 rport 62079 generation 0 ufrag CZWu network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3266306212 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag CZWu network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:342651519 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag CZWu network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1210167963 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag CZWu network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:49:48] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1208495881 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag CZWu network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773114588,"type":"candidate","valid":true}
+---
+[2026-03-10 11:50:02] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"answer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 B7:10:D3:0C:E4:BF:25:52:E5:81:1D:93:B1:3D:80:C9:35:FE:53:F0:D7:7B:A4:5C:68:9D:07:B9:40:E8:D2:03\r\na=setup:passive\r\na=ice-ufrag:lPd9\r\na=ice-pwd:ZwfQgpeN3WiStdYMx5Ru0n8U\r\na=candidate:0 1 UDP 1685482495 39.144.0.51 30315 typ srflx raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":24}
+---
+[2026-03-10 12:19:03] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 12:19:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773116343,"type":"ice_response","valid":true}
+---
+[2026-03-10 13:15:21] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3381}
+---
+[2026-03-10 13:15:21] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773119721,"type":"ice_response","valid":true}
+---
+[2026-03-10 13:44:49] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"ice_request","timestamp":3}
+---
+[2026-03-10 13:44:49] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773121489,"type":"ice_response","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 7063156531565413322 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS 60f6098d-6cfd-4958-9fc1-46dd0bd92839\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:1hhv\r\na=ice-pwd:ZfSKBvr8ROGybNM9jY3LWzek\r\na=ice-options:trickle\r\na=fingerprint:sha-256 29:38:FF:CD:C5:7E:6A:51:C1:14:8E:A9:68:BD:1B:B5:87:7A:6F:8E:BE:5F:03:60:6B:85:40:85:3A:DB:BA:7D\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:60f6098d-6cfd-4958-9fc1-46dd0bd92839 bbe4dc63-4a75-416b-a3de-796c7a201a03\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:27437854 cname:Lc1/NyjSpgtl1zSQ\r\na=ssrc:27437854 msid:60f6098d-6cfd-4958-9fc1-46dd0bd92839 bbe4dc63-4a75-416b-a3de-796c7a201a03\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"offer","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:554038430 1 udp 2122260223 172.30.208.1 65195 typ host generation 0 ufrag 1hhv network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:819084368 1 udp 2122194687 172.24.192.1 65196 typ host generation 0 ufrag 1hhv network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2548652017 1 udp 2122129151 192.168.31.121 65197 typ host generation 0 ufrag 1hhv network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2313718788 1 udp 2122063615 172.17.208.1 65198 typ host generation 0 ufrag 1hhv network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:18952488 1 udp 1685921535 222.135.198.64 65197 typ srflx raddr 192.168.31.121 rport 65197 generation 0 ufrag 1hhv network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2045432550 1 udp 41754623 139.129.34.198 56163 typ relay raddr 222.135.198.64 rport 65197 generation 0 ufrag 1hhv network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3752796170 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag 1hhv network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3464030404 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag 1hhv network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1766032229 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag 1hhv network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:19] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:2000836752 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag 1hhv network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773122479,"type":"candidate","valid":true}
+---
+[2026-03-10 14:01:25] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"answer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 D2:50:78:02:5E:86:0B:FE:1F:09:45:B6:19:43:F2:57:28:31:BA:03:1A:95:57:3E:3C:D7:A0:9B:3D:0D:04:20\r\na=setup:passive\r\na=ice-ufrag:WwUl\r\na=ice-pwd:Pd9ZwfQgpeN3WiStdYMx5Ru0\r\na=candidate:0 1 UDP 1683314687 39.144.0.162 21847 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 16263167 139.129.34.198 63527 typ relay raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":999}
+---
+[2026-03-10 14:07:56] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"from":"web_client_001","target":"esp32_001","timestamp":1773122876,"type":"bye","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"data":"v=0\r\no=- 4080626440089279776 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS 54ccd6ba-3c85-482a-a0d8-7bf311311244\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:tAxs\r\na=ice-pwd:Hsm0K8GMN4hEHsV5RcTeIpzH\r\na=ice-options:trickle\r\na=fingerprint:sha-256 6D:2B:08:CE:9D:68:21:D1:84:A8:78:18:47:03:12:E1:14:CC:51:BE:52:75:E6:48:8C:29:D9:E0:CA:21:EF:EE\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:54ccd6ba-3c85-482a-a0d8-7bf311311244 33706370-0659-4cb5-ba20-e17e5837c91e\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:3381969259 cname:UxqbdbSHHrEPrHl6\r\na=ssrc:3381969259 msid:54ccd6ba-3c85-482a-a0d8-7bf311311244 33706370-0659-4cb5-ba20-e17e5837c91e\r\n","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"offer","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3084438062 1 udp 2122260223 172.30.208.1 63605 typ host generation 0 ufrag tAxs network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1629182197 1 udp 2122194687 172.24.192.1 63606 typ host generation 0 ufrag tAxs network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1029085201 1 udp 2122129151 192.168.31.121 63607 typ host generation 0 ufrag tAxs network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1031734659 1 udp 2122063615 172.17.208.1 63608 typ host generation 0 ufrag tAxs network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:4237872987 1 udp 1685921535 222.135.198.64 63607 typ srflx raddr 192.168.31.121 rport 63607 generation 0 ufrag tAxs network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:817013523 1 udp 41754623 139.129.34.198 52306 typ relay raddr 222.135.198.64 rport 63607 generation 0 ufrag tAxs network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:3373738166 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag tAxs network-id 1","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:534035053 1 tcp 1518214911 172.24.192.1 9 typ host tcptype active generation 0 ufrag tAxs network-id 2","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1134131849 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag tAxs network-id 3","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:03] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"candidate":"candidate:1135666971 1 tcp 1518083839 172.17.208.1 9 typ host tcptype active generation 0 ufrag tAxs network-id 4","from":"web_client_001","target":"esp32_001","timestamp":1773122883,"type":"candidate","valid":true}
+---
+[2026-03-10 14:08:08] [UP] Topic: /voice/project/esp32_001/up
+Payload: {"type":"answer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 D2:50:78:02:5E:86:0B:FE:1F:09:45:B6:19:43:F2:57:28:31:BA:03:1A:95:57:3E:3C:D7:A0:9B:3D:0D:04:20\r\na=setup:passive\r\na=ice-ufrag:WwUl\r\na=ice-pwd:Pd9ZwfQgpeN3WiStdYMx5Ru0\r\na=candidate:0 1 UDP 1684326143 39.144.0.162 25798 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 14596095 139.129.34.198 57015 typ relay raddr 0.0.0.0 rport 0\r\n","from":"esp32_001","timestamp":1401}
+---
+[2026-03-10 14:08:16] [DOWN] Topic: /voice/project/esp32_001/down
+Payload: {"from":"web_client_001","target":"esp32_001","timestamp":1773122896,"type":"bye","valid":true}
+---

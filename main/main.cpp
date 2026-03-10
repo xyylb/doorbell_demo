@@ -34,6 +34,7 @@ extern "C" {
 #include "webrtc_utils_time.h"
 #include "esp_cpu.h"
 #include "settings.h"
+//#include "app_config.h"
 #include "common.h"
 #include "esp_capture.h"
 }
@@ -336,7 +337,7 @@ void new_4g(){
         ESP_LOGI(TAG, "ICCID: %s", modem->GetIccid().c_str());
         ESP_LOGI(TAG, "Signal: %d", modem->GetCsq());
         
-        //Network4g::initMqtt();
+        Network4g::initMqtt();
     }
     
 }
@@ -349,8 +350,11 @@ void app_main() {
     esp_capture_set_thread_scheduler(capture_scheduler);
     media_lib_thread_set_schedule_cb(thread_scheduler);
     init_board();
-
-	new_4g();
+    
+    // 初始化配置（从 NVS 加载）
+    //app_config_init();
+    
+    new_4g();
 
 
 

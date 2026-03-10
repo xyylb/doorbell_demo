@@ -12,6 +12,8 @@ namespace Network4g {
     static std::unique_ptr<AtModem> modem = nullptr;
     
     static std::unique_ptr<Mqtt> mqtt = nullptr;
+
+    static bool initialized = false;
     
     void init(void) {
         ESP_LOGI(TAG, "开始检测4G网络");
@@ -27,7 +29,7 @@ namespace Network4g {
         // 设置网络状态回调
         modem->OnNetworkStateChanged([](bool ready) {
             ESP_LOGI(TAG, "网络状态: %s", ready ? "已连接" : "已断开");
-            if (ready) {
+            if (ready && initialized) { // 第二次为网络恢复，第一次为连接成功
                 // 网络连接成功，延迟重启 MQTT 信令，避免干扰网络检测
                 ESP_LOGI(TAG, "网络已恢复，延迟重启MQTT信令...");
                 TaskHandle_t task_handle;
@@ -40,6 +42,7 @@ namespace Network4g {
                     vTaskDelete(NULL);
                 }, "mqtt_restart", 4096, NULL, 5, &task_handle);
             }
+            initialized = true; //首次初始化完成
         });
         
         // 等待网络就绪
