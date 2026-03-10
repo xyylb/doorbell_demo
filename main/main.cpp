@@ -34,7 +34,7 @@ extern "C" {
 #include "webrtc_utils_time.h"
 #include "esp_cpu.h"
 #include "settings.h"
-//#include "app_config.h"
+#include "app_config.h"
 #include "common.h"
 #include "esp_capture.h"
 }
@@ -352,7 +352,7 @@ void app_main() {
     init_board();
     
     // 初始化配置（从 NVS 加载）
-    //app_config_init();
+    app_config_init();
     
     new_4g();
 

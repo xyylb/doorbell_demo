@@ -2,6 +2,7 @@
 #include "at_modem.h"
 #include "network_4g.h"
 #include "mqtt_signaling.h"
+#include "app_config.h"
 
 static const char *TAG = "network_4g";
 
@@ -84,7 +85,8 @@ namespace Network4g {
 	    });*/
 	    
 	    // 连接到 MQTT 代理
-	    if (mqtt->Connect("visit-repair.2811.top", 1883, "esp32_client", "", "")) {
+	    app_config_t* cfg = app_config_get();
+	    if (mqtt->Connect(cfg->mqtt_host, cfg->mqtt_port, cfg->mqtt_user, cfg->mqtt_password, "")) {
 	        // 订阅主题
 	        mqtt->Subscribe("test/esp32/message");
 	        

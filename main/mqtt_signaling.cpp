@@ -15,6 +15,7 @@
 #include "esp_netif.h"
 
 #include "mqtt_signaling.h"
+#include "app_config.h"
 #include "esp_webrtc.h"
 #include "esp_peer.h"
 #include "network_4g.h"
@@ -31,10 +32,17 @@ static void *g_webrtc_handle = NULL;
 
 #define TAG "MQTT_SIG"
 
-#define UP_TOPIC_TEMPLATE "/voice/project/%s/up"
-#define DOWN_TOPIC_TEMPLATE "/voice/project/%s/down"
+// 动态获取主题
+static inline void get_up_topic(char* buf, size_t len) {
+    app_config_t* cfg = app_config_get();
+    snprintf(buf, len, "%s/%s/up", cfg->base_topic, cfg->device_id);
+}
 
-static char g_device_id[32] = "esp32_001";
+static inline void get_down_topic(char* buf, size_t len) {
+    app_config_t* cfg = app_config_get();
+    snprintf(buf, len, "%s/%s/down", cfg->base_topic, cfg->device_id);
+}
+
 static bool g_mqtt_initialized = false;
 static bool g_mqtt_connected = false;
 
@@ -60,7 +68,7 @@ typedef struct {
 void mqtt_sig_set_device_id(const char *device_id)
 {
     if (device_id) {
-        strncpy(g_device_id, device_id, sizeof(g_device_id) - 1);
+        app_config_set_device_id(device_id);
     }
 }
 
@@ -188,10 +196,10 @@ void mqtt_sig_reject_call(void)
     
     char topic[128];
     char payload[128];
-    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, g_device_id);
+    get_up_topic(topic, sizeof(topic));
     snprintf(payload, sizeof(payload), 
              "{\"type\":\"reject\",\"from\":\"%s\",\"timestamp\":%ld}",
-             g_device_id, (long)time(NULL));
+             sg->device_id, (long)time(NULL));
     
     mqtt->Publish(topic, payload, 1);
     ESP_LOGI(TAG, "Reject sent: %s", payload);
@@ -231,10 +239,10 @@ void mqtt_sig_close_call(void)
     
     char topic[128];
     char payload[128];
-    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, g_device_id);
+    get_up_topic(topic, sizeof(topic));
     snprintf(payload, sizeof(payload), 
              "{\"type\":\"bye\",\"from\":\"%s\",\"timestamp\":%ld}",
-             g_device_id, (long)time(NULL));
+             sg->device_id, (long)time(NULL));
     
     mqtt->Publish(topic, payload, 1);
     ESP_LOGI(TAG, "Bye sent: %s", payload);
@@ -294,7 +302,7 @@ void mqtt_sig_trigger_offer(void)
 static int mqtt_send_up(mqtt_sig_t *sg, const char *type, const char *data)
 {
     char topic[128];
-    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, sg->device_id);
+    get_up_topic(topic, sizeof(topic));
 
     cJSON *json = cJSON_CreateObject();
     cJSON_AddStringToObject(json, "type", type);
@@ -353,7 +361,7 @@ void mqtt_sig_send_timeout(const char *target)
     
     char topic[128];
     char payload[128];
-    snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, sg->device_id);
+    get_up_topic(topic, sizeof(topic));
     snprintf(payload, sizeof(payload), 
              "{\"type\":\"timeout\",\"from\":\"%s\",\"timestamp\":%ld}",
              sg->device_id, (long)time(NULL));
@@ -371,7 +379,7 @@ static void send_ice_request(void)
     char *req_payload = cJSON_PrintUnformatted(ice_req);
     if (req_payload) {
         char topic[128];
-        snprintf(topic, sizeof(topic), UP_TOPIC_TEMPLATE, g_device_id);
+        get_up_topic(topic, sizeof(topic));
         
         Mqtt* mqtt = Network4g::GetMqttInstance();
         if (mqtt && mqtt->IsConnected()) {
@@ -401,7 +409,7 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
     
     // Only handle messages from device topic
     char expected_topic[128];
-    snprintf(expected_topic, sizeof(expected_topic), DOWN_TOPIC_TEMPLATE, g_device_id);
+    get_down_topic(expected_topic, sizeof(expected_topic));
     
     if (topic.find(expected_topic) == std::string::npos) {
         return;
@@ -641,7 +649,7 @@ void mqtt_sig_restart(void)
         mqtt_sig_t *sg = (mqtt_sig_t *)g_mqtt_sig_handle;
         
         char topic[128];
-        snprintf(topic, sizeof(topic), DOWN_TOPIC_TEMPLATE, g_device_id);
+        get_down_topic(topic, sizeof(topic));
         mqtt->Subscribe(topic, 1);
         
         sg->signaling_ready = true;
@@ -667,7 +675,7 @@ static void setup_mqtt_callbacks(void)
         
         // Subscribe to device topic
         char topic[128];
-        snprintf(topic, sizeof(topic), DOWN_TOPIC_TEMPLATE, g_device_id);
+        get_down_topic(topic, sizeof(topic));
         
         Mqtt* mqtt = Network4g::GetMqttInstance();
         if (mqtt) {
@@ -737,7 +745,7 @@ static int mqtt_signal_start(esp_peer_signaling_cfg_t *cfg, esp_peer_signaling_h
     }
 
     sg->cfg = *cfg;
-    sg->device_id = strdup(g_device_id);
+    sg->device_id = strdup(app_config_get()->device_id);
     sg->signaling_ready = false;
     sg->is_initiator = true;
     sg->ice_reload_started = false;
@@ -758,7 +766,7 @@ static int mqtt_signal_start(esp_peer_signaling_cfg_t *cfg, esp_peer_signaling_h
         
         // Subscribe to topic
         char topic[128];
-        snprintf(topic, sizeof(topic), DOWN_TOPIC_TEMPLATE, g_device_id);
+        get_down_topic(topic, sizeof(topic));
         mqtt->Subscribe(topic, 1);
         
         // Send initial ICE request
