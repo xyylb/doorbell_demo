@@ -10792,3 +10792,42 @@ Payload: {"candidate":"candidate:1249019842 1 tcp 1518083839 192.168.96.1 9 typ 
 [2026-03-13 16:10:00] [DOWN] Topic: /voice/project/189833342344184/down
 Payload: {"candidate":"candidate:2517451811 1 udp 41754623 139.129.34.198 63624 typ relay raddr 222.135.198.64 rport 59245 generation 0 ufrag LyG3 network-id 3","from":"web_client_001","target":"189833342344184","timestamp":1773389400,"type":"candidate","valid":true}
 ---
+[2026-03-13 16:20:01] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":642}
+---
+[2026-03-13 16:20:01] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773390001,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:23:17] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 16:23:17] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773390197,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:24:02] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773390242,"type":"ota","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":165}
+---
+[2026-03-13 16:24:39] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773390279,"type":"ota","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 16:31:22] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":7}
+---
+[2026-03-13 16:31:22] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773390682,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:31:28] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 16:31:28] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773390688,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:31:33] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773390693,"type":"ota","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 16:43:28] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":722}
+---
+[2026-03-13 16:43:29] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773391408,"type":"ice_response","valid":true}
+---

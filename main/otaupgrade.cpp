@@ -402,13 +402,14 @@ static void ota_task(void *param)
     vTaskDelay(pdMS_TO_TICKS(200));
     ESP_LOGI(TAG, "设置编码模式为原始数据（临时）");
 
-    // 设置数据输出流控，防止 UART FIFO 溢出
-    // frag_size: 每次最多输出 512 字节（减小以降低传输速度）
-    // interval: 每次输出间隔 100ms（增加间隔以确保有足够时间处理）
-    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"fragment\",%d,512,100", s_ota_context->http_id);
+    // 设置数据输出流控，提高传输速度
+    // frag_size: 每次最多输出 512 字节
+    // interval: 每次输出间隔 1ms
+    // 理论速度：512字节/1ms = 512KB/s，约5秒下载2.64MB
+    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"fragment\",%d,512,1", s_ota_context->http_id);
     at_uart->SendCommand(at_cmd, 1000);
     vTaskDelay(pdMS_TO_TICKS(200));
-    ESP_LOGI(TAG, "设置数据流控：512 字节/包，间隔 100ms（保守设置以防止溢出）");
+    ESP_LOGI(TAG, "设置数据流控：512 字节/包，间隔 1ms（高速模式）");
 
     // 设置超时时间
     snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"timeout\",%d,60,0", s_ota_context->http_id);
@@ -500,14 +501,14 @@ static void ota_task(void *param)
         }
     }
 
-    // 等待下载完成（最多 15 分钟）
-    // 由于使用了保守的流控设置（512字节/100ms），下载 2.64MB 需要约 9-10 分钟
+    // 等待下载完成（最多 2 分钟）
+    // 高速模式（512字节/1ms），下载 2.64MB 约需 5-10 秒
     {
         auto bits = xEventGroupWaitBits(s_ota_context->event_group,
                                         OTA_EVENT_DOWNLOAD_COMPLETE | OTA_EVENT_ERROR,
                                         pdTRUE,
                                         pdFALSE,
-                                        pdMS_TO_TICKS(900000));  // 15 分钟超时
+                                        pdMS_TO_TICKS(1200000));  // 2 分钟超时
 
         if (bits & OTA_EVENT_ERROR) {
             ESP_LOGE(TAG, "固件下载出错");
