@@ -12,9 +12,9 @@ typedef struct {
     char mqtt_user[32];
     char mqtt_password[32];
     char device_id[32];
-    char base_topic[64];       // 如 /voice/project
-    uint32_t ice_refresh_interval;  // ICE 刷新间隔（秒），默认 1800 (30分钟)
-    uint32_t call_timeout;           // 通话超时（秒），默认 120 (2分钟)
+    char base_topic[64];
+    uint32_t ice_refresh_interval;
+    uint32_t call_timeout;
 } app_config_t;
 
 void app_config_init(void);

@@ -141,9 +141,15 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
                     if (arguments[5].type == AtArgumentValue::Type::String) {
                         const std::string& hex_data = arguments[5].string_value;
 
+                        // 调试：打印 HEX 数据长度
+                        if (packet_count <= 3) {
+                            ESP_LOGI(TAG, "数据包 #%d: HEX 字符串长度=%d, cur_len=%d",
+                                    packet_count, hex_data.length(), cur_len);
+                        }
+
                         if (!hex_data.empty() && cur_len > 0) {
                             // 解码 HEX 数据为二进制数据
-                            // ML307 即使设置 encoding=0,0 也会以 HEX 格式发送数据
+                            // ML307 使用 HEX 编码传输数据以避免二进制数据中的特殊字符干扰 AT 命令解析
                             std::string binary_data;
                             s_ota_context->at_uart->DecodeHexAppend(binary_data, hex_data.c_str(), hex_data.length());
 
@@ -154,7 +160,7 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
                             }
 
                             // 调试：打印前几个包的数据
-                            if (packet_count <= 3) {
+                            if (packet_count <= 3 && binary_data.length() >= 16) {
                                 ESP_LOGI(TAG, "数据包 #%d 前 16 字节: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x",
                                         packet_count,
                                         (uint8_t)binary_data[0], (uint8_t)binary_data[1], (uint8_t)binary_data[2], (uint8_t)binary_data[3],
@@ -198,11 +204,12 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
 
                         if (cur_len == 0) {
                             // cur_len == 0 是明确的结束信号
-                            ESP_LOGI(TAG, "收到结束信号 (cur_len=0)");
+                            ESP_LOGI(TAG, "收到结束信号 (cur_len=0), packet_count=%d", packet_count);
                             is_complete = true;
                         } else if (content_len > 0 && sum_len >= content_len) {
                             // sum_len 达到了 content_len，也认为完成
-                            ESP_LOGI(TAG, "sum_len (%d) 达到 content_len (%d)", sum_len, content_len);
+                            ESP_LOGI(TAG, "sum_len (%d) 达到 content_len (%d), packet_count=%d",
+                                    sum_len, content_len, packet_count);
                             is_complete = true;
                         }
 
@@ -393,20 +400,27 @@ static void ota_task(void *param)
     snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"encoding\",%d,0,0", s_ota_context->http_id);
     at_uart->SendCommand(at_cmd, 1000);
     vTaskDelay(pdMS_TO_TICKS(200));
-    ESP_LOGI(TAG, "设置编码模式为原始数据");
+    ESP_LOGI(TAG, "设置编码模式为原始数据（临时）");
 
     // 设置数据输出流控，防止 UART FIFO 溢出
-    // frag_size: 每次最多输出 1024 字节（增大以提高传输效率）
-    // interval: 每次输出间隔 50ms（减小间隔以加快传输速度，但仍保持流控）
-    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"fragment\",%d,1024,50", s_ota_context->http_id);
+    // frag_size: 每次最多输出 512 字节（减小以降低传输速度）
+    // interval: 每次输出间隔 100ms（增加间隔以确保有足够时间处理）
+    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"fragment\",%d,512,100", s_ota_context->http_id);
     at_uart->SendCommand(at_cmd, 1000);
     vTaskDelay(pdMS_TO_TICKS(200));
-    ESP_LOGI(TAG, "设置数据流控：1024 字节/包，间隔 50ms");
+    ESP_LOGI(TAG, "设置数据流控：512 字节/包，间隔 100ms（保守设置以防止溢出）");
 
     // 设置超时时间
     snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"timeout\",%d,60,0", s_ota_context->http_id);
     at_uart->SendCommand(at_cmd, 1000);
     vTaskDelay(pdMS_TO_TICKS(200));
+
+    // 重新设置为 HEX 编码模式（用于接收数据）
+    // 这样可以避免二进制数据中的特殊字符干扰 AT 命令解析
+    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"encoding\",%d,1,1", s_ota_context->http_id);
+    at_uart->SendCommand(at_cmd, 1000);
+    vTaskDelay(pdMS_TO_TICKS(200));
+    ESP_LOGI(TAG, "设置编码模式为 HEX（用于接收数据）");
 
     // 步骤 3: 初始化 OTA 分区
     ESP_LOGI(TAG, "步骤 3: 初始化 OTA 分区");
@@ -450,9 +464,12 @@ static void ota_task(void *param)
 
         ESP_LOGI(TAG, "请求路径: %s", path.c_str());
 
+        // 由于设置了 encoding=1,1，path 需要进行 HEX 编码
+        std::string hex_path = at_uart->EncodeHex(path);
+
         // 发送 GET 请求（method=1 表示 GET）
-        snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPREQUEST=%d,1,0,\"%s\"",
-                 s_ota_context->http_id, path.c_str());
+        snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPREQUEST=%d,1,0,%s",
+                 s_ota_context->http_id, hex_path.c_str());
         at_uart->SendCommand(at_cmd, 10000);
     }
 
@@ -483,13 +500,14 @@ static void ota_task(void *param)
         }
     }
 
-    // 等待下载完成（最多 5 分钟）
+    // 等待下载完成（最多 15 分钟）
+    // 由于使用了保守的流控设置（512字节/100ms），下载 2.64MB 需要约 9-10 分钟
     {
         auto bits = xEventGroupWaitBits(s_ota_context->event_group,
                                         OTA_EVENT_DOWNLOAD_COMPLETE | OTA_EVENT_ERROR,
                                         pdTRUE,
                                         pdFALSE,
-                                        pdMS_TO_TICKS(300000));  // 5 分钟超时
+                                        pdMS_TO_TICKS(900000));  // 15 分钟超时
 
         if (bits & OTA_EVENT_ERROR) {
             ESP_LOGE(TAG, "固件下载出错");

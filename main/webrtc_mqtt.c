@@ -232,10 +232,10 @@ static void key_monitor_thread(void *arg)
 
 int start_webrtc(char *url)
 {
-    if (network_is_connected() == false) {
+/*     if (network_is_connected() == false) {
         ESP_LOGE(TAG, "Wifi not connected yet");
         return -1;
-    }
+    } */
     if (url[0] == 0) {
         ESP_LOGE(TAG, "Room Url not set yet");
         return -1;

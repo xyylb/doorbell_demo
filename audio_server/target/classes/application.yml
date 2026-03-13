@@ -37,3 +37,12 @@ signaling:
 # 如果不配置，默认使用 Google 的免费 STUN 服务器
 ice:
   servers: ""
+
+# OTA 升级配置
+ota:
+  # OTA 固件下载服务器 URL，{version} 会被替换为实际版本号
+  server-url: http://bus.2811.top/doorbell_102.bin
+  # 目标版本号（纯数字，如 100 表示 1.0.0）
+  target-version: 165
+  # 固件 MD5 校验码（可选）
+  md5: "8757d08104c30af47ac4c34ffaefe14a"

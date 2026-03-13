@@ -364,7 +364,10 @@ void app_main() {
 
     media_sys_buildup();
     init_console();
-    network_init(WIFI_SSID, WIFI_PASSWORD, network_event_handler);
+    //network_init(WIFI_SSID, WIFI_PASSWORD, network_event_handler);
+
+    
+    media_lib_thread_create_from_scheduler(nullptr, "start", run_async_start, nullptr);
 
     while (true) {
         media_lib_thread_sleep(2000);

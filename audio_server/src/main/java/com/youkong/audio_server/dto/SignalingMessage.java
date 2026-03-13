@@ -51,6 +51,12 @@ public class SignalingMessage {
      */
     private Object data;
 
+    private String url;
+
+    private String md5;
+
+    private Integer version;
+
     /**
      * ICE 服务器配置
      */
@@ -79,6 +85,18 @@ public class SignalingMessage {
         // customized 信令 target 字段可选（用于广播场景）
         if ("customized".equals(type)) {
             return timestamp != null;
+        }
+        // version_report 需要 device_id 和 version
+        if ("version_report".equals(type)) {
+            return version != null;
+        }
+        // ota 消息需要 target, url, timestamp
+        if ("ota".equals(type)) {
+            return target != null && !target.isEmpty() && timestamp != null;
+        }
+        // version_query 需要 target 和 timestamp
+        if ("version_query".equals(type)) {
+            return target != null && !target.isEmpty() && timestamp != null;
         }
         // 其他消息需要 target 和 timestamp
         return target != null && !target.isEmpty() && timestamp != null;

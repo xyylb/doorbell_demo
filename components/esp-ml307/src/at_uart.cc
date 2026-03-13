@@ -74,7 +74,9 @@ void AtUart::Initialize() {
     uart_config.source_clk = UART_SCLK_DEFAULT;
     
     // 增大接收缓冲区以支持 OTA 大数据量传输，防止 FIFO 溢出
-    ESP_ERROR_CHECK(uart_driver_install(uart_num_, 16384, 0, 100, &event_queue_handle_, ESP_INTR_FLAG_IRAM));
+    // 从 16KB 增加到 32KB 以应对高速数据传输
+    // 增大事件队列从 100 到 200，以处理更多的 UART 事件
+    ESP_ERROR_CHECK(uart_driver_install(uart_num_, 32768, 0, 200, &event_queue_handle_, ESP_INTR_FLAG_IRAM));
     ESP_ERROR_CHECK(uart_param_config(uart_num_, &uart_config));
     ESP_ERROR_CHECK(uart_set_pin(uart_num_, tx_pin_, rx_pin_, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
     
@@ -110,13 +112,14 @@ void AtUart::Initialize() {
         auto ml307_at_modem = (AtUart*)arg;
         ml307_at_modem->EventTask();
         vTaskDelete(NULL);
-    }, "modem_event", 2048, this, configMAX_PRIORITIES - 1, &event_task_handle_, 0);
+    }, "modem_event", 3072, this, configMAX_PRIORITIES - 1, &event_task_handle_, 0);
 
+    // 增大接收任务栈大小以处理 OTA 大数据量
     xTaskCreatePinnedToCore([](void* arg) {
         auto ml307_at_modem = (AtUart*)arg;
         ml307_at_modem->ReceiveTask();
         vTaskDelete(NULL);
-    }, "modem_receive", 2048 * 3, this, configMAX_PRIORITIES - 2, &receive_task_handle_, 0);
+    }, "modem_receive", 8192, this, configMAX_PRIORITIES - 1, &receive_task_handle_, 0);
     initialized_ = true;
 }
 

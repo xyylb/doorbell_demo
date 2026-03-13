@@ -20,6 +20,7 @@
 #include "esp_peer.h"
 #include "network_4g.h"
 #include "door_bell_audio.h"
+#include "otaupgrade.h"
 
 extern "C" {
     const esp_peer_signaling_impl_t *esp_signaling_get_mqtt_impl(void);
@@ -598,6 +599,49 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
                 };
                 sg->cfg.on_msg(&msg, sg->cfg.ctx);
             }
+        }
+    } else if (strcmp(msg_type, "ota") == 0) {
+        // OTA 升级消息
+        ESP_LOGI(TAG, "Received OTA upgrade command");
+        cJSON *ota_url = cJSON_GetObjectItem(json, "url");
+        cJSON *ota_version = cJSON_GetObjectItem(json, "version");
+        cJSON *md5 = cJSON_GetObjectItem(json, "md5");
+        
+        if (ota_url && ota_url->valuestring && ota_version && ota_version->type == cJSON_Number) {
+            const char *url = ota_url->valuestring;
+            int target_version = ota_version->valueint;
+            int current_version = get_firmware_version();
+            
+            ESP_LOGI(TAG, "OTA URL: %s, Target version: %d, Current version: %d", url, target_version, current_version);
+            
+            if (target_version <= current_version) {
+                ESP_LOGW(TAG, "Target version %d <= current version %d, skip upgrade", target_version, current_version);
+            } else {
+                // 触发 OTA 升级
+                ota_start_upgrade(url, md5->valuestring);
+            }
+        }
+    } else if (strcmp(msg_type, "version_query") == 0) {
+        // 版本查询请求，回复当前版本
+        ESP_LOGI(TAG, "Received version query request");
+        
+        int fw_version = get_firmware_version();
+        
+        app_config_t* cfg = app_config_get();
+        
+        // 发送版本信息
+        char topic[128];
+        get_up_topic(topic, sizeof(topic));
+        
+        char payload[256];
+        snprintf(payload, sizeof(payload),
+                 "{\"type\":\"version_report\",\"version\":\"%d\",\"from\":\"%s\"}",
+                 fw_version, cfg->device_id);
+        
+        Mqtt* mqtt = Network4g::GetMqttInstance();
+        if (mqtt && mqtt->IsConnected()) {
+            mqtt->Publish(topic, payload, 1);
+            ESP_LOGI(TAG, "Version reported: %s", payload);
         }
     }
 

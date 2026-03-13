@@ -66,6 +66,14 @@ public class MqttSignalingService {
     private File logFile;
     private final Object logLock = new Object();
 
+    private final ConcurrentMap<String, DeviceVersion> deviceVersions = new ConcurrentHashMap<>();
+
+    @Value("${ota.server-url:}")
+    private String otaServerUrl;
+
+    @Value("${ota.target-version:}")
+    private Integer otaTargetVersion;
+
     /**
      * 通话状态管理
      */
@@ -153,6 +161,9 @@ public class MqttSignalingService {
                     // 自定义消息
                     handleCustomizedMessage(message);
                     break;
+                case "version_report":
+                    handleVersionReport(message);
+                    break;
                 default:
                     log.warn("未知的信令类型: {}", type);
             }
@@ -186,6 +197,71 @@ public class MqttSignalingService {
         // 发送响应到设备下行主题
         String downTopic = String.format("/voice/%s/%s/down", project, deviceId);
         sendMqttMessage(downTopic, JSON.toJSONString(response));
+    }
+
+    private void handleVersionReport(SignalingMessage message) {
+        String deviceId = message.getFrom();
+        Integer version = message.getVersion();
+
+        if (deviceId == null || version == null) {
+            log.warn("版本上报信息不完整");
+            return;
+        }
+
+        log.info("收到设备版本上报: deviceId={}, version={}", deviceId, version);
+
+        DeviceVersion dv = new DeviceVersion();
+        dv.setDeviceId(deviceId);
+        dv.setVersion(version);
+        dv.setLastUpdateTime(System.currentTimeMillis());
+        deviceVersions.put(deviceId, dv);
+
+        String target = message.getTarget();
+        // 如果 target 为空，则广播给所有会话
+        if (target != null && !target.isEmpty()) {
+            // 告诉web端版本
+            sessionManager.sendMessageToDevice(target, JSON.toJSONString(message));
+        }
+        log.info("设备版本已记录: deviceId={}, version={}", deviceId, version);
+    }
+
+    public void manualOtaUpgrade(String deviceId, Integer version, String url) {
+        if (deviceId == null || deviceId.isEmpty()) {
+            log.warn("设备ID为空");
+            return;
+        }
+
+        if (url == null || url.isEmpty()) {
+            log.warn("OTA URL为空");
+            return;
+        }
+
+        log.info("手动推送 OTA 升级到设备 {}: URL={}, 版本={}", deviceId, url, version);
+
+        SignalingMessage otaMsg = new SignalingMessage();
+        otaMsg.setType("ota");
+        otaMsg.setTimestamp(System.currentTimeMillis() / 1000);
+        otaMsg.setTarget(deviceId);
+        otaMsg.setVersion(version != null ? version : 0);
+        otaMsg.setUrl(url);
+        otaMsg.setMd5("");
+
+        String downTopic = String.format("/voice/%s/%s/down", project, deviceId);
+        sendMqttMessage(downTopic, JSON.toJSONString(otaMsg));
+
+        log.info("已发送 OTA 升级消息到设备 {}", deviceId);
+    }
+
+    public void queryVersion(String deviceId) {
+        log.info("查询设备 {} 版本", deviceId);
+
+        SignalingMessage msg = new SignalingMessage();
+        msg.setType("version_query");
+        msg.setTimestamp(System.currentTimeMillis() / 1000);
+        msg.setTarget(deviceId);
+
+        String downTopic = String.format("/voice/%s/%s/down", project, deviceId);
+        sendMqttMessage(downTopic, JSON.toJSONString(msg));
     }
 
     /**
@@ -390,5 +466,12 @@ public class MqttSignalingService {
         private CallStatus status;
         private long startTime;
         private long endTime;
+    }
+
+    @Data
+    public static class DeviceVersion {
+        private String deviceId;
+        private Integer version;
+        private long lastUpdateTime;
     }
 }

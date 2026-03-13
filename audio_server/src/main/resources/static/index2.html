@@ -72,7 +72,6 @@
     </div>
     <div class="call-controls">
       <button class="btn btn-success" id="btnCall" onclick="startCall()" disabled>📞 发起通话</button>
-      <button class="btn btn-primary" id="btnRing" onclick="sendRing()" disabled>🔔 发送振铃</button>
       <button class="btn btn-primary" id="btnAnswer" onclick="answerRing()" disabled>✅ 接听</button>
       <button class="btn btn-danger" id="btnHangup" onclick="hangupCall()" disabled>❌ 挂断</button>
       <button class="btn btn-warning" id="btnReject" onclick="rejectRing()" disabled>🚫 拒接</button>
@@ -80,6 +79,22 @@
     </div>
     <div style="margin-top: 16px;">
       <span id="callStatus" class="status status-disconnected">空闲</span>
+    </div>
+  </div>
+
+  <!-- OTA 升级控制 -->
+  <div class="card">
+    <div class="card-title">🔄 OTA 升级控制</div>
+    <div class="form-group">
+      <label>目标设备ID (ESP32)</label>
+      <input type="text" id="otaDeviceId" placeholder="设备ID">
+    </div>
+    <div class="call-controls">
+      <button class="btn btn-primary" id="btnQueryVersion" onclick="queryVersion()">🔍 查询版本</button>
+      <button class="btn btn-success" id="btnPushOta" onclick="pushOta()">📤 推送升级</button>
+    </div>
+    <div style="margin-top: 16px;">
+      <span id="otaStatus" class="status status-disconnected">空闲</span>
     </div>
   </div>
 
@@ -241,8 +256,74 @@
         log('error', '服务器错误: ' + (message.data || '无错误信息'));
         break;
 
+      case 'version_report':
+        handleVersionReport(message);
+        break;
+
       default:
         log('warn', '未知信令类型: ' + message.type);
+    }
+  }
+
+  // ==================== OTA 升级功能 ====================
+  function queryVersion() {
+    const deviceId = document.getElementById('otaDeviceId').value;
+    if (!deviceId) {
+      alert('请输入目标设备ID');
+      return;
+    }
+
+    updateOtaStatus('querying', '正在查询版本...');
+    log('info', `查询设备 ${deviceId} 的版本`);
+
+    // 发送版本查询信令
+    sendSignaling({
+      type: 'version_query',
+      target: deviceId,
+      from: document.getElementById('localDeviceId').value,
+      timestamp: Math.floor(Date.now() / 1000)
+    });
+  }
+
+  function pushOta() {
+    const deviceId = document.getElementById('otaDeviceId').value;
+
+    if (!deviceId) {
+      alert('请输入目标设备ID');
+      return;
+    }
+
+    updateOtaStatus('pushing', '正在推送升级...');
+    log('info', `推送 OTA 升级到设备 ${deviceId}:`);
+
+    // 发送 OTA 升级信令
+    sendSignaling({
+      type: 'ota',
+      target: deviceId,
+      from: document.getElementById('localDeviceId').value,
+      timestamp: Math.floor(Date.now() / 1000),
+    });
+
+    updateOtaStatus('success', '升级命令已发送');
+  }
+
+  function handleVersionReport(message) {
+    const deviceId = message.device_id || message.from;
+    const version = message.version;
+    log('info', `收到设备 ${deviceId} 的版本报告: ${version}`);
+    updateOtaStatus('success', `设备版本: ${version}`);
+  }
+
+  function updateOtaStatus(status, text) {
+    const statusEl = document.getElementById('otaStatus');
+    statusEl.textContent = text;
+    statusEl.className = 'status';
+    if (status === 'success') {
+      statusEl.classList.add('status-connected');
+    } else if (status === 'querying' || status === 'pushing') {
+      statusEl.classList.add('status-connecting');
+    } else {
+      statusEl.classList.add('status-disconnected');
     }
   }
 
@@ -566,26 +647,6 @@
     } catch (error) {
       log('error', '发起通话失败: ' + error.message);
     }
-  }
-
-  // 发送振铃信令给ESP32
-  function sendRing() {
-    const targetId = document.getElementById('targetDeviceId').value;
-    if (!targetId) {
-      alert('请输入目标设备ID');
-      return;
-    }
-
-    // 发送ESP32格式的ring信令
-    sendSignaling({
-      type: 'ring',
-      target: targetId,
-      from: document.getElementById('localDeviceId').value,
-      timestamp: Math.floor(Date.now() / 1000)
-    });
-
-    updateCallStatus('calling', '正在振铃...');
-    document.getElementById('btnHangup').disabled = false;
   }
 
   // 挂断通话

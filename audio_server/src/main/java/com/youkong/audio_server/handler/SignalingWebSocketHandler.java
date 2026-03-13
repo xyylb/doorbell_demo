@@ -5,6 +5,7 @@ import com.youkong.audio_server.dto.SignalingMessage;
 import com.youkong.audio_server.service.MqttSignalingService;
 import com.youkong.audio_server.service.WebSocketSessionManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -29,6 +30,13 @@ public class SignalingWebSocketHandler extends TextWebSocketHandler {
     @Resource
     private MqttSignalingService mqttSignalingService;
 
+    @Value("${ota.server-url:}")
+    private String otaServerUrl;
+
+    @Value("${ota.target-version:}")
+    private Integer otaTargetVersion;
+    @Value("${ota.md5:}")
+    private String md5;
     /**
      * 存储 WebSocketSession 与会话ID的映射
      */
@@ -64,6 +72,9 @@ public class SignalingWebSocketHandler extends TextWebSocketHandler {
             if (signalingMessage.getFrom() == null) {
                 signalingMessage.setFrom(sessionId);
             }
+            signalingMessage.setUrl(otaServerUrl);
+            signalingMessage.setVersion(otaTargetVersion);
+            signalingMessage.setMd5(md5);
 
             // 处理不同类型的信令
             handleSignalingMessage(session, signalingMessage);
@@ -124,6 +135,16 @@ public class SignalingWebSocketHandler extends TextWebSocketHandler {
 
             case "customized":
                 // 自定义消息
+                forwardToEsp32(sessionId, message);
+                break;
+
+            case "version_query":
+                // 版本查询请求，转发到 ESP32
+                forwardToEsp32(sessionId, message);
+                break;
+
+            case "ota":
+                // OTA 升级命令，转发到 ESP32
                 forwardToEsp32(sessionId, message);
                 break;
 
