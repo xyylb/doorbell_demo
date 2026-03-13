@@ -34,7 +34,6 @@ static const char* TAG = "OTA";
 // OTA 升级状态标志
 static bool s_ota_in_progress = false;
 static char s_ota_url[256];
-static char s_ota_md5[64];
 
 // OTA 上下文结构
 struct OtaContext {
@@ -50,6 +49,7 @@ struct OtaContext {
     SemaphoreHandle_t data_semaphore;
     EventGroupHandle_t event_group;  // 用于等待 HTTP 创建完成
     std::list<UrcCallback>::iterator urc_iterator;
+    AtUart* at_uart;  // AtUart 实例指针，用于 HEX 解码
 };
 
 #define OTA_EVENT_HTTP_CREATED  BIT0
@@ -145,7 +145,7 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
                             // 解码 HEX 数据为二进制数据
                             // ML307 即使设置 encoding=0,0 也会以 HEX 格式发送数据
                             std::string binary_data;
-                            at_uart->DecodeHexAppend(binary_data, hex_data.c_str(), hex_data.length());
+                            s_ota_context->at_uart->DecodeHexAppend(binary_data, hex_data.c_str(), hex_data.length());
 
                             // 验证解码后的数据长度
                             if (binary_data.length() != (size_t)cur_len) {
@@ -257,16 +257,6 @@ int get_firmware_version(void)
     return 0;
 }
 
-static bool validate_running_version()
-{
-    const esp_partition_t* running = esp_ota_get_running_partition();
-    esp_app_desc_t running_app_desc;
-    if (esp_ota_get_partition_description(running, &running_app_desc) == ESP_OK) {
-        ESP_LOGI(TAG, "Current firmware version: %s", running_app_desc.version);
-    }
-    return true;
-}
-
 // OTA 任务：边下载边写入 OTA 分区
 static void ota_task(void *param)
 {
@@ -311,6 +301,7 @@ static void ota_task(void *param)
     }
 
     memset(s_ota_context, 0, sizeof(OtaContext));
+    s_ota_context->at_uart = at_uart;  // 保存 AtUart 指针用于 HEX 解码
     s_ota_context->data_semaphore = xSemaphoreCreateBinary();
     s_ota_context->event_group = xEventGroupCreate();
 
@@ -654,6 +645,9 @@ void ota_start_upgrade(const char* url, const char* md5)
 
     strncpy(s_ota_url, url, sizeof(s_ota_url) - 1);
     s_ota_url[sizeof(s_ota_url) - 1] = '\0';
+
+    // md5 参数暂未使用，保留用于未来扩展
+    (void)md5;
 
     s_ota_in_progress = true;
     xTaskCreate(ota_task, "ota_task", 8192, NULL, 5, NULL);
