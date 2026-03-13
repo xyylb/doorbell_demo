@@ -89,7 +89,7 @@ public:
         //ESP_LOGI(TAG, "get 4");
 
         int id = next_id++ % MAX_CONN;
-        
+
         //ESP_LOGI(TAG, "get 4 id=%d", id);
         conn->udp = modem->CreateUdp(id);
         if (!conn->udp) {
@@ -296,11 +296,18 @@ int udp_get_local_address(udp_socket_t *, bool, esp_peer_addr_t *addr) {
 }
 
 int ports_resolve_addr(const char *host, esp_peer_addr_t *addr) {
-    struct hostent *he = gethostbyname(host);
-    if (!he) return -1;
+    std::string ip_addr = Network4g::resolveDomain(host);
+    if (ip_addr.empty()) {
+        ESP_LOGE(TAG, "Failed to resolve IP address for host: %s", host);
+        return -1;
+    }
+
     addr->family = AF_INET;
     addr->port = 0;
-    memcpy(addr->ipv4, he->h_addr_list[0], 4);
+    struct in_addr in;
+    inet_pton(AF_INET, ip_addr.c_str(), &in);
+    memcpy(addr->ipv4, &in, 4);
+
     return 0;
 }
 

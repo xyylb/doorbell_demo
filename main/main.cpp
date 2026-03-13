@@ -15,6 +15,7 @@
 #include "at_modem.h"
 #include "network_4g.h"
 #include "ml307_udp_socket.h"
+#include "otaupgrade.h"
 
 
 // C includes wrapped for C++
@@ -350,6 +351,8 @@ void app_main() {
     esp_capture_set_thread_scheduler(capture_scheduler);
     media_lib_thread_set_schedule_cb(thread_scheduler);
     init_board();
+    //显示当前软件版本
+    ESP_LOGI(TAG, "当前软件版本: %d", get_firmware_version());
     
     // 初始化配置（从 NVS 加载）
     app_config_init();
