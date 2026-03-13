@@ -139,19 +139,40 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
 
                     // 提取数据
                     if (arguments[5].type == AtArgumentValue::Type::String) {
-                        const std::string& data = arguments[5].string_value;
+                        const std::string& hex_data = arguments[5].string_value;
 
-                        if (!data.empty() && cur_len > 0) {
+                        if (!hex_data.empty() && cur_len > 0) {
+                            // 解码 HEX 数据为二进制数据
+                            // ML307 即使设置 encoding=0,0 也会以 HEX 格式发送数据
+                            std::string binary_data;
+                            at_uart->DecodeHexAppend(binary_data, hex_data.c_str(), hex_data.length());
+
+                            // 验证解码后的数据长度
+                            if (binary_data.length() != (size_t)cur_len) {
+                                ESP_LOGW(TAG, "数据包 #%d: 解码后长度不匹配！期望 %d，实际 %d",
+                                        packet_count, cur_len, binary_data.length());
+                            }
+
+                            // 调试：打印前几个包的数据
+                            if (packet_count <= 3) {
+                                ESP_LOGI(TAG, "数据包 #%d 前 16 字节: %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x",
+                                        packet_count,
+                                        (uint8_t)binary_data[0], (uint8_t)binary_data[1], (uint8_t)binary_data[2], (uint8_t)binary_data[3],
+                                        (uint8_t)binary_data[4], (uint8_t)binary_data[5], (uint8_t)binary_data[6], (uint8_t)binary_data[7],
+                                        (uint8_t)binary_data[8], (uint8_t)binary_data[9], (uint8_t)binary_data[10], (uint8_t)binary_data[11],
+                                        (uint8_t)binary_data[12], (uint8_t)binary_data[13], (uint8_t)binary_data[14], (uint8_t)binary_data[15]);
+                            }
+
                             // 写入 OTA 分区
                             esp_err_t err = esp_ota_write(s_ota_context->ota_handle,
-                                                          data.data(),
-                                                          data.length());
+                                                          binary_data.data(),
+                                                          binary_data.length());
                             if (err != ESP_OK) {
                                 ESP_LOGE(TAG, "esp_ota_write 失败: %s", esp_err_to_name(err));
                                 s_ota_context->download_error = true;
                                 xEventGroupSetBits(s_ota_context->event_group, OTA_EVENT_ERROR);
                             } else {
-                                s_ota_context->total_received += data.length();
+                                s_ota_context->total_received += binary_data.length();
 
                                 // 每接收 100KB 打印一次进度
                                 static int last_progress = 0;
@@ -534,14 +555,20 @@ static void ota_task(void *param)
         // 在固件验证期间，临时从看门狗中删除当前任务
         // 因为 SHA256 计算可能需要很长时间（对于 2.64MB 固件可能需要 30-60 秒）
         TaskHandle_t current_task = xTaskGetCurrentTaskHandle();
-        esp_task_wdt_delete(current_task);
-        ESP_LOGI(TAG, "已临时禁用看门狗");
+        esp_err_t wdt_err = esp_task_wdt_delete(current_task);
+        if (wdt_err == ESP_OK) {
+            ESP_LOGI(TAG, "已临时禁用看门狗");
+        } else {
+            ESP_LOGW(TAG, "无法禁用看门狗: %s (任务可能未注册)", esp_err_to_name(wdt_err));
+        }
 
         esp_err_t err = esp_ota_end(s_ota_context->ota_handle);
 
-        // 验证完成后，重新添加到看门狗
-        esp_task_wdt_add(current_task);
-        ESP_LOGI(TAG, "已重新启用看门狗");
+        // 验证完成后，重新添加到看门狗（如果之前成功删除）
+        if (wdt_err == ESP_OK) {
+            esp_task_wdt_add(current_task);
+            ESP_LOGI(TAG, "已重新启用看门狗");
+        }
 
         if (err != ESP_OK) {
             if (err == ESP_ERR_OTA_VALIDATE_FAILED) {
