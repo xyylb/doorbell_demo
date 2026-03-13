@@ -6,8 +6,9 @@
 extern "C" {
 #endif
 
+#define FIRMWARE_VERSION 2
+
 void ota_start_upgrade(const char* url, const char* md5);
-int get_firmware_version(void);
 
 #ifdef __cplusplus
 }

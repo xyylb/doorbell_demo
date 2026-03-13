@@ -352,7 +352,7 @@ void app_main() {
     media_lib_thread_set_schedule_cb(thread_scheduler);
     init_board();
     //显示当前软件版本
-    ESP_LOGI(TAG, "当前软件版本: %d", get_firmware_version());
+    ESP_LOGI(TAG, "当前软件版本: %d", FIRMWARE_VERSION);
     
     // 初始化配置（从 NVS 加载）
     app_config_init();

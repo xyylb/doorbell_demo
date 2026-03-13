@@ -610,7 +610,7 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
         if (ota_url && ota_url->valuestring && ota_version && ota_version->type == cJSON_Number) {
             const char *url = ota_url->valuestring;
             int target_version = ota_version->valueint;
-            int current_version = get_firmware_version();
+            int current_version = FIRMWARE_VERSION;
             
             ESP_LOGI(TAG, "OTA URL: %s, Target version: %d, Current version: %d", url, target_version, current_version);
             
@@ -625,7 +625,7 @@ static void mqtt_message_handler(const std::string& topic, const std::string& pa
         // 版本查询请求，回复当前版本
         ESP_LOGI(TAG, "Received version query request");
         
-        int fw_version = get_firmware_version();
+        int fw_version = FIRMWARE_VERSION;
         
         app_config_t* cfg = app_config_get();
         

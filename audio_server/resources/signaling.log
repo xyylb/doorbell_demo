@@ -10831,3 +10831,120 @@ Payload: {"type":"ice_request","timestamp":722}
 [2026-03-13 16:43:29] [DOWN] Topic: /voice/project/189833342344184/down
 Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773391408,"type":"ice_response","valid":true}
 ---
+[2026-03-13 16:45:30] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 16:45:30] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773391530,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:47:05] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 16:47:05] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773391625,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:47:15] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773391635,"type":"ota","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 16:54:30] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 16:54:30] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773392070,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:54:33] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392073,"type":"ota","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 16:56:13] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":104}
+---
+[2026-03-13 16:56:13] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773392173,"type":"ice_response","valid":true}
+---
+[2026-03-13 16:56:55] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392215,"type":"version_query","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 16:56:56] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"version_report","version":"5","from":"189833342344184"}
+---
+[2026-03-13 17:02:17] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 17:02:17] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773392537,"type":"ice_response","valid":true}
+---
+[2026-03-13 17:03:26] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 17:03:26] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773392606,"type":"ice_response","valid":true}
+---
+[2026-03-13 17:03:50] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392630,"type":"version_query","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:03:51] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"version_report","version":"1","from":"189833342344184"}
+---
+[2026-03-13 17:03:52] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392632,"type":"ota","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:05:44] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":1}
+---
+[2026-03-13 17:05:44] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773392744,"type":"ice_response","valid":true}
+---
+[2026-03-13 17:05:47] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392747,"type":"ota","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:07:28] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"ice_request","timestamp":105}
+---
+[2026-03-13 17:07:28] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"iceServers":[{"credential":"HJbnf23oNF23BgdlNM","urls":["stun:turn.vcall.75prc.cn:3478","turn:turn.vcall.75prc.cn:3478"],"username":"youkongcall"}],"target":"web_client_001","timestamp":1773392848,"type":"ice_response","valid":true}
+---
+[2026-03-13 17:07:40] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392860,"type":"version_query","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:07:41] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"version_report","version":"2","from":"189833342344184"}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"data":"v=0\r\no=- 1633863403698074651 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS 165cdf00-a105-446d-abfc-f0542a5f6914\r\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 9 0 8 13 110 126\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:kH1z\r\na=ice-pwd:KNnVcfv3jsaA9NCXkeIgTP7l\r\na=ice-options:trickle\r\na=fingerprint:sha-256 5B:6F:A4:78:05:B0:94:99:F2:8D:E7:BC:9B:E5:0C:F8:84:66:0D:74:51:B2:DD:18:D9:99:01:2A:1D:72:96:D0\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=sendrecv\r\na=msid:165cdf00-a105-446d-abfc-f0542a5f6914 f42077d5-d2c4-403a-8acb-126d83c15fb8\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:111 opus/48000/2\r\na=rtcp-fb:111 transport-cc\r\na=fmtp:111 minptime=10;useinbandfec=1\r\na=rtpmap:63 red/48000/2\r\na=fmtp:63 111/111\r\na=rtpmap:9 G722/8000\r\na=rtpmap:0 PCMU/8000\r\na=rtpmap:8 PCMA/8000\r\na=rtpmap:13 CN/8000\r\na=rtpmap:110 telephone-event/48000\r\na=rtpmap:126 telephone-event/8000\r\na=ssrc:896289696 cname:+yrkfGnODjzf2++n\r\na=ssrc:896289696 msid:165cdf00-a105-446d-abfc-f0542a5f6914 f42077d5-d2c4-403a-8acb-126d83c15fb8\r\n","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"offer","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:758789658 1 udp 2122260223 172.30.208.1 49900 typ host generation 0 ufrag kH1z network-id 1","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:3842350498 1 udp 2122194687 172.21.32.1 49901 typ host generation 0 ufrag kH1z network-id 2","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:2813617189 1 udp 2122129151 192.168.31.121 49902 typ host generation 0 ufrag kH1z network-id 3","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:148930142 1 udp 2122063615 192.168.96.1 49903 typ host generation 0 ufrag kH1z network-id 4","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:1408619650 1 tcp 1518280447 172.30.208.1 9 typ host tcptype active generation 0 ufrag kH1z network-id 1","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:2613739322 1 tcp 1518214911 172.21.32.1 9 typ host tcptype active generation 0 ufrag kH1z network-id 2","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:3648751293 1 tcp 1518149375 192.168.31.121 9 typ host tcptype active generation 0 ufrag kH1z network-id 3","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:51] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:1982831814 1 tcp 1518083839 192.168.96.1 9 typ host tcptype active generation 0 ufrag kH1z network-id 4","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:52] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:1719284591 1 udp 1685921535 222.135.198.64 49902 typ srflx raddr 192.168.31.121 rport 49902 generation 0 ufrag kH1z network-id 3","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:09:52] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"candidate":"candidate:2857393959 1 udp 41754623 139.129.34.198 52159 typ relay raddr 222.135.198.64 rport 49902 generation 0 ufrag kH1z network-id 3","from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773392991,"type":"candidate","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---
+[2026-03-13 17:10:01] [UP] Topic: /voice/project/189833342344184/up
+Payload: {"type":"answer","data":"v=0\r\no=- 7801614086411001801 2 IN IP4 0.0.0.0\r\ns=-\r\nt=0 0\r\na=msid-semantic: esp-webrtc\r\na=group:BUNDLE 0\r\nm=audio 9 UDP/TLS/RTP/SAVP 111\r\na=rtpmap:111 opus/48000/2\r\na=ssrc:6 cname:webrtc-opus\r\na=ssrc:6 msid:esp_stream a0\r\na=sendrecv\r\na=mid:0\r\na=msid:esp_stream a0\r\nc=IN IP4 0.0.0.0\r\na=rtcp-mux\r\na=sendrecv\r\na=fingerprint:sha-256 E5:2A:46:50:FD:05:31:18:2A:AC:E7:20:A5:20:3E:B6:0A:FA:EF:3A:25:71:64:DA:40:4B:E0:DD:77:95:BD:E2\r\na=setup:passive\r\na=ice-ufrag:WwUl\r\na=ice-pwd:Pd9ZwfQgpeN3WiStdYMx5Ru0\r\na=candidate:0 1 UDP 1685779455 39.144.0.148 31475 typ srflx raddr 0.0.0.0 rport 0\r\na=candidate:1 1 UDP 16103679 139.129.34.198 62904 typ relay raddr 0.0.0.0 rport 0\r\n","from":"189833342344184","timestamp":259}
+---
+[2026-03-13 17:10:10] [DOWN] Topic: /voice/project/189833342344184/down
+Payload: {"from":"web_client_001","md5":"8757d08104c30af47ac4c34ffaefe14a","target":"189833342344184","timestamp":1773393010,"type":"bye","url":"http://bus.2811.top/doorbell_102.bin","valid":true,"version":700}
+---

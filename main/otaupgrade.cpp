@@ -254,16 +254,6 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
     }
 }
 
-int get_firmware_version(void)
-{
-    const esp_partition_t* running = esp_ota_get_running_partition();
-    esp_app_desc_t running_app_desc;
-    if (esp_ota_get_partition_description(running, &running_app_desc) == ESP_OK) {
-        return atoi(running_app_desc.version);
-    }
-    return 0;
-}
-
 // OTA 任务：边下载边写入 OTA 分区
 static void ota_task(void *param)
 {
@@ -284,7 +274,7 @@ static void ota_task(void *param)
     }
 
     ESP_LOGI(TAG, "开始 OTA 升级，URL: %s", s_ota_url);
-    ESP_LOGI(TAG, "当前固件版本: %d", get_firmware_version());
+    ESP_LOGI(TAG, "当前固件版本: %d", FIRMWARE_VERSION);
 
     // 获取 AtUart 实例
     auto at_uart = modem->GetAtUart();
@@ -406,7 +396,8 @@ static void ota_task(void *param)
     // frag_size: 每次最多输出 512 字节
     // interval: 每次输出间隔 1ms
     // 理论速度：512字节/1ms = 512KB/s，约5秒下载2.64MB
-    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"fragment\",%d,512,1", s_ota_context->http_id);
+    // 4096 有概率溢出，改成了2048
+    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"fragment\",%d,2048,1", s_ota_context->http_id);
     at_uart->SendCommand(at_cmd, 1000);
     vTaskDelay(pdMS_TO_TICKS(200));
     ESP_LOGI(TAG, "设置数据流控：512 字节/包，间隔 1ms（高速模式）");
@@ -421,7 +412,7 @@ static void ota_task(void *param)
     snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"encoding\",%d,1,1", s_ota_context->http_id);
     at_uart->SendCommand(at_cmd, 1000);
     vTaskDelay(pdMS_TO_TICKS(200));
-    ESP_LOGI(TAG, "设置编码模式为 HEX（用于接收数据）");
+    ESP_LOGI(TAG, "设置编码模式为 HEX（用于接收数据） ");
 
     // 步骤 3: 初始化 OTA 分区
     ESP_LOGI(TAG, "步骤 3: 初始化 OTA 分区");
