@@ -49,7 +49,7 @@ struct OtaContext {
     SemaphoreHandle_t data_semaphore;
     EventGroupHandle_t event_group;  // 用于等待 HTTP 创建完成
     std::list<UrcCallback>::iterator urc_iterator;
-    AtUart* at_uart;  // AtUart 实例指针，用于 HEX 解码
+    std::shared_ptr<AtUart> at_uart;  // AtUart 实例指针，用于 HEX 解码
 };
 
 #define OTA_EVENT_HTTP_CREATED  BIT0
