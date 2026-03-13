@@ -20,6 +20,7 @@
 #include <esp_log.h>
 #include <esp_ota_ops.h>
 #include <esp_system.h>
+#include <esp_task_wdt.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/semphr.h>
@@ -126,6 +127,16 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
                 int cur_len = arguments[4].int_value;
 
                 if (httpid == s_ota_context->http_id) {
+                    // 调试日志：打印关键参数
+                    static int packet_count = 0;
+                    packet_count++;
+
+                    // 前 10 个包和每 50 个包打印一次详细信息
+                    if (packet_count <= 10 || packet_count % 50 == 0) {
+                        ESP_LOGI(TAG, "数据包 #%d: content_len=%d, sum_len=%d, cur_len=%d, 已接收=%d",
+                                packet_count, content_len, sum_len, cur_len, s_ota_context->total_received);
+                    }
+
                     // 提取数据
                     if (arguments[5].type == AtArgumentValue::Type::String) {
                         const std::string& data = arguments[5].string_value;
@@ -142,8 +153,11 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
                             } else {
                                 s_ota_context->total_received += data.length();
 
-                                // 每接收 10KB 打印一次进度
-                                if (s_ota_context->total_received % (10 * 1024) < data.length()) {
+                                // 每接收 100KB 打印一次进度
+                                static int last_progress = 0;
+                                int current_progress = s_ota_context->total_received / (100 * 1024);
+                                if (current_progress > last_progress) {
+                                    last_progress = current_progress;
                                     if (s_ota_context->content_length > 0) {
                                         ESP_LOGI(TAG, "OTA 进度: %d/%d 字节 (%.1f%%)",
                                                 s_ota_context->total_received,
@@ -156,11 +170,36 @@ static void http_urc_callback(const std::string& command, const std::vector<AtAr
                             }
                         }
 
-                        // 检查是否下载完成
-                        // cur_len == 0 表示 chunked 模式下载完成
-                        // 或者 sum_len == content_len 表示普通模式下载完成
-                        if (cur_len == 0 || (content_len > 0 && sum_len >= content_len)) {
-                            ESP_LOGI(TAG, "固件下载完成，总共接收: %d 字节", s_ota_context->total_received);
+                        // 改进的下载完成判断逻辑
+                        // 1. cur_len == 0 表示这是最后一个数据包（chunked 模式或普通模式的结束标志）
+                        // 2. 如果知道 content_length，则验证 sum_len 是否达到预期大小
+                        bool is_complete = false;
+
+                        if (cur_len == 0) {
+                            // cur_len == 0 是明确的结束信号
+                            ESP_LOGI(TAG, "收到结束信号 (cur_len=0)");
+                            is_complete = true;
+                        } else if (content_len > 0 && sum_len >= content_len) {
+                            // sum_len 达到了 content_len，也认为完成
+                            ESP_LOGI(TAG, "sum_len (%d) 达到 content_len (%d)", sum_len, content_len);
+                            is_complete = true;
+                        }
+
+                        if (is_complete) {
+                            ESP_LOGI(TAG, "固件下载完成！");
+                            ESP_LOGI(TAG, "  - 数据包总数: %d", packet_count);
+                            ESP_LOGI(TAG, "  - 总共接收: %d 字节", s_ota_context->total_received);
+                            ESP_LOGI(TAG, "  - Content-Length: %d 字节", s_ota_context->content_length);
+                            ESP_LOGI(TAG, "  - sum_len: %d, content_len: %d", sum_len, content_len);
+
+                            // 验证下载完整性
+                            if (s_ota_context->content_length > 0) {
+                                if (s_ota_context->total_received < s_ota_context->content_length) {
+                                    ESP_LOGW(TAG, "警告：接收字节数 (%d) 小于 Content-Length (%d)，可能数据不完整！",
+                                            s_ota_context->total_received, s_ota_context->content_length);
+                                }
+                            }
+
                             s_ota_context->download_complete = true;
                             xEventGroupSetBits(s_ota_context->event_group, OTA_EVENT_DOWNLOAD_COMPLETE);
                         }
@@ -337,6 +376,21 @@ static void ota_task(void *param)
     at_uart->SendCommand(at_cmd, 1000);
     vTaskDelay(pdMS_TO_TICKS(200));
 
+    // 设置编码模式为原始数据（0=ASCII原始数据，1=HEX，2=转义字符）
+    // input_format=0, output_format=0 表示输入输出都是原始数据
+    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"encoding\",%d,0,0", s_ota_context->http_id);
+    at_uart->SendCommand(at_cmd, 1000);
+    vTaskDelay(pdMS_TO_TICKS(200));
+    ESP_LOGI(TAG, "设置编码模式为原始数据");
+
+    // 设置数据输出流控，防止 UART FIFO 溢出
+    // frag_size: 每次最多输出 1024 字节（增大以提高传输效率）
+    // interval: 每次输出间隔 50ms（减小间隔以加快传输速度，但仍保持流控）
+    snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"fragment\",%d,1024,50", s_ota_context->http_id);
+    at_uart->SendCommand(at_cmd, 1000);
+    vTaskDelay(pdMS_TO_TICKS(200));
+    ESP_LOGI(TAG, "设置数据流控：1024 字节/包，间隔 50ms");
+
     // 设置超时时间
     snprintf(at_cmd, sizeof(at_cmd), "AT+MHTTPCFG=\"timeout\",%d,60,0", s_ota_context->http_id);
     at_uart->SendCommand(at_cmd, 1000);
@@ -443,23 +497,52 @@ static void ota_task(void *param)
 
     ESP_LOGI(TAG, "固件下载完成，总共接收: %d 字节", s_ota_context->total_received);
 
+    // 检查下载大小是否与 Content-Length 匹配
+    if (s_ota_context->content_length > 0) {
+        if (s_ota_context->total_received != s_ota_context->content_length) {
+            ESP_LOGE(TAG, "错误：下载大小不匹配！");
+            ESP_LOGE(TAG, "期望: %d 字节, 实际: %d 字节",
+                     s_ota_context->content_length, s_ota_context->total_received);
+            ESP_LOGE(TAG, "固件可能不完整，终止 OTA 升级");
+            goto cleanup;
+        } else {
+            ESP_LOGI(TAG, "下载大小验证通过：%d 字节", s_ota_context->total_received);
+        }
+    } else {
+        ESP_LOGW(TAG, "警告：无法获取 Content-Length，跳过大小验证");
+    }
+
     // 步骤 6: 验证固件
     ESP_LOGI(TAG, "步骤 6: 验证固件");
 
     // 获取当前运行分区信息
-    const esp_partition_t* running = esp_ota_get_running_partition();
-    esp_app_desc_t running_app_info;
-    if (esp_ota_get_partition_description(running, &running_app_info) == ESP_OK) {
-        ESP_LOGI(TAG, "当前固件版本: %s", running_app_info.version);
-        ESP_LOGI(TAG, "当前固件项目: %s", running_app_info.project_name);
-        ESP_LOGI(TAG, "当前固件编译时间: %s %s", running_app_info.date, running_app_info.time);
+    {
+        const esp_partition_t* running = esp_ota_get_running_partition();
+        esp_app_desc_t running_app_info;
+        if (esp_ota_get_partition_description(running, &running_app_info) == ESP_OK) {
+            ESP_LOGI(TAG, "当前固件版本: %s", running_app_info.version);
+            ESP_LOGI(TAG, "当前固件项目: %s", running_app_info.project_name);
+            ESP_LOGI(TAG, "当前固件编译时间: %s %s", running_app_info.date, running_app_info.time);
+        }
     }
 
     // 步骤 7: 完成 OTA 写入
     ESP_LOGI(TAG, "步骤 7: 完成 OTA 写入");
+    ESP_LOGI(TAG, "正在验证固件，这可能需要几十秒时间...");
 
     {
+        // 在固件验证期间，临时从看门狗中删除当前任务
+        // 因为 SHA256 计算可能需要很长时间（对于 2.64MB 固件可能需要 30-60 秒）
+        TaskHandle_t current_task = xTaskGetCurrentTaskHandle();
+        esp_task_wdt_delete(current_task);
+        ESP_LOGI(TAG, "已临时禁用看门狗");
+
         esp_err_t err = esp_ota_end(s_ota_context->ota_handle);
+
+        // 验证完成后，重新添加到看门狗
+        esp_task_wdt_add(current_task);
+        ESP_LOGI(TAG, "已重新启用看门狗");
+
         if (err != ESP_OK) {
             if (err == ESP_ERR_OTA_VALIDATE_FAILED) {
                 ESP_LOGE(TAG, "固件验证失败！");

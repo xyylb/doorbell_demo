@@ -73,7 +73,8 @@ void AtUart::Initialize() {
     uart_config.stop_bits = UART_STOP_BITS_1;
     uart_config.source_clk = UART_SCLK_DEFAULT;
     
-    ESP_ERROR_CHECK(uart_driver_install(uart_num_, 8192, 0, 100, &event_queue_handle_, ESP_INTR_FLAG_IRAM));
+    // 增大接收缓冲区以支持 OTA 大数据量传输，防止 FIFO 溢出
+    ESP_ERROR_CHECK(uart_driver_install(uart_num_, 16384, 0, 100, &event_queue_handle_, ESP_INTR_FLAG_IRAM));
     ESP_ERROR_CHECK(uart_param_config(uart_num_, &uart_config));
     ESP_ERROR_CHECK(uart_set_pin(uart_num_, tx_pin_, rx_pin_, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
     
@@ -255,19 +256,36 @@ bool AtUart::ParseResponse() {
         std::string item;
         while (std::getline(iss, item, ',')) {
             AtArgumentValue argument;
-            if (item.front() == '"') {
+            if (item.empty()) {
+                argument.type = AtArgumentValue::Type::String;
+                argument.string_value = "";
+            } else if (item.front() == '"') {
                 argument.type = AtArgumentValue::Type::String;
                 argument.string_value = item.substr(1, item.size() - 2);
             } else if (item.find(".") != std::string::npos) {
-                argument.type = AtArgumentValue::Type::Double;
-                argument.double_value = std::stod(item);
+                char* end_ptr = nullptr;
+                double val = strtod(item.c_str(), &end_ptr);
+                if (end_ptr && *end_ptr == '\0' && end_ptr != item.c_str()) {
+                    argument.type = AtArgumentValue::Type::Double;
+                    argument.double_value = val;
+                } else {
+                    argument.type = AtArgumentValue::Type::String;
+                    argument.string_value = item;
+                }
             } else if (is_number(item)) {
-                argument.type = AtArgumentValue::Type::Int;
-                argument.int_value = std::stoi(item);
-                argument.string_value = std::move(item);
+                char* end_ptr = nullptr;
+                long val = strtol(item.c_str(), &end_ptr, 10);
+                if (end_ptr && *end_ptr == '\0' && end_ptr != item.c_str()) {
+                    argument.type = AtArgumentValue::Type::Int;
+                    argument.int_value = (int)val;
+                } else {
+                    argument.type = AtArgumentValue::Type::String;
+                    argument.int_value = 0;
+                }
+                argument.string_value = item;
             } else {
                 argument.type = AtArgumentValue::Type::String;
-                argument.string_value = std::move(item);
+                argument.string_value = item;
             }
             arguments.push_back(argument);
         }
